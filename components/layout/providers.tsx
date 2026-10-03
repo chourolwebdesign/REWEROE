@@ -1,5 +1,4 @@
 "use client";
-import { ThemeProvider } from "next-themes";
 import { LazyMotion, domAnimation } from "framer-motion";
 import { Toaster } from "sonner";
 import { CartDrawer, MobileCartBar } from "@/components/commerce/cart-drawer";
@@ -8,7 +7,7 @@ import { ScrollProgress } from "@/components/motion/scroll-progress";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+    <>
       <LazyMotion features={domAnimation} strict>
       <ScrollProgress />
       {children}
@@ -22,6 +21,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
         }}
       />
       </LazyMotion>
-    </ThemeProvider>
+    </>
   );
 }

@@ -2,7 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant dark (@media (prefers-color-scheme: dark));
 
 /* ───────────────────────── Brand tokens ───────────────────────── */
 :root {
@@ -64,42 +64,44 @@
   --sidebar-ring: var(--accent-gold);
 }
 
-.dark {
-  --price-red: #ff7a85; /* AA contrast (text + badge) on dark cards; light mode keeps the classic #d0021b */
-  --surface: #0a1210;
-  --surface-2: #10201a;
-  --ink: #f2efe8;
-  --ink-muted: #a7aca6;
-  --line: rgba(242, 239, 232, 0.12);
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 32px -12px rgba(0, 0, 0, 0.6);
-  --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.5), 0 28px 56px -20px rgba(0, 0, 0, 0.8);
+@media (prefers-color-scheme: dark) {
+  :root {
+    --price-red: #ff7a85; /* AA contrast (text + badge) on dark cards; light mode keeps the classic #d0021b */
+    --surface: #0a1210;
+    --surface-2: #10201a;
+    --ink: #f2efe8;
+    --ink-muted: #a7aca6;
+    --line: rgba(242, 239, 232, 0.12);
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 32px -12px rgba(0, 0, 0, 0.6);
+    --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.5), 0 28px 56px -20px rgba(0, 0, 0, 0.8);
 
-  --background: var(--surface);
-  --foreground: var(--ink);
-  --card: #0f1b16;
-  --card-foreground: var(--ink);
-  --popover: #0f1b16;
-  --popover-foreground: var(--ink);
-  --primary: var(--brand-rewe);
-  --primary-foreground: #0a1a10;
-  --secondary: var(--surface-2);
-  --secondary-foreground: var(--ink);
-  --muted: var(--surface-2);
-  --muted-foreground: var(--ink-muted);
-  --accent: #15291f;
-  --accent-foreground: var(--brand-rewe);
-  --destructive: #ff4d5e;
-  --border: var(--line);
-  --input: var(--line);
-  --ring: var(--accent-gold);
-  --sidebar: var(--surface);
-  --sidebar-foreground: var(--ink);
-  --sidebar-primary: var(--brand-rewe);
-  --sidebar-primary-foreground: #0a1a10;
-  --sidebar-accent: var(--surface-2);
-  --sidebar-accent-foreground: var(--ink);
-  --sidebar-border: var(--line);
-  --sidebar-ring: var(--accent-gold);
+    --background: var(--surface);
+    --foreground: var(--ink);
+    --card: #0f1b16;
+    --card-foreground: var(--ink);
+    --popover: #0f1b16;
+    --popover-foreground: var(--ink);
+    --primary: var(--brand-rewe);
+    --primary-foreground: #0a1a10;
+    --secondary: var(--surface-2);
+    --secondary-foreground: var(--ink);
+    --muted: var(--surface-2);
+    --muted-foreground: var(--ink-muted);
+    --accent: #15291f;
+    --accent-foreground: var(--brand-rewe);
+    --destructive: #ff4d5e;
+    --border: var(--line);
+    --input: var(--line);
+    --ring: var(--accent-gold);
+    --sidebar: var(--surface);
+    --sidebar-foreground: var(--ink);
+    --sidebar-primary: var(--brand-rewe);
+    --sidebar-primary-foreground: #0a1a10;
+    --sidebar-accent: var(--surface-2);
+    --sidebar-accent-foreground: var(--ink);
+    --sidebar-border: var(--line);
+    --sidebar-ring: var(--accent-gold);
+  }
 }
 
 @theme inline {
@@ -248,7 +250,7 @@
 
 /* Site header colour model: forest on light pages, cream over dark heroes (CSS :has, no JS) */
 .site-header { --hdr-fg: var(--brand-forest); --hdr-bg: var(--surface); color: var(--hdr-fg); }
-.dark .site-header { --hdr-fg: var(--surface-cream); --hdr-bg: var(--surface); }
+@media (prefers-color-scheme: dark) { .site-header { --hdr-fg: var(--surface-cream); --hdr-bg: var(--surface); } }
 body:has([data-header-theme="dark"]) .site-header:not([data-scrolled="true"]):not([data-mega="true"]) { --hdr-fg: var(--surface-cream); --hdr-bg: var(--brand-forest); }
 
 /* Decorative footer watermark rendered as a pseudo-element (not text for AT or contrast checks) */
@@ -285,10 +287,10 @@ body:has([data-header-theme="dark"]) .site-header:not([data-scrolled="true"]):no
 .prose-editorial ul { margin: 0 0 1.5em 1.25em; list-style: disc; }
 .prose-editorial li { margin: .35em 0; }
 .prose-editorial blockquote { font-family: var(--font-serif); font-weight: 500; font-size: clamp(1.375rem, 1vw + 1rem, 1.875rem); line-height: 1.3; margin: 2em 0; padding-left: 1.25em; border-left: 2px solid var(--accent-gold); color: var(--brand-forest); }
-.dark .prose-editorial blockquote { color: var(--brand-rewe); }
+@media (prefers-color-scheme: dark) { .prose-editorial blockquote { color: var(--brand-rewe); } }
 .prose-editorial strong { font-weight: 600; }
 
 /* Leaflet overrides */
 .leaflet-container { font-family: var(--font-sans); background: var(--surface-2); }
 .leaflet-tile { filter: saturate(0.6) contrast(1.05); }
-.dark .leaflet-tile { filter: invert(1) hue-rotate(180deg) saturate(0.5) brightness(0.85); }
+@media (prefers-color-scheme: dark) { .leaflet-tile { filter: invert(1) hue-rotate(180deg) saturate(0.5) brightness(0.85); } }
