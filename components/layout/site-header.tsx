@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { Heart, Menu, Search, ShoppingBag, ChevronDown, X } from "lucide-react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useCart, cartTotals } from "@/lib/store/cart";
@@ -117,9 +117,9 @@ export function SiteHeader({ categories, merchant, logoSrc }: Props) {
               {favorites.length > 0 && <Dot n={favorites.length} />}
             </Link>
             <IconButton label={t("openCart")} onClick={() => setCartOpen(true)}>
-              <motion.span key={lastAdded} animate={lastAdded ? { scale: [1, 1.25, 0.95, 1], rotate: [0, -8, 6, 0] } : undefined} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], times: [0, 0.35, 0.7, 1] }} className="inline-flex">
+              <m.span key={lastAdded} animate={lastAdded ? { scale: [1, 1.25, 0.95, 1], rotate: [0, -8, 6, 0] } : undefined} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], times: [0, 0.35, 0.7, 1] }} className="inline-flex">
                 <ShoppingBag className="h-5 w-5" />
-              </motion.span>
+              </m.span>
               <AnimatePresence>{count > 0 && <Dot n={count} key="cart-dot" />}</AnimatePresence>
             </IconButton>
             <IconButton label={t("menu")} onClick={() => setMenuOpen(true)} className="lg:hidden">
@@ -131,7 +131,7 @@ export function SiteHeader({ categories, merchant, logoSrc }: Props) {
         {/* Mega panels */}
         <AnimatePresence>
           {mega === "categories" && (
-            <motion.div
+            <m.div
               key="mega-cat"
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
@@ -154,10 +154,10 @@ export function SiteHeader({ categories, merchant, logoSrc }: Props) {
                 <span className="eyebrow">{t("megaDiscover")}</span>
                 <Link href="/kategorien" onClick={closeAll} className="mono text-xs uppercase tracking-widest underline-offset-4 hover:underline">{t("allCategories")} →</Link>
               </div>
-            </motion.div>
+            </m.div>
           )}
           {mega === "more" && (
-            <motion.div key="mega-more" initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.3 }} className="glass hidden border-t border-line/60 lg:block">
+            <m.div key="mega-more" initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.3 }} className="glass hidden border-t border-line/60 lg:block">
               <div className="container-x grid grid-cols-5 gap-2 py-5">
                 {more.map((m) => (
                   <Link key={m.key} href={m.href} onClick={closeAll} className="rounded-[10px] px-4 py-3 text-[15px] font-medium transition-colors hover:bg-current/10">
@@ -165,7 +165,7 @@ export function SiteHeader({ categories, merchant, logoSrc }: Props) {
                   </Link>
                 ))}
               </div>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
       </header>
@@ -182,11 +182,11 @@ export function SiteHeader({ categories, merchant, logoSrc }: Props) {
             <nav className="flex-1 overflow-y-auto px-5 pb-10 pt-4" aria-label="Mobile Navigation">
               <ul className="space-y-1">
                 {[...primary, ...more].map((item, i) => (
-                  <motion.li key={item.key} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.05 + i * 0.04, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
+                  <m.li key={item.key} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.05 + i * 0.04, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
                     <Link href={item.href} onClick={closeAll} className="serif block border-b border-cream/10 py-4 text-[2rem] leading-none tracking-tight hover:text-rewe">
                       {t(item.key)}
                     </Link>
-                  </motion.li>
+                  </m.li>
                 ))}
               </ul>
               <div className="mt-8 flex flex-wrap gap-3">
@@ -195,7 +195,7 @@ export function SiteHeader({ categories, merchant, logoSrc }: Props) {
                 <LangSwitch className="ml-auto [--hdr-fg:var(--surface-cream)] [--hdr-bg:var(--brand-forest)]" />
               </div>
             </nav>
-            <p className="eyebrow px-5 pb-6 text-cream/50">Wir lieben Lebensmittel.</p>
+            <p className="eyebrow px-5 pb-6 text-cream/70">Wir lieben Lebensmittel.</p>
           </div>
         </SheetContent>
       </Sheet>
@@ -217,7 +217,7 @@ function IconButton({ children, label, onClick, className }: { children: React.R
 
 function Dot({ n }: { n: number }) {
   return (
-    <motion.span
+    <m.span
       initial={{ scale: 0 }}
       animate={{ scale: 1 }}
       exit={{ scale: 0 }}
@@ -225,7 +225,7 @@ function Dot({ n }: { n: number }) {
       className="mono absolute -right-0.5 -top-0.5 inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-rewe px-1 text-[10px] font-semibold text-forest"
     >
       {n}
-    </motion.span>
+    </m.span>
   );
 }
 

@@ -34,7 +34,7 @@ export default async function BonusPage({ params }: { params: Promise<{ locale: 
             <div className="gold-glow absolute inset-0 opacity-90" aria-hidden />
             <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-rewe/20 blur-3xl" aria-hidden />
             <div className="relative flex h-full flex-col justify-between">
-              <div className="flex items-start justify-between"><span className="rounded-[4px] bg-price px-2 py-0.5 font-sans text-lg font-black tracking-tighter">REWE</span><span className="eyebrow">{t("cardLabel")}</span></div>
+              <div className="flex items-start justify-between"><span className="rounded-[4px] bg-[#d0021b] px-2 py-0.5 font-sans text-lg font-black tracking-tighter text-white">REWE</span><span className="eyebrow">{t("cardLabel")}</span></div>
               <div>
                 <p className="mono text-xs uppercase tracking-[0.2em] text-cream/60">{t("cardOwner")}</p>
                 <p className="mono mt-1 text-2xl tracking-[0.18em]">•••• •••• •••• 0427</p>

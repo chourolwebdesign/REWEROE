@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { Check } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -45,14 +45,14 @@ export function JobApplicationForm({ jobs, preselect }: { jobs: JobOption[]; pre
       <ol className="mb-8 grid grid-cols-3 gap-2" aria-label="Fortschritt">
         {steps.map((s, i) => (
           <li key={s} className="space-y-2">
-            <div className="h-1 overflow-hidden rounded-full bg-forest/10 dark:bg-cream/10"><motion.div className="h-full bg-rewe" initial={false} animate={{ width: i <= step ? "100%" : "0%" }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }} /></div>
+            <div className="h-1 overflow-hidden rounded-full bg-forest/10 dark:bg-cream/10"><m.div className="h-full bg-rewe" initial={false} animate={{ width: i <= step ? "100%" : "0%" }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }} /></div>
             <p className={cn("mono text-[11px] uppercase tracking-wider", i === step ? "text-forest dark:text-cream" : "text-ink-muted")}>{String(i + 1).padStart(2, "0")} · {s}</p>
           </li>
         ))}
       </ol>
 
       <AnimatePresence mode="wait">
-        <motion.div key={step} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }} transition={{ duration: 0.35 }} className="space-y-5">
+        <m.div key={step} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }} transition={{ duration: 0.35 }} className="space-y-5">
           {step === 0 && (
             <Field label={t("position")} error={errors.position} id="position">
               <Select value={data.position} onValueChange={set("position")}>
@@ -74,7 +74,7 @@ export function JobApplicationForm({ jobs, preselect }: { jobs: JobOption[]; pre
               <Field label={t("cv")} error={errors.cv} id="cv"><Input id="cv" type="file" accept="application/pdf" onChange={(e) => set("cv")(e.target.files?.[0]?.name ?? "")} aria-invalid={!!errors.cv} className="h-11 pt-2" /></Field>
             </>
           )}
-        </motion.div>
+        </m.div>
       </AnimatePresence>
 
       <div className="mt-8 flex justify-between">

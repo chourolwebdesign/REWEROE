@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useMounted } from "@/lib/hooks";
 import { useTranslations } from "next-intl";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { Link } from "@/i18n/navigation";
 import { usePrefs } from "@/lib/store/prefs";
 import { useUi } from "@/lib/store/ui";
@@ -33,7 +33,7 @@ export function CookieConsent() {
   return (
     <AnimatePresence>
       {open && (
-        <motion.aside
+        <m.aside
           role="dialog"
           aria-modal="false"
           aria-labelledby="cookie-title"
@@ -65,7 +65,7 @@ export function CookieConsent() {
             <button type="button" onClick={() => setDetail((d) => !d)} className="mono ml-auto text-[11px] uppercase tracking-widest text-ink-muted underline-offset-4 hover:underline">{t("settings")}</button>
           </div>
           <Link href="/datenschutz" className="mono mt-3 inline-block text-[11px] uppercase tracking-widest text-ink-muted underline-offset-4 hover:underline">{t("privacy")}</Link>
-        </motion.aside>
+        </m.aside>
       )}
     </AnimatePresence>
   );

@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { SmartImage } from "@/components/ui/smart-image";
 import { cn } from "@/lib/utils";
 import type { ImgVM } from "@/lib/blur";
@@ -26,13 +26,13 @@ export function ProductGallery({ images }: { images: ImgVM[] }) {
         onMouseLeave={() => setZoom(null)}
       >
         <AnimatePresence mode="wait">
-          <motion.div key={cur.src} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }} className="absolute inset-0">
+          <m.div key={cur.src} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }} className="absolute inset-0">
             <SmartImage
               src={cur.src} alt={cur.alt} blur={cur.blur} fill priority sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover transition-transform duration-500 ease-out"
               style={zoom ? { transform: "scale(1.6)", transformOrigin: `${zoom.x}% ${zoom.y}%` } : undefined}
             />
-          </motion.div>
+          </m.div>
         </AnimatePresence>
       </div>
     </div>

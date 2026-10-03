@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Heart, Eye } from "lucide-react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Link } from "@/i18n/navigation";
 import { usePrefs } from "@/lib/store/prefs";
 import { cn } from "@/lib/utils";
@@ -40,9 +40,9 @@ export function ProductCard({ p, className, showCountdown, priority }: { p: Card
           aria-label={fav ? tp("unfavorite") : tp("favorite")}
           className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-cream/90 text-forest backdrop-blur transition-colors hover:bg-white"
         >
-          <motion.span animate={fav ? { scale: [1, 1.35, 1] } : { scale: 1 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1], times: [0, 0.5, 1] }} className="inline-flex">
+          <m.span animate={fav ? { scale: [1, 1.35, 1] } : { scale: 1 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1], times: [0, 0.5, 1] }} className="inline-flex">
             <Heart className={cn("h-4 w-4", fav && "fill-price text-price")} />
-          </motion.span>
+          </m.span>
         </button>
         <div className="absolute bottom-3 right-3 flex flex-col gap-2 md:translate-x-3 md:opacity-0 md:transition-all md:duration-500 md:ease-[cubic-bezier(.22,1,.36,1)] md:group-hover:translate-x-0 md:group-hover:opacity-100 md:group-focus-within:translate-x-0 md:group-focus-within:opacity-100">
           <AddToCart item={toCartItem(p)} variant="icon" />

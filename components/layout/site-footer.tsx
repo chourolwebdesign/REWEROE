@@ -48,16 +48,16 @@ export async function SiteFooter() {
 
       <div className="container-x flex flex-col gap-6 border-t border-cream/10 py-8 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-wrap items-center gap-2" aria-label={t("payments")}>
-          <span className="mono mr-2 text-[10px] uppercase tracking-[0.18em] text-cream/50">{t("payments")}</span>
+          <span className="mono mr-2 text-[10px] uppercase tracking-[0.18em] text-cream/70">{t("payments")}</span>
           {s.payments.map((p) => (
             <span key={p} className="mono rounded-[4px] border border-cream/20 bg-cream/5 px-2 py-1 text-[11px] font-semibold tracking-wide text-cream/90">{paymentMarks[p] ?? p}</span>
           ))}
         </div>
-        <p className="mono text-[11px] text-cream/50">{t("copyright", { year })}</p>
+        <p className="mono text-[11px] text-cream/70">{t("copyright", { year })}</p>
       </div>
 
       <div className="container-x overflow-hidden pb-6" aria-hidden>
-        <p className="select-none font-sans text-[clamp(5rem,20vw,19rem)] font-black leading-[0.8] tracking-[-0.06em] text-cream/[0.06]">REWE</p>
+        <div className="footer-watermark select-none" data-text="REWE" />
       </div>
     </footer>
   );

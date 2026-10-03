@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { Store, Truck } from "lucide-react";
 import { useRouter } from "@/i18n/navigation";
 import { useCart, cartTotals } from "@/lib/store/cart";
@@ -55,11 +55,11 @@ export function CheckoutFlow({ slots, freeFrom, pickup }: Props) {
       <form onSubmit={(e) => { e.preventDefault(); next(); }} noValidate className="rounded-[16px] border border-line bg-card p-6 md:p-10">
         <ol className="mb-10 grid grid-cols-4 gap-2">
           {steps.map((s, i) => (
-            <li key={s}><div className="h-1 overflow-hidden rounded-full bg-forest/10 dark:bg-cream/10"><motion.div className="h-full bg-rewe" initial={false} animate={{ width: i <= step ? "100%" : "0%" }} transition={{ duration: 0.5 }} /></div><p className={cn("mono mt-2 text-[10px] uppercase tracking-wider", i === step ? "text-forest dark:text-cream" : "text-ink-muted")}>{s}</p></li>
+            <li key={s}><div className="h-1 overflow-hidden rounded-full bg-forest/10 dark:bg-cream/10"><m.div className="h-full bg-rewe" initial={false} animate={{ width: i <= step ? "100%" : "0%" }} transition={{ duration: 0.5 }} /></div><p className={cn("mono mt-2 text-[10px] uppercase tracking-wider", i === step ? "text-forest dark:text-cream" : "text-ink-muted")}>{s}</p></li>
           ))}
         </ol>
         <AnimatePresence mode="wait">
-          <motion.div key={step} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }} transition={{ duration: 0.35 }} className="space-y-5">
+          <m.div key={step} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }} transition={{ duration: 0.35 }} className="space-y-5">
             {step === 0 && (
               <div className="grid gap-5 md:grid-cols-2">
                 <F id="firstName" label={t("firstName")} err={errors.firstName}><Input id="firstName" autoComplete="given-name" value={addr.firstName} onChange={(e) => setAddr({ ...addr, firstName: e.target.value })} aria-invalid={!!errors.firstName} className="h-11" /></F>
@@ -109,7 +109,7 @@ export function CheckoutFlow({ slots, freeFrom, pickup }: Props) {
                 <p className="text-xs text-ink-muted">{t("legalHint")} · {t("demoNote")}</p>
               </div>
             )}
-          </motion.div>
+          </m.div>
         </AnimatePresence>
         <div className="mt-8 flex justify-between">
           <Cta type="button" variant="ghost" arrow={false} onClick={() => setStep(Math.max(0, step - 1))} className={cn(step === 0 && "invisible")}>{t("prev")}</Cta>

@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Slider } from "@/components/ui/slider";
 import { formatNumber, formatPrice } from "@/lib/format";
 
@@ -23,9 +23,9 @@ export function PointsCalculator({ eurosPerPoint, centPerPoint }: { eurosPerPoin
       </div>
       <div className="rounded-[12px] bg-forest p-6 text-cream">
         <p className="eyebrow">{t("calcPoints")}</p>
-        <motion.p key={points} initial={{ opacity: 0.5, y: 4 }} animate={{ opacity: 1, y: 0 }} className="mono mt-2 text-5xl font-medium text-rewe">{formatNumber(points, locale)}</motion.p>
+        <m.p key={points} initial={{ opacity: 0.5, y: 4 }} animate={{ opacity: 1, y: 0 }} className="mono mt-2 text-5xl font-medium text-rewe">{formatNumber(points, locale)}</m.p>
         <p className="eyebrow mt-8">{t("calcValue")}</p>
-        <motion.p key={value} initial={{ opacity: 0.5, y: 4 }} animate={{ opacity: 1, y: 0 }} className="mono mt-2 text-4xl font-medium">{formatPrice(value, locale)} <span className="text-base text-cream/60">{t("calcVouchers")}</span></motion.p>
+        <m.p key={value} initial={{ opacity: 0.5, y: 4 }} animate={{ opacity: 1, y: 0 }} className="mono mt-2 text-4xl font-medium">{formatPrice(value, locale)} <span className="text-base text-cream/60">{t("calcVouchers")}</span></m.p>
       </div>
     </div>
   );

@@ -39,7 +39,7 @@ export function BulkIngredients({ ingredients, servings }: { ingredients: Ingred
         </div>
         <button type="button" onClick={addAll} disabled={addable.length === 0} className="group inline-flex items-center gap-2 rounded-[10px] bg-rewe px-5 py-3 text-[15px] font-medium text-forest transition-all duration-300 ease-[cubic-bezier(.22,1,.36,1)] hover:bg-rewe-deep active:scale-[0.98] disabled:opacity-40">
           {done ? <Check className="h-4 w-4" /> : <ShoppingBag className="h-4 w-4 transition-transform group-hover:-rotate-6" />}
-          {t("addAll")} <span className="mono text-xs opacity-70">({addable.length} · {formatPrice(total, locale)})</span>
+          {t("addAll")} <span className="mono text-xs">({addable.length} · {formatPrice(total, locale)})</span>
         </button>
       </div>
       <ul className="mt-6 divide-y divide-line">

@@ -12,7 +12,7 @@ export function Logo({ className, inverse, logoSrc, merchant }: { className?: st
         // eslint-disable-next-line @next/next/no-img-element
         <img src={logoSrc} alt="REWE" className="h-8 w-auto" />
       ) : (
-        <span className={cn("inline-flex h-9 items-center rounded-[4px] px-2.5 font-sans text-[22px] font-black tracking-[-0.04em]", inverse ? "bg-cream text-price" : "bg-price text-white")}>
+        <span className={cn("inline-flex h-9 items-center rounded-[4px] px-2.5 font-sans text-[22px] font-black tracking-[-0.04em]", inverse ? "bg-cream text-[#d0021b]" : "bg-[#d0021b] text-white")}>
           REWE
         </span>
       )}

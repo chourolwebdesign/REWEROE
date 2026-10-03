@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { QuantityStepper } from "@/components/commerce/quantity-stepper";
 import { formatPrice } from "@/lib/format";
 import { tx, type L10n } from "@/lib/l10n";
@@ -32,7 +32,7 @@ export function PfandKompass({ types }: { types: PfandType[] }) {
       <div className="flex flex-col justify-between rounded-[12px] bg-forest p-6 text-cream">
         <div>
           <p className="eyebrow">{t("pfandTotal")}</p>
-          <motion.p key={total} initial={{ scale: 0.96, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mono mt-2 text-5xl font-medium text-rewe">{formatPrice(total, locale)}</motion.p>
+          <m.p key={total} initial={{ scale: 0.96, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mono mt-2 text-5xl font-medium text-rewe">{formatPrice(total, locale)}</m.p>
           <ul className="mono mt-4 space-y-1 text-[11px] uppercase tracking-wider text-cream/70">
             {lines.length === 0 ? <li>0 × …</li> : lines.map((ty) => <li key={ty.id}>{counts[ty.id]} × {formatPrice(ty.amount, locale)} = {formatPrice(counts[ty.id] * ty.amount, locale)}</li>)}
           </ul>

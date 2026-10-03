@@ -160,7 +160,7 @@ Blur-up: `scripts/blur.mjs` → `content/blur.json` (base64 10px LQIP); `<SmartI
 - Metadata API + OG + `alternates.languages` (hreflang de/en/x-default), `sitemap.ts`, `robots.ts`.
 - JSON-LD: `Organization/GroceryStore` (layout), `Product`, `Recipe`, `JobPosting`, `Article`, `BreadcrumbList`, `FAQPage`.
 - WCAG 2.2 AA: skip-link, focus ring (altın 2px), `aria-live` toast, form label+hata, kontrast testli, semantic landmarks.
-- Perf: `next/image`, font `display: swap`, `dynamic()` Leaflet/FlipBrochure, animasyonlar `transform/opacity` only. Hedef Lighthouse ≥95.
+- Perf: `next/image` (AVIF/WebP, blur-up), Fraunces 500 + Inter 400/500 (`latin`), Inter/Space Grotesk `font-display: optional` (metin LCP'si web fontunu beklemez), Framer `LazyMotion`, ilk boyamada gizlenen içerik yok, Leaflet `dynamic()`; animasyonlar `transform/opacity` only. Ölçümler: `docs/QA-REPORT.md`.
 
 ## 9. Çalışma Sırası (brief §10) ve durum
 

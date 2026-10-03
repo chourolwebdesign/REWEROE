@@ -1,7 +1,7 @@
 "use client";
 import { useMounted, useTick } from "@/lib/hooks";
 import { useLocale, useTranslations } from "next-intl";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { tx, type L10n } from "@/lib/l10n";
 import { cn } from "@/lib/utils";
 
@@ -29,9 +29,9 @@ export function FreshnessClock({ slots, className, inverse }: { slots: Slot[]; c
       <span className="relative flex h-2 w-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rewe opacity-60" /><span className="relative inline-flex h-2 w-2 rounded-full bg-rewe" /></span>
       <span className="opacity-70">{t("label")}{time && ` · ${time}`}</span>
       {slot && (
-        <motion.span key={tx(slot.message, locale)} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} className="normal-case tracking-normal">
+        <m.span key={tx(slot.message, locale)} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} className="normal-case tracking-normal">
           {tx(slot.message, locale)}
-        </motion.span>
+        </m.span>
       )}
     </div>
   );

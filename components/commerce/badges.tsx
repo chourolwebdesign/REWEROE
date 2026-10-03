@@ -7,8 +7,8 @@ const styles: Record<BadgeKind, string> = {
   regional: "bg-forest text-cream",
   neu: "bg-gold text-forest",
   vegan: "bg-emerald text-cream",
-  glutenfrei: "bg-surface-2 text-forest border border-line",
-  angebot: "bg-price text-white",
+  glutenfrei: "bg-cream-2 text-forest border border-line",
+  angebot: "bg-price text-white dark:text-forest",
 };
 
 export function Badges({ badges, discount, className, size = "sm" }: { badges: BadgeKind[]; discount?: number | null; className?: string; size?: "sm" | "md" }) {

@@ -1,5 +1,5 @@
 "use client";
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -10,11 +10,11 @@ interface Props {
   once?: boolean;
 }
 
-/** Section entrance: 24px up + blur(8→0) + fade, 800ms, custom expo ease. Honors reduced motion. */
+/** Section entrance: 24px up + blur(8→0) + fade, 800ms, custom expo ease. Honors reduced m. */
 export function Reveal({ children, className, delay = 0, y = 24, once = true }: Props) {
   const reduce = useReducedMotion();
   return (
-    <motion.div
+    <m.div
       className={cn(className)}
       initial={reduce ? false : { opacity: 0, y, filter: "blur(8px)" }}
       whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -22,14 +22,14 @@ export function Reveal({ children, className, delay = 0, y = 24, once = true }: 
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay }}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }
 
 export function Stagger({ children, className, gap = 0.08 }: { children: React.ReactNode; className?: string; gap?: number }) {
   const reduce = useReducedMotion();
   return (
-    <motion.div
+    <m.div
       className={className}
       initial={reduce ? false : "hidden"}
       whileInView="show"
@@ -37,13 +37,13 @@ export function Stagger({ children, className, gap = 0.08 }: { children: React.R
       variants={{ hidden: {}, show: { transition: { staggerChildren: gap } } }}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }
 
 export function StaggerItem({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <motion.div
+    <m.div
       className={className}
       variants={{
         hidden: { opacity: 0, y: 24, filter: "blur(8px)" },
@@ -51,6 +51,6 @@ export function StaggerItem({ children, className }: { children: React.ReactNode
       }}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }

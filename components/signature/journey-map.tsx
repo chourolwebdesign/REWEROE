@@ -1,6 +1,6 @@
 "use client";
 import { useRef } from "react";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { m, useInView, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
@@ -47,7 +47,7 @@ export function JourneyMap({ from, to, fromLabel, toLabel, distanceKm, story, in
         {!local && (
           <>
             <path d={d} fill="none" className="stroke-gold/30" strokeWidth={6 * k} strokeLinecap="round" strokeDasharray={international ? "2 10" : undefined} />
-            <motion.path d={d} fill="none" className="stroke-rewe" strokeWidth={3 * k} strokeLinecap="round" strokeDasharray={international ? "6 8" : undefined}
+            <m.path d={d} fill="none" className="stroke-rewe" strokeWidth={3 * k} strokeLinecap="round" strokeDasharray={international ? "6 8" : undefined}
               initial={{ pathLength: reduce ? 1 : 0 }} animate={{ pathLength: inView || reduce ? 1 : 0 }} transition={{ duration: 2, ease: [0.22, 1, 0.36, 1] }} />
             <g transform={`translate(${A.x} ${A.y})`}>
               <circle r={9 * k} className="fill-gold" /><circle r={9 * k} className="pulse-dot fill-gold/60" />

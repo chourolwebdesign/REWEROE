@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ProductCard } from "@/components/commerce/product-card";
 import { Countdown } from "@/components/motion/countdown";
@@ -35,7 +35,7 @@ export function FlipBrochure({ pages, categories }: { pages: BrochurePage[]; cat
       {!page ? <p className="py-16 text-center text-ink-muted">—</p> : (
         <div className="flip-scene mt-8">
           <AnimatePresence mode="wait" initial={false}>
-            <motion.div
+            <m.div
               key={`${cat}-${page.n}`}
               className="flip-page rounded-[16px] border border-line bg-card p-5 shadow-card md:p-8"
               initial={reduce ? false : { rotateY: dir * 70, opacity: 0, transformOrigin: dir > 0 ? "left center" : "right center" }}
@@ -55,7 +55,7 @@ export function FlipBrochure({ pages, categories }: { pages: BrochurePage[]; cat
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </m.div>
           </AnimatePresence>
           <div className="mt-6 flex items-center justify-center gap-3">
             <button type="button" onClick={() => go(-1)} disabled={idx === 0} aria-label={t("prev")} className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-line transition-colors hover:bg-forest hover:text-cream disabled:opacity-30"><ChevronLeft className="h-4 w-4" /></button>
