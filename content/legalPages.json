@@ -1,0 +1,6 @@
+[
+  { "slug": "impressum", "title": { "de": "Impressum", "en": "Legal Notice" }, "status": "pending", "body": null, "updatedAt": null },
+  { "slug": "datenschutz", "title": { "de": "Datenschutzerklärung", "en": "Privacy Policy" }, "status": "pending", "body": null, "updatedAt": null },
+  { "slug": "agb", "title": { "de": "Allgemeine Geschäftsbedingungen", "en": "Terms & Conditions" }, "status": "pending", "body": null, "updatedAt": null },
+  { "slug": "widerruf", "title": { "de": "Widerrufsbelehrung", "en": "Right of Withdrawal" }, "status": "pending", "body": null, "updatedAt": null }
+]

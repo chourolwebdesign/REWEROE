@@ -1,0 +1,56 @@
+[
+  {
+    "slug": "herbst-in-der-wetterau", "category": "saison", "featured": true,
+    "title": { "de": "Herbst in der Wetterau: Was jetzt reif ist", "en": "Autumn in the Wetterau: What's ripe now" },
+    "excerpt": { "de": "Kürbis, Boskoop, Quitten — und warum unsere Obstkisten im Oktober am schwersten sind.", "en": "Pumpkin, Boskoop, quince — and why our fruit crates are heaviest in October." },
+    "author": { "name": "Redaktion REWE Rödelheim", "status": "pending" }, "readMinutes": 5, "publishedAt": "2026-10-01",
+    "cover": { "src": "/images/placeholders/magazin-kapak.jpg", "alt": { "de": "Erntekiste im Herbstnebel", "en": "Harvest crate in autumn mist" }, "ratio": "16:9" },
+    "relatedRecipes": ["kuerbissuppe", "apfelkuchen"],
+    "body": { "de": "## Die schwersten Kisten des Jahres\n\nWenn die Nächte kühl werden, verändert sich unser Markt. Die Kisten vom Obsthof Keller kommen voller, die Sorten werden kantiger: Boskoop statt Gala, Quitten statt Pfirsich.\n\n> „Im Oktober schmeckt ein Apfel nach dem ganzen Sommer.“ — Familie Keller, Obsthof Wetterau\n\n## Was du jetzt kaufen solltest\n\n- **Hokkaido-Kürbis** — ungeschält verarbeiten, die Schale wird weich.\n- **Boskoop** — der Backapfel. Säuerlich, standfest im Ofen.\n- **Quitten** — roh ungenießbar, als Gelee unschlagbar.\n\n## Unser Tipp\n\nKauf Äpfel nicht im Beutel, sondern aus der Kiste: Du siehst, was du bekommst, und wir werfen weniger weg.", "en": "## The heaviest crates of the year\n\nWhen the nights turn cool, our store changes. The crates from the Keller orchard arrive fuller, the varieties get edgier: Boskoop instead of Gala, quince instead of peach.\n\n> “In October an apple tastes of the whole summer.” — Keller family, Wetterau orchard\n\n## What to buy now\n\n- **Hokkaido pumpkin** — cook unpeeled, the skin softens.\n- **Boskoop** — the baking apple. Tart, holds up in the oven.\n- **Quince** — inedible raw, unbeatable as jelly.\n\n## Our tip\n\nBuy apples from the crate, not the bag: you see what you get, and we throw away less." }
+  },
+  {
+    "slug": "apfelernte-obsthof-keller", "category": "region",
+    "title": { "de": "Ein Tag auf dem Obsthof Keller", "en": "A day at the Keller orchard" },
+    "excerpt": { "de": "Wir waren bei der Ernte dabei — 38 Kilometer von Rödelheim, 24 Stunden bis ins Regal.", "en": "We joined the harvest — 38 kilometres from Rödelheim, 24 hours to the shelf." },
+    "author": { "name": "Redaktion REWE Rödelheim", "status": "pending" }, "readMinutes": 6, "publishedAt": "2026-09-24",
+    "cover": { "src": "/images/placeholders/magazin-apfelernte.jpg", "alt": { "de": "Apfelernte mit Leitern", "en": "Apple harvest with ladders" }, "ratio": "16:9" },
+    "relatedRecipes": ["apfelkuchen"],
+    "body": { "de": "## 6:10 Uhr, Wetterau\n\nDer Tau liegt noch auf den Reihen, als die ersten Kisten gefüllt werden. Jeder Apfel wird gedreht, nicht gezogen — sonst reißt der Stiel.\n\n## Warum 24 Stunden?\n\nUnsere Regel für „Regional“: 100 Kilometer, ein Tag. Was morgens gepflückt wird, steht am nächsten Morgen in Rödelheim. Kein Kühllager dazwischen.\n\n## Was das für dich bedeutet\n\nKnackigere Äpfel, weniger Transport, ein Hof, der bleibt.", "en": "## 6:10 am, Wetterau\n\nDew still lies on the rows as the first crates fill. Every apple is twisted, not pulled — otherwise the stem tears.\n\n## Why 24 hours?\n\nOur rule for “Regional”: 100 kilometres, one day. What's picked in the morning is in Rödelheim the next morning. No cold storage in between.\n\n## What it means for you\n\nCrisper apples, less transport, a farm that stays." }
+  },
+  {
+    "slug": "sauerteig-handwerk", "category": "gesundheit",
+    "title": { "de": "Warum unser Sauerteig 24 Stunden braucht", "en": "Why our sourdough takes 24 hours" },
+    "excerpt": { "de": "Langsam geführtes Brot ist bekömmlicher. Unser Bäcker erklärt, was in der Nacht passiert.", "en": "Slow-proofed bread is easier to digest. Our baker explains what happens overnight." },
+    "author": { "name": "Redaktion REWE Rödelheim", "status": "pending" }, "readMinutes": 4, "publishedAt": "2026-09-15",
+    "cover": { "src": "/images/placeholders/magazin-brot-handwerk.jpg", "alt": { "de": "Brote auf dem Auskühlgitter", "en": "Loaves on a cooling rack" }, "ratio": "16:9" },
+    "relatedRecipes": [],
+    "body": { "de": "## Zeit statt Zusätze\n\nIn 24 Stunden bauen Milchsäurebakterien schwer verdauliche Zucker ab (FODMAPs) und erschließen Mineralstoffe. Das Ergebnis: ein Brot, das länger frisch bleibt und besser bekommt.\n\n## Der Anstellgut-Trick\n\nUnser Sauerteig ist seit Markteröffnung derselbe — jeden Tag gefüttert, nie ersetzt.", "en": "## Time instead of additives\n\nIn 24 hours, lactic acid bacteria break down hard-to-digest sugars (FODMAPs) and unlock minerals. The result: bread that stays fresh longer and sits better.\n\n## The starter trick\n\nOur starter has been the same since the store opened — fed daily, never replaced." }
+  },
+  {
+    "slug": "hessen-schmeckt", "category": "region",
+    "title": { "de": "Hessen schmeckt: Unsere 48 Erzeuger", "en": "Hesse tastes: Our 48 producers" },
+    "excerpt": { "de": "Vom Vogelsberg bis zum Rheingau — eine Karte, die zeigt, woher dein Einkauf kommt.", "en": "From the Vogelsberg to the Rheingau — a map showing where your groceries come from." },
+    "author": { "name": "Redaktion REWE Rödelheim", "status": "pending" }, "readMinutes": 7, "publishedAt": "2026-09-08",
+    "cover": { "src": "/images/placeholders/magazin-region-hessen.jpg", "alt": { "de": "Hessische Landschaft", "en": "Hessian landscape" }, "ratio": "16:9" },
+    "relatedRecipes": ["gruene-sosse", "spargel-risotto"],
+    "body": { "de": "## 100 Kilometer\n\nDas ist unser Radius. Darin: Streuobstwiesen der Wetterau, Vulkanwiesen im Vogelsberg, Schieferhänge im Rheingau, Sandböden im Ried.\n\n## Produktreise\n\nAuf jeder Produktseite findest du die Karte: Wo kommt mein Produkt her? — mit Hof, Entfernung und Geschichte.", "en": "## 100 kilometres\n\nThat's our radius. Inside it: orchard meadows of the Wetterau, volcanic pastures in the Vogelsberg, slate slopes in the Rheingau, sandy soils in the Ried.\n\n## Product journey\n\nOn every product page you'll find the map: Where does my product come from? — with farm, distance and story." }
+  },
+  {
+    "slug": "pfand-richtig", "category": "saison",
+    "title": { "de": "Pfand richtig: Was zurückkommt und was nicht", "en": "Deposits done right: what comes back and what doesn't" },
+    "excerpt": { "de": "0,25 €, 0,15 €, 0,08 € — und der Kasten. Ein kleiner Kompass für den Automaten.", "en": "€0.25, €0.15, €0.08 — and the crate. A small compass for the machine." },
+    "author": { "name": "Redaktion REWE Rödelheim", "status": "pending" }, "readMinutes": 3, "publishedAt": "2026-09-01",
+    "cover": { "src": "/images/placeholders/magazin-pfand.jpg", "alt": { "de": "Leergut in Kisten", "en": "Empties in crates" }, "ratio": "16:9" },
+    "relatedRecipes": [],
+    "body": { "de": "## Die Beträge\n\n- **Einweg** (Plastikflasche, Dose): 0,25 €\n- **Mehrweg Glas** (Milch, Saft, Wasser): 0,15 €\n- **Mehrweg Bier**: 0,08 €\n- **Kasten**: 1,50 €\n\n## Pfand-Kompass\n\nAuf unserer Filialseite rechnest du dein Leergut vorab aus — damit du weißt, was am Automaten zurückkommt.", "en": "## The amounts\n\n- **Single-use** (plastic bottle, can): €0.25\n- **Reusable glass** (milk, juice, water): €0.15\n- **Reusable beer**: €0.08\n- **Crate**: €1.50\n\n## Deposit Compass\n\nOn our store page you can calculate your empties in advance — so you know what comes back at the machine." }
+  },
+  {
+    "slug": "meal-prep-herbst", "category": "gesundheit",
+    "title": { "de": "Meal Prep für kurze Tage", "en": "Meal prep for short days" },
+    "excerpt": { "de": "Drei Gläser, ein Sonntagabend, fünf warme Mittagessen.", "en": "Three jars, one Sunday evening, five warm lunches." },
+    "author": { "name": "Redaktion REWE Rödelheim", "status": "pending" }, "readMinutes": 4, "publishedAt": "2026-08-25",
+    "cover": { "src": "/images/placeholders/magazin-ernaehrung.jpg", "alt": { "de": "Meal-Prep-Gläser", "en": "Meal prep jars" }, "ratio": "16:9" },
+    "relatedRecipes": ["bowl-vegan", "kuerbissuppe"],
+    "body": { "de": "## Das Prinzip\n\nEine Basis (Quinoa, Kartoffeln), ein Protein (Tofu, Hähnchen), ein Gemüse der Saison, ein Dressing. Fertig.\n\n## Haltbarkeit\n\nIm Glas bleibt alles vier Tage frisch — und sieht im Kühlschrank besser aus als jede Dose.", "en": "## The principle\n\nOne base (quinoa, potatoes), one protein (tofu, chicken), one seasonal vegetable, one dressing. Done.\n\n## Shelf life\n\nIn a jar everything stays fresh for four days — and looks better in the fridge than any tub." }
+  }
+]

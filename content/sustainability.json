@@ -1,0 +1,23 @@
+{
+  "hero": { "title": { "de": "Weniger Plastik. Mehr Hessen.", "en": "Less plastic. More Hesse." }, "quote": { "de": "Nachhaltigkeit ist bei uns keine Abteilung. Sie ist die Art, wie wir einkaufen, backen und zurücknehmen.", "en": "Sustainability isn't a department here. It's how we buy, bake and take back." }, "image": { "src": "/images/placeholders/hero-nachhaltigkeit.jpg", "alt": { "de": "Apfelplantage in Hessen", "en": "Apple orchard in Hesse" }, "ratio": "16:9" } },
+  "goals": [
+    { "id": "klima", "label": { "de": "Klimaneutraler Marktbetrieb", "en": "Climate-neutral store operations" }, "progress": 62, "target": "2030" },
+    { "id": "plastik", "label": { "de": "Plastikfreie Obst- & Gemüseabteilung", "en": "Plastic-free produce department" }, "progress": 78, "target": "2027" },
+    { "id": "mehrweg", "label": { "de": "Mehrweg-Anteil bei Getränken", "en": "Reusable share in beverages" }, "progress": 71, "target": "80 %" },
+    { "id": "regional", "label": { "de": "Regionaler Anteil im Frischesortiment", "en": "Regional share in fresh range" }, "progress": 54, "target": "60 %" }
+  ],
+  "sections": [
+    { "id": "plastik", "eyebrow": "01", "title": { "de": "Plastik reduzieren", "en": "Reducing plastic" }, "text": { "de": "Lose Ware statt Beutel, Mehrwegnetze an jeder Waage, Papier statt Folie in der Bäckerei. Seit 2025 ohne Einweg-Tragetaschen.", "en": "Loose produce instead of bags, reusable nets at every scale, paper instead of film in the bakery. No single-use carrier bags since 2025." } },
+    { "id": "partner", "eyebrow": "02", "title": { "de": "Regionale Partner", "en": "Regional partners" }, "text": { "de": "48 Höfe, Käsereien, Keltereien und ein Weingut im Umkreis von 100 km. Kurze Wege, lange Beziehungen.", "en": "48 farms, dairies, juice presses and a winery within 100 km. Short distances, long relationships." } },
+    { "id": "pfand", "eyebrow": "03", "title": { "de": "Pfand & Mehrweg", "en": "Deposits & reusables" }, "text": { "de": "Jeder Automat nimmt jedes Einweg-Pfand. Unsere Mehrweg-Glasflaschen kommen bis zu 50-mal zurück.", "en": "Every machine takes every single-use deposit. Our reusable glass bottles come back up to 50 times." } },
+    { "id": "lebensmittel", "eyebrow": "04", "title": { "de": "Lebensmittel retten", "en": "Saving food" }, "text": { "de": "Abendrabatte ab 18 Uhr auf Frische, Kooperation mit der Frankfurter Tafel, Reste aus der Bäckerei werden zu Brotchips.", "en": "Evening discounts on fresh goods from 6 pm, cooperation with the Frankfurt food bank, bakery leftovers become bread chips." } }
+  ],
+  "certificates": [
+    { "id": "bio", "label": "EU-Bio" },
+    { "id": "asc", "label": "ASC" },
+    { "id": "msc", "label": "MSC" },
+    { "id": "fairtrade", "label": "Fairtrade" },
+    { "id": "pro-planet", "label": "PRO PLANET" },
+    { "id": "rainforest", "label": "Rainforest Alliance" }
+  ]
+}

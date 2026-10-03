@@ -1,0 +1,143 @@
+{
+  "meta": {
+    "siteName": "REWE Rödelheim · Alamyaar",
+    "defaultTitle": "REWE Rödelheim — Frische, zelebriert.",
+    "defaultDescription": "Dein REWE in Frankfurt-Rödelheim: eigene Bäckerei, Frischetheke, 48 regionale Erzeuger, Lieferservice und Click & Collect. Geführt von Ali Alamyaar."
+  },
+  "nav": {
+    "home": "Start", "categories": "Sortiment", "recipes": "Rezepte", "stores": "Unser Markt", "offers": "Angebote",
+    "magazine": "Magazin", "about": "Über uns", "sustainability": "Nachhaltigkeit", "career": "Karriere", "bonus": "Bonus & PAYBACK",
+    "contact": "Kontakt", "account": "Mein REWE", "login": "Anmelden", "cart": "Warenkorb", "search": "Suche", "favorites": "Favoriten",
+    "language": "Sprache", "menu": "Menü", "close": "Schließen", "skip": "Zum Inhalt springen", "openCart": "Warenkorb öffnen",
+    "megaDiscover": "Entdecken", "megaService": "Service", "allCategories": "Alle Kategorien", "searchPlaceholder": "Produkt, Rezept oder Thema suchen …",
+    "searchHint": "Tipp: „Grüne Soße“, „Pfand“, „Riesling“", "noResults": "Kein Treffer — probier ein anderes Wort.", "results": "Treffer"
+  },
+  "common": {
+    "addToCart": "In den Warenkorb", "add": "Hinzufügen", "added": "In den Warenkorb gelegt ✓", "remove": "Entfernen", "qty": "Menge",
+    "basePrice": "{price} / {per}", "pfandIncl": "zzgl. {amount} Pfand", "pfand": "Pfand", "discover": "Jetzt entdecken", "readMore": "Weiterlesen",
+    "showAll": "Alle anzeigen", "back": "Zurück", "toHome": "Zur Startseite", "contentSoon": "Inhalte folgen in Kürze.", "pending": "Wir arbeiten an diesen Inhalten.",
+    "minutes": "{n} Min.", "servings": "{n} Portionen", "rating": "{rating} von 5", "reviews": "{n} Bewertungen", "new": "Neu", "from": "ab",
+    "placeholderNote": "Platzhalter — wird durch echte Inhalte ersetzt.", "learnMore": "Mehr erfahren", "all": "Alle", "apply": "Anwenden", "reset": "Zurücksetzen",
+    "kg": "kg", "g": "g", "l": "l", "piece": "Stück", "yes": "Ja", "no": "Nein", "or": "oder", "and": "und", "optional": "optional", "required": "Pflichtfeld",
+    "closed": "Geschlossen", "open": "Geöffnet", "openUntil": "Geöffnet bis {time}", "opensAt": "Öffnet um {time}", "today": "Heute", "tomorrow": "Morgen",
+    "difficulty": { "leicht": "Leicht", "mittel": "Mittel", "schwer": "Anspruchsvoll" },
+    "season": { "fruehling": "Frühling", "sommer": "Sommer", "herbst": "Herbst", "winter": "Winter", "ganzjaehrig": "Ganzjährig" },
+    "badges": { "bio": "Bio", "regional": "Regional", "neu": "Neu", "vegan": "Vegan", "glutenfrei": "Glutenfrei", "angebot": "Angebot" },
+    "weekdays": { "mon": "Montag", "tue": "Dienstag", "wed": "Mittwoch", "thu": "Donnerstag", "fri": "Freitag", "sat": "Samstag", "sun": "Sonntag" },
+    "services": { "baeckerei": "Bäckerei", "metzgerei": "Metzgerei", "click-collect": "Click & Collect", "lieferservice": "Lieferservice", "pfand": "Pfandautomat", "payback": "PAYBACK", "parkplatz": "Parkplatz", "barrierefrei": "Barrierefrei" }
+  },
+  "home": {
+    "eyebrow": "— 01 · Frische", "title": "Frische, zelebriert.", "subtitle": "Ein Markt in Rödelheim, der jeden Morgen um vier Uhr anfängt zu riechen wie Brot. Regional, persönlich, von Ali Alamyaar geführt.",
+    "cta": "Jetzt entdecken", "ctaSecondary": "Unser Markt", "scroll": "Scrollen",
+    "categoriesEyebrow": "— 02 · Sortiment", "categoriesTitle": "Sechs Welten, ein Markt.", "categoriesText": "Jede Abteilung mit eigenem Charakter — und eigener Herkunft.",
+    "offersEyebrow": "— 03 · Diese Woche", "offersTitle": "Diese Woche im Angebot", "offersText": "Frisch kalkuliert, zeitlich begrenzt. Der Countdown läuft.", "offersAll": "Alle Angebote",
+    "recipesEyebrow": "— 04 · Kochen", "recipesTitle": "Rezepte aus der Nachbarschaft", "recipesText": "Mit Zutaten, die du bei uns findest — alle auf einmal in den Warenkorb.", "recipesAll": "Alle Rezepte",
+    "manifestoEyebrow": "— 05 · Haltung", "manifestoQuote": "„Was nicht aus Hessen kommt, muss einen guten Grund haben.“", "manifestoAuthor": "Ali Alamyaar, REWE-Kaufmann Rödelheim", "manifestoCta": "Unsere Nachhaltigkeit",
+    "storeEyebrow": "— 06 · Mein Markt", "storeTitle": "Mach Rödelheim zu deinem Markt.", "storeText": "Wähle deine Filiale — die Seite zeigt dir dann regionale Produkte und Angebote von genau dort.",
+    "storeSearch": "PLZ oder Stadtteil", "storeChoose": "Meine Filiale wählen", "storeChosen": "Deine Filiale", "storeChange": "Ändern",
+    "newsletterEyebrow": "— 07 · Post von uns", "newsletterTitle": "10 % Willkommensrabatt.", "newsletterText": "Einmal pro Woche: Angebote, Saisonales, ein Rezept. Kein Spam, versprochen.", "newsletterPlaceholder": "deine@email.de", "newsletterCta": "Anmelden", "newsletterPrivacy": "Mit der Anmeldung akzeptierst du unsere Datenschutzerklärung.", "newsletterDone": "Danke! Wir melden uns.", "newsletterInvalid": "Bitte eine gültige E-Mail-Adresse eingeben."
+  },
+  "category": {
+    "eyebrow": "— Sortiment", "allTitle": "Unser Sortiment", "allText": "Sechs Abteilungen, jede mit Herkunft.", "filters": "Filter", "price": "Preis", "diet": "Ernährung", "origin": "Herkunft",
+    "rating": "Bewertung", "ratingMin": "ab {n} Sterne", "sort": "Sortieren", "sortPopular": "Beliebt", "sortPriceAsc": "Preis aufsteigend", "sortPriceDesc": "Preis absteigend", "sortNew": "Neu",
+    "results": "{n, plural, =1 {1 Produkt} other {# Produkte}}", "clear": "Filter löschen", "quickView": "Schnellansicht", "toProduct": "Zum Produkt", "noMatch": "Keine Produkte für diese Filter.",
+    "pfandInfo": "Pfand: {amount}", "showFilters": "Filter anzeigen", "upTo": "bis {price}", "regionalOnly": "Nur Regional", "bioOnly": "Nur Bio", "page": "Seite {n}"
+  },
+  "product": {
+    "eyebrow": "— Produkt", "origin": "Herkunft", "journeyEyebrow": "— Produktreise", "journeyTitle": "Wo kommt mein Produkt her?", "journeyText": "Vom Hof bis ins Regal in Rödelheim — die Strecke, die dein Einkauf zurücklegt.",
+    "journeyFrom": "Von", "journeyTo": "Nach", "journeyDistance": "{km} km", "journeyLocal": "Direkt aus unserem Markt", "journeyInternational": "Aus Europa — per Bahn & LKW",
+    "nutritionTitle": "Nährwerte pro 100 g", "kcal": "Energie", "fat": "Fett", "carbs": "Kohlenhydrate", "sugar": "davon Zucker", "protein": "Eiweiß", "salt": "Salz",
+    "freshness": "Frischegarantie", "freshnessText": "Nicht zufrieden? Geld zurück, ohne Diskussion.", "similar": "Ähnliche Produkte", "cookWith": "Mit diesem Produkt kochen",
+    "favorite": "Zu Favoriten", "unfavorite": "Aus Favoriten entfernen", "deliveryInfo": "Lieferung heute ab 16 Uhr oder Click & Collect", "pfandNote": "Pfand {amount} — kommt am Automaten zurück.",
+    "storyEyebrow": "— Geschichte", "sku": "Art.-Nr.", "share": "Teilen", "producerDistance": "{km} km von Rödelheim"
+  },
+  "recipes": {
+    "eyebrow": "— Rezepte", "title": "Kochen, wie Rödelheim isst.", "text": "Saisonal, regional, machbar. Jedes Rezept mit Zutaten aus unserem Markt.",
+    "monthEyebrow": "— Rezept des Monats", "monthCta": "Zum Rezept", "filterTime": "Dauer", "filterDifficulty": "Schwierigkeit", "filterDiet": "Ernährung", "filterSeason": "Saison",
+    "timeUnder30": "unter 30 Min.", "time30to60": "30–60 Min.", "timeOver60": "über 60 Min.", "ingredients": "Zutaten", "steps": "Zubereitung", "tips": "Tipp vom Küchenchef",
+    "nutrition": "Nährwerte pro Portion", "similar": "Ähnliche Rezepte", "addAll": "Alle Zutaten in den Warenkorb", "addedAll": "{n} Zutaten im Warenkorb ✓", "haveIt": "Habe ich schon",
+    "notInShop": "Nicht im Online-Sortiment", "step": "Schritt {n}", "forServings": "für {n} Portionen", "allRecipes": "Alle Rezepte", "noMatch": "Kein Rezept für diese Filter."
+  },
+  "stores": {
+    "eyebrow": "— Unser Markt", "title": "Mitten in Rödelheim.", "text": "Ein Markt, geführt von einem Kaufmann aus der Nachbarschaft. Öffnungszeiten, Services, Anfahrt — und der Pfand-Kompass.",
+    "near": "In meiner Nähe", "locating": "Standort wird ermittelt …", "geoDenied": "Standort nicht verfügbar — wir zeigen dir Rödelheim.", "openNow": "Jetzt geöffnet", "closedNow": "Geschlossen",
+    "hours": "Öffnungszeiten", "services": "Services", "route": "Route planen", "details": "Zur Filiale", "addressPending": "Adresse folgt", "hoursPending": "Öffnungszeiten werden bestätigt",
+    "pfandEyebrow": "— Pfand-Kompass", "pfandTitle": "Was bringt dein Leergut?", "pfandText": "Zähl deine Flaschen — wir rechnen, was am Automaten zurückkommt.", "pfandTotal": "Pfand-Total",
+    "pfandReset": "Zurücksetzen", "pfandHint": "Alle Beträge in Euro, gesetzlich festgelegt.", "myStore": "Als meine Filiale wählen", "isMyStore": "Deine Filiale", "regionalEyebrow": "— Regional in diesem Markt",
+    "regionalTitle": "Was hier aus der Nähe kommt", "mapTitle": "Karte", "gallery": "Einblicke", "contact": "Kontakt", "phonePending": "Telefonnummer folgt", "yourPosition": "Dein Standort"
+  },
+  "about": {
+    "eyebrow": "— Über uns", "timelineEyebrow": "— Seit 1927", "timelineTitle": "Eine Geschichte, die weitergeht.", "valuesEyebrow": "— Werte", "valuesTitle": "Woran wir uns messen lassen.",
+    "statsEyebrow": "— In Zahlen", "teamEyebrow": "— Team", "teamTitle": "Die Menschen hinter der Theke.", "teamPending": "Namen und Porträts folgen — sobald das Team sich vorgestellt hat.", "yearPending": "Jahr folgt"
+  },
+  "sustainability": {
+    "eyebrow": "— Nachhaltigkeit", "goalsEyebrow": "— Ziele", "goalsTitle": "Klimaneutral bis 2030.", "goalsText": "Vier Fortschrittsbalken, ehrlich gemessen — aktualisiert jedes Quartal.",
+    "target": "Ziel {target}", "certEyebrow": "— Siegel", "certTitle": "Zertifikate, auf die wir achten.", "certNote": "Logos folgen mit Freigabe der Siegelgeber."
+  },
+  "career": {
+    "eyebrow": "— Karriere", "title": "Arbeiten, wo der Tag nach Brot riecht.", "text": "Fünf offene Stellen in Rödelheim. Faire Schichten, echtes Team, ein Kaufmann, der mit anpackt.",
+    "openJobs": "Offene Stellen", "apply": "Jetzt bewerben", "whyEyebrow": "— Warum REWE Rödelheim", "whyTitle": "Drei gute Gründe.",
+    "why1Title": "Planbare Schichten", "why1Text": "Dein Dienstplan steht 4 Wochen im Voraus.", "why2Title": "Faire Bezahlung", "why2Text": "Tarif plus Zuschläge, 30 Tage Urlaub, Mitarbeiterrabatt.", "why3Title": "Wachsen", "why3Text": "Vom Azubi zur Marktleitung — bei uns passiert das.",
+    "storiesEyebrow": "— Stimmen", "storiesTitle": "Aus dem Team.", "storiesPending": "Videos folgen — die Interviews sind geplant.", "formEyebrow": "— Bewerbung", "formTitle": "In drei Schritten zu uns.",
+    "step1": "Stelle", "step2": "Über dich", "step3": "Unterlagen", "name": "Name", "email": "E-Mail", "phone": "Telefon", "position": "Stelle", "message": "Kurz: Warum du?", "cv": "Lebenslauf (PDF)",
+    "next": "Weiter", "prev": "Zurück", "submit": "Bewerbung absenden", "done": "Danke! Wir melden uns innerhalb von 5 Werktagen.", "errorRequired": "Bitte ausfüllen.", "errorEmail": "Bitte gültige E-Mail eingeben.",
+    "type": { "Vollzeit": "Vollzeit", "Teilzeit": "Teilzeit", "Minijob": "Minijob", "Ausbildung": "Ausbildung" }
+  },
+  "bonus": {
+    "eyebrow": "— Bonus & PAYBACK", "howEyebrow": "— So funktioniert's", "howTitle": "Drei Schritte, ein Konto.", "calcEyebrow": "— Punkte-Rechner", "calcTitle": "Was bringt dir ein Jahr bei uns?",
+    "calcLabel": "Ich gebe monatlich aus", "calcPoints": "Jährliche Punkte", "calcValue": "Das entspricht", "calcVouchers": "in Gutscheinen", "calcNote": "1 Punkt pro {euros} € · 1 Punkt = {cent} Cent. Zusatzpunkte durch Coupons nicht eingerechnet.",
+    "benefitsEyebrow": "— Vorteile", "benefitsTitle": "Mehr als Punkte.", "cta": "Karte aktivieren", "cardLabel": "Deine Karte", "cardOwner": "Mustermann", "cardPoints": "Punkte"
+  },
+  "offers": {
+    "eyebrow": "— Angebote", "title": "Der Prospekt, digital geblättert.", "text": "Wöchentlich neu. Blättere durch die Seiten — oder filtere nach Abteilung.", "endsSoon": "Endet bald", "ends": "Endet in", "over": "Vorbei",
+    "page": "Seite {n} von {total}", "prev": "Vorherige Seite", "next": "Nächste Seite", "valid": "Gültig bis {date}", "percent": "-{n} %", "instead": "statt {price}", "filterAll": "Alle Abteilungen"
+  },
+  "magazine": {
+    "eyebrow": "— Magazin", "title": "Lesestoff mit Geschmack.", "text": "Saison, Gesundheit, Region — Geschichten aus unserem Markt und von unseren Höfen.", "readTime": "{n} Min. Lesezeit", "by": "Von",
+    "category": { "saison": "Saison", "gesundheit": "Gesundheit", "region": "Region" }, "related": "Passende Rezepte", "more": "Weitere Artikel", "authorPending": "Autor:in folgt"
+  },
+  "contact": {
+    "eyebrow": "— Kontakt", "title": "Sag uns, was wir besser machen können.", "text": "Lob, Kritik, Produktwunsch — wir antworten innerhalb eines Werktages.", "name": "Name", "email": "E-Mail", "subject": "Betreff", "message": "Nachricht",
+    "subjects": { "frage": "Allgemeine Frage", "bestellung": "Bestellung & Lieferung", "produkt": "Produktwunsch", "lob": "Lob & Kritik", "presse": "Presse" }, "send": "Nachricht senden", "sent": "Danke — deine Nachricht ist bei uns.",
+    "faqEyebrow": "— Häufige Fragen", "faqTitle": "Schnelle Antworten.", "serviceEyebrow": "— Kundenservice", "serviceTitle": "Direkt erreichen.", "servicePhonePending": "Telefonnummer folgt", "serviceEmailPending": "E-Mail folgt",
+    "serviceHours": "Mo–Sa 8–20 Uhr", "errorRequired": "Bitte ausfüllen.", "errorEmail": "Bitte gültige E-Mail eingeben.", "errorMin": "Mindestens 20 Zeichen."
+  },
+  "legal": {
+    "pendingTitle": "Wir arbeiten an diesen Inhalten.", "pendingText": "Dieser Text wird gerade rechtlich geprüft und folgt in Kürze. Danke für deine Geduld.", "updated": "Stand: {date}", "eyebrow": "— Rechtliches"
+  },
+  "account": {
+    "eyebrow": "— Mein REWE", "title": "Hallo.", "titleNamed": "Hallo, {name}.", "intro": "Adressen, Bestellungen, Einkaufslisten, Favoriten — alles an einem Ort.", "tabs": { "overview": "Übersicht", "orders": "Bestellungen", "addresses": "Adressen", "list": "Einkaufsliste", "favorites": "Favoriten", "bonus": "Bonus" },
+    "noOrders": "Noch keine Bestellungen — dein erster Einkauf wartet.", "noAddresses": "Noch keine Adresse hinterlegt.", "addAddress": "Adresse hinzufügen", "noFavorites": "Noch keine Favoriten. Tipp aufs Herz bei einem Produkt.",
+    "listPlaceholder": "Was fehlt? z. B. Milch", "listAdd": "Hinzufügen", "listEmpty": "Deine Einkaufsliste ist leer.", "bonusPoints": "Punktestand", "bonusValue": "Gutscheinwert", "logout": "Abmelden",
+    "loginTitle": "Willkommen zurück.", "loginText": "Mit E-Mail und Passwort — oder neu registrieren.", "password": "Passwort", "login": "Anmelden", "register": "Konto erstellen", "forgot": "Passwort vergessen?",
+    "registerTitle": "Konto erstellen.", "noAccount": "Noch kein Konto?", "hasAccount": "Schon ein Konto?", "demoNote": "Demo-Modus: Anmeldung ohne Server — Daten bleiben in deinem Browser."
+  },
+  "cart": {
+    "eyebrow": "— Warenkorb", "title": "Dein Warenkorb", "empty": "Dieses Regal ist noch leer.", "emptyCta": "Sortiment entdecken", "subtotal": "Zwischensumme", "pfandLine": "Pfand gesamt", "weightLine": "Gesamtgewicht",
+    "delivery": "Lieferung", "pickup": "Abholung", "deliveryFree": "kostenlos", "total": "Gesamt", "coupon": "Gutscheincode", "couponApply": "Einlösen", "couponInvalid": "Code nicht gültig.", "couponOk": "Code eingelöst: −{amount}",
+    "checkout": "Zur Kasse", "continue": "Weiter einkaufen", "items": "{n, plural, =1 {1 Artikel} other {# Artikel}}", "freeFromHint": "Noch {amount} bis zur kostenlosen Lieferung.", "freeReached": "Kostenlose Lieferung erreicht.",
+    "modeDelivery": "Lieferung nach Hause", "modePickup": "Click & Collect im Markt", "vat": "inkl. MwSt.", "minOrder": "Mindestbestellwert {amount}"
+  },
+  "checkout": {
+    "eyebrow": "— Kasse", "title": "Fast geschafft.", "step1": "Adresse", "step2": "Zeitfenster", "step3": "Zahlung", "step4": "Prüfen", "firstName": "Vorname", "lastName": "Nachname", "street": "Straße & Nr.", "zip": "PLZ", "city": "Stadt",
+    "phone": "Telefon (für die Lieferung)", "slotTitle": "Wann soll es ankommen?", "slotPickup": "Abholung im Markt Rödelheim", "payment": "Zahlungsart", "payKlarna": "Klarna", "payPaypal": "PayPal", "payGiropay": "giropay", "payCard": "Kreditkarte",
+    "summary": "Bestellübersicht", "placeOrder": "Zahlungspflichtig bestellen", "legalHint": "Mit der Bestellung akzeptierst du unsere AGB und Widerrufsbelehrung.", "next": "Weiter", "prev": "Zurück",
+    "confirmEyebrow": "— Bestätigung", "confirmTitle": "Danke, {name}!", "confirmText": "Deine Bestellung {id} ist eingegangen. Wir packen frisch — und melden uns, sobald sie unterwegs ist.", "confirmSlot": "Dein Zeitfenster", "confirmBack": "Zurück zur Startseite",
+    "errorRequired": "Bitte ausfüllen.", "errorZip": "Bitte 5-stellige PLZ eingeben.", "demoNote": "Demo-Checkout: Es wird keine Zahlung ausgelöst."
+  },
+  "notFound": {
+    "eyebrow": "— 404", "title": "Dieses Regal ist leer.", "text": "Die Seite gibt es nicht (mehr). Aber unten liegen drei Dinge, die gerade besonders gut gehen.", "search": "Suchen", "popular": "Gerade beliebt"
+  },
+  "footer": {
+    "brand": "Marke", "service": "Service", "legal": "Rechtliches", "follow": "Folgen", "claim": "Wir lieben Lebensmittel.", "merchantNote": "Ein Markt von Ali Alamyaar, selbstständiger REWE-Kaufmann.", "payments": "Sicher bezahlen",
+    "copyright": "© {year} REWE Ali Alamyaar oHG · Frankfurt-Rödelheim", "impressum": "Impressum", "datenschutz": "Datenschutz", "agb": "AGB", "widerruf": "Widerruf", "cookieSettings": "Cookie-Einstellungen"
+  },
+  "cookies": {
+    "title": "Cookies — du entscheidest.", "text": "Wir nutzen notwendige Cookies, damit der Markt funktioniert. Statistik und Marketing nur, wenn du zustimmst (DSGVO, Art. 6).",
+    "necessary": "Notwendig", "necessaryText": "Warenkorb, Spracheinstellung, deine Filiale.", "statistics": "Statistik", "statisticsText": "Anonyme Nutzungsstatistik, hilft uns die Seite zu verbessern.", "marketing": "Marketing", "marketingText": "Personalisierte Angebote und Newsletter-Erfolgsmessung.",
+    "acceptAll": "Alle akzeptieren", "acceptSelected": "Auswahl speichern", "onlyNecessary": "Nur notwendige", "settings": "Einstellungen", "privacy": "Datenschutzerklärung"
+  },
+  "freshness": { "label": "Jetzt im Markt" },
+  "countdown": { "days": "T", "hours": "Std", "minutes": "Min", "seconds": "Sek", "over": "Vorbei" },
+  "search": { "title": "Suche", "placeholder": "Wonach suchst du?", "products": "Produkte", "recipes": "Rezepte", "articles": "Magazin", "empty": "Gib einen Begriff ein — wir durchsuchen Sortiment, Rezepte und Magazin." }
+}

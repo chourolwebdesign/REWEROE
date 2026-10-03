@@ -1,0 +1,258 @@
+{
+  "brand": {
+    "name": "REWE",
+    "merchant": "REWE Alamyaar",
+    "merchantLegal": "REWE Ali Alamyaar oHG",
+    "owner": "Ali Alamyaar",
+    "district": "Frankfurt-Rödelheim",
+    "claim": "Wir lieben Lebensmittel.",
+    "premiumClaim": {
+      "de": "Frische, zelebriert.",
+      "en": "Freshness, celebrated."
+    },
+    "tagline": {
+      "de": "Dein Markt in Frankfurt-Rödelheim",
+      "en": "Your market in Frankfurt-Rödelheim"
+    },
+    "logo": null,
+    "siteUrl": "https://rewe-roedelheim.de",
+    "voice": {
+      "de": "warm, nahbar, meisterhaft zubereitet",
+      "en": "warm, approachable, masterfully prepared"
+    }
+  },
+  "contact": {
+    "status": "pending",
+    "phone": "",
+    "email": "",
+    "hoursNote": {
+      "de": "Kontaktdaten folgen in Kürze.",
+      "en": "Contact details coming soon."
+    }
+  },
+  "social": [
+    {
+      "id": "instagram",
+      "label": "Instagram",
+      "url": "#"
+    },
+    {
+      "id": "facebook",
+      "label": "Facebook",
+      "url": "#"
+    },
+    {
+      "id": "tiktok",
+      "label": "TikTok",
+      "url": "#"
+    }
+  ],
+  "freshnessClock": [
+    {
+      "from": 6,
+      "to": 10,
+      "message": {
+        "de": "Unsere Bäckerei ist jetzt heiß.",
+        "en": "Our bakery is hot right now."
+      }
+    },
+    {
+      "from": 10,
+      "to": 18,
+      "message": {
+        "de": "Frisch vom Markt — täglich.",
+        "en": "Fresh from the market — daily."
+      }
+    },
+    {
+      "from": 18,
+      "to": 22,
+      "message": {
+        "de": "Abendrabatte in deiner Filiale.",
+        "en": "Evening deals at your store."
+      }
+    },
+    {
+      "from": 22,
+      "to": 6,
+      "message": {
+        "de": "Wir ruhen — morgen früh wieder frisch.",
+        "en": "We rest — fresh again tomorrow morning."
+      }
+    }
+  ],
+  "marquee": [
+    {
+      "de": "FRISCH",
+      "en": "FRESH"
+    },
+    {
+      "de": "REGIONAL",
+      "en": "REGIONAL"
+    },
+    {
+      "de": "BIO",
+      "en": "ORGANIC"
+    },
+    {
+      "de": "FAIR",
+      "en": "FAIR"
+    },
+    {
+      "de": "PFAND-BEWUSST",
+      "en": "DEPOSIT-AWARE"
+    },
+    {
+      "de": "RÖDELHEIM",
+      "en": "RÖDELHEIM"
+    }
+  ],
+  "newsletter": {
+    "discount": 10,
+    "status": "pending"
+  },
+  "payments": [
+    "visa",
+    "mastercard",
+    "paypal",
+    "klarna",
+    "giropay"
+  ],
+  "delivery": {
+    "pickup": true,
+    "deliveryFee": 3.9,
+    "freeFrom": 60,
+    "minOrder": 20,
+    "slots": [
+      {
+        "id": "slot-1",
+        "day": "today",
+        "from": "16:00",
+        "to": "18:00",
+        "price": 3.9
+      },
+      {
+        "id": "slot-2",
+        "day": "today",
+        "from": "18:00",
+        "to": "20:00",
+        "price": 3.9
+      },
+      {
+        "id": "slot-3",
+        "day": "tomorrow",
+        "from": "08:00",
+        "to": "10:00",
+        "price": 2.9
+      },
+      {
+        "id": "slot-4",
+        "day": "tomorrow",
+        "from": "10:00",
+        "to": "12:00",
+        "price": 2.9
+      },
+      {
+        "id": "slot-5",
+        "day": "tomorrow",
+        "from": "16:00",
+        "to": "18:00",
+        "price": 3.9
+      },
+      {
+        "id": "slot-6",
+        "day": "tomorrow",
+        "from": "18:00",
+        "to": "20:00",
+        "price": 3.9
+      }
+    ]
+  },
+  "pfand": {
+    "types": [
+      {
+        "id": "einweg",
+        "label": {
+          "de": "Einweg-Flasche / Dose",
+          "en": "Single-use bottle / can"
+        },
+        "amount": 0.25
+      },
+      {
+        "id": "mehrweg-bier",
+        "label": {
+          "de": "Mehrweg-Bierflasche",
+          "en": "Reusable beer bottle"
+        },
+        "amount": 0.08
+      },
+      {
+        "id": "mehrweg-glas",
+        "label": {
+          "de": "Mehrweg-Glas (Milch, Saft, Wasser)",
+          "en": "Reusable glass (milk, juice, water)"
+        },
+        "amount": 0.15
+      },
+      {
+        "id": "mehrweg-pet",
+        "label": {
+          "de": "Mehrweg-PET",
+          "en": "Reusable PET"
+        },
+        "amount": 0.15
+      },
+      {
+        "id": "kasten",
+        "label": {
+          "de": "Getränkekasten",
+          "en": "Beverage crate"
+        },
+        "amount": 1.5
+      }
+    ]
+  },
+  "payback": {
+    "eurosPerPoint": 2,
+    "centPerPoint": 1,
+    "welcomePoints": 200
+  },
+  "stats": [
+    {
+      "id": "producers",
+      "value": 48,
+      "suffix": "",
+      "label": {
+        "de": "regionale Erzeuger",
+        "en": "regional producers"
+      }
+    },
+    {
+      "id": "radius",
+      "value": 100,
+      "suffix": " km",
+      "label": {
+        "de": "Umkreis für „Regional“",
+        "en": "radius for “Regional”"
+      }
+    },
+    {
+      "id": "daily",
+      "value": 2,
+      "suffix": "×",
+      "label": {
+        "de": "tägliche Frischelieferung",
+        "en": "daily fresh deliveries"
+      }
+    },
+    {
+      "id": "pfand",
+      "value": 100,
+      "suffix": " %",
+      "label": {
+        "de": "Pfand-Rücknahme",
+        "en": "deposit returns"
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "hero": { "title": { "de": "Jeder Einkauf zahlt zurück.", "en": "Every purchase pays back." }, "subtitle": { "de": "REWE Bonus & PAYBACK — Punkte sammeln im Markt und online, einlösen an der Kasse.", "en": "REWE Bonus & PAYBACK — collect points in store and online, redeem at checkout." }, "image": { "src": "/images/placeholders/hero-bonus.jpg", "alt": { "de": "REWE Bonuskarte", "en": "REWE bonus card" }, "ratio": "16:9" } },
+  "steps": [
+    { "n": "01", "title": { "de": "Karte aktivieren", "en": "Activate your card" }, "text": { "de": "In der REWE App oder an der Kasse — in zwei Minuten.", "en": "In the REWE app or at the checkout — in two minutes." } },
+    { "n": "02", "title": { "de": "Punkte sammeln", "en": "Collect points" }, "text": { "de": "1 Punkt pro 2 € — plus Extra-Coupons jede Woche.", "en": "1 point per €2 — plus extra coupons every week." } },
+    { "n": "03", "title": { "de": "Einlösen", "en": "Redeem" }, "text": { "de": "100 Punkte = 1 €. Direkt an der Kasse oder als Gutschein.", "en": "100 points = €1. Right at the checkout or as a voucher." } }
+  ],
+  "benefits": [
+    { "title": { "de": "Wochen-Coupons", "en": "Weekly coupons" }, "text": { "de": "Bis zu 20-fach Punkte auf ausgewählte Produkte.", "en": "Up to 20× points on selected products." } },
+    { "title": { "de": "Geburtstags-Bonus", "en": "Birthday bonus" }, "text": { "de": "Ein kleines Dankeschön aus deinem Markt.", "en": "A small thank-you from your store." } },
+    { "title": { "de": "Digitaler Kassenbon", "en": "Digital receipt" }, "text": { "de": "Papierlos, DSGVO-konform, jederzeit abrufbar.", "en": "Paperless, GDPR-compliant, always available." } }
+  ]
+}

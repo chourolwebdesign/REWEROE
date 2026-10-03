@@ -1,0 +1,30 @@
+[
+  {
+    "slug": "roedelheim",
+    "name": "REWE Rödelheim",
+    "merchant": "REWE Alamyaar",
+    "owner": "Ali Alamyaar",
+    "storeNumber": "FFM-RH-01",
+    "address": { "status": "pending", "street": "", "zip": "60489", "city": "Frankfurt am Main", "district": "Rödelheim" },
+    "coords": [50.1256, 8.6085],
+    "coordsNote": "Ungefähre Position Stadtteilzentrum Rödelheim — exakte Adresse folgt.",
+    "phone": "",
+    "email": "",
+    "hours": {
+      "mon": ["07:00", "22:00"], "tue": ["07:00", "22:00"], "wed": ["07:00", "22:00"],
+      "thu": ["07:00", "22:00"], "fri": ["07:00", "22:00"], "sat": ["07:00", "22:00"], "sun": null
+    },
+    "hoursStatus": "pending",
+    "services": ["baeckerei", "metzgerei", "click-collect", "lieferservice", "pfand", "payback", "parkplatz", "barrierefrei"],
+    "images": [
+      { "src": "/images/placeholders/filiale-roedelheim-aussen.jpg", "alt": { "de": "Außenansicht REWE Rödelheim", "en": "Exterior of REWE Rödelheim" }, "ratio": "16:9" },
+      { "src": "/images/placeholders/filiale-roedelheim-innen.jpg", "alt": { "de": "Obst- und Gemüseabteilung", "en": "Produce department" }, "ratio": "16:9" },
+      { "src": "/images/placeholders/filiale-roedelheim-baeckerei.jpg", "alt": { "de": "Bäckereitheke", "en": "Bakery counter" }, "ratio": "16:9" }
+    ],
+    "intro": {
+      "de": "Mitten in Rödelheim, zwischen Nidda und Bahnhof: Unser Markt ist Nachbarschaft. Geführt von Ali Alamyaar als selbstständiger REWE-Kaufmann — mit eigener Bäckerei, Frischetheke und einem Sortiment, das Hessen schmeckt.",
+      "en": "In the heart of Rödelheim, between the Nidda river and the station: our store is neighbourhood. Run by Ali Alamyaar as an independent REWE merchant — with its own bakery, fresh counter and a range that tastes of Hesse."
+    },
+    "status": "published"
+  }
+]
