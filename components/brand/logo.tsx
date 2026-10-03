@@ -17,7 +17,7 @@ export function Logo({ className, inverse, logoSrc, merchant }: { className?: st
         </span>
       )}
       {merchant && (
-        <span className={cn("mono hidden text-[11px] uppercase leading-tight tracking-[0.16em] sm:block", inverse ? "text-cream/80" : "text-forest/80 dark:text-cream/80")}>
+        <span className={cn("mono hidden text-[11px] uppercase leading-tight tracking-[0.16em] opacity-80 sm:block", inverse && "text-cream")}>
           {merchant}
         </span>
       )}

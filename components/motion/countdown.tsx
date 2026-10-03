@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useMounted, useTick } from "@/lib/hooks";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
@@ -12,13 +12,10 @@ function diff(until: string) {
 
 export function Countdown({ until, className, compact }: { until: string; className?: string; compact?: boolean }) {
   const t = useTranslations("countdown");
-  const [left, setLeft] = useState<ReturnType<typeof diff> | undefined>(undefined);
-
-  useEffect(() => {
-    setLeft(diff(until));
-    const id = setInterval(() => setLeft(diff(until)), 1000);
-    return () => clearInterval(id);
-  }, [until]);
+  const mounted = useMounted();
+  const tick = useTick(1000);
+  void tick;
+  const left = mounted ? diff(until) : undefined;
 
   if (left === undefined) return <span className={cn("mono text-xs", className)} aria-hidden>··:··:··</span>;
   if (left === null) return <span className={cn("mono text-xs uppercase tracking-widest text-ink-muted", className)}>{t("over")}</span>;

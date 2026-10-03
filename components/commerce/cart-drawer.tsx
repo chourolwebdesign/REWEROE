@@ -37,7 +37,7 @@ export function CartDrawer() {
             <ul className="divide-y divide-line">
               {lines.map((l) => (
                 <li key={l.slug} className="flex gap-4 py-4">
-                  <Link href={`/produkt/${l.slug}`} onClick={() => setCartOpen(false)} className="relative h-20 w-16 shrink-0 overflow-hidden rounded-[8px] bg-cream-2">
+                  <Link href={`/produkt/${l.slug}`} onClick={() => setCartOpen(false)} className="relative h-20 w-16 shrink-0 overflow-hidden rounded-[8px] bg-surface-2">
                     <SmartImage src={l.image} alt={l.name} fill sizes="64px" className="object-cover" />
                   </Link>
                   <div className="min-w-0 flex-1">
@@ -56,7 +56,7 @@ export function CartDrawer() {
         </div>
 
         {lines.length > 0 && (
-          <div className="border-t border-line bg-cream-2/60 px-6 py-5">
+          <div className="border-t border-line bg-surface-2/60 px-6 py-5">
             <dl className="mono space-y-1.5 text-sm">
               <div className="flex justify-between"><dt className="text-ink-muted">{t("subtotal")}</dt><dd>{formatPrice(subtotal, locale)}</dd></div>
               <div className="flex justify-between"><dt className="text-ink-muted">{t("pfandLine")}</dt><dd className="text-emerald">{formatPrice(pfand, locale)}</dd></div>

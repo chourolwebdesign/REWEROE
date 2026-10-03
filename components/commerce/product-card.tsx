@@ -27,7 +27,7 @@ export function ProductCard({ p, className, showCountdown, priority }: { p: Card
 
   return (
     <article className={cn("group relative flex flex-col overflow-hidden rounded-[12px] bg-card card-hover", className)}>
-      <Link href={`/produkt/${p.slug}`} className="relative block aspect-[4/5] overflow-hidden bg-cream-2" aria-label={p.name}>
+      <Link href={`/produkt/${p.slug}`} className="relative block aspect-[4/5] overflow-hidden bg-surface-2" aria-label={p.name}>
         <SmartImage src={p.image.src} alt={p.image.alt} blur={p.image.blur} fill sizes="(max-width: 640px) 50vw, (max-width: 1280px) 33vw, 320px" className="img-zoom object-cover" priority={priority} />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-forest/40 via-transparent to-transparent opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
         <Badges badges={p.badges} discount={p.discount} className="absolute left-3 top-3" />
@@ -70,7 +70,7 @@ export function ProductCard({ p, className, showCountdown, priority }: { p: Card
 
       <Dialog open={quick} onOpenChange={setQuick}>
         <DialogContent className="grid gap-0 overflow-hidden p-0 sm:max-w-2xl md:grid-cols-2">
-          <div className="relative aspect-[4/5] bg-cream-2 md:aspect-auto">
+          <div className="relative aspect-[4/5] bg-surface-2 md:aspect-auto">
             <SmartImage src={p.image.src} alt={p.image.alt} blur={p.image.blur} fill sizes="400px" className="object-cover" />
           </div>
           <div className="flex flex-col gap-4 p-6">

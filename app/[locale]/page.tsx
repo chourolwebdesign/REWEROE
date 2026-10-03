@@ -33,7 +33,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   return (
     <>
       <Hero settings={settings} locale={locale} />
-      <Marquee items={settings.marquee.map((m) => tx(m, locale))} className="bg-cream text-forest dark:bg-surface-dark dark:text-cream" />
+      <Marquee items={settings.marquee.map((m) => tx(m, locale))} className="bg-surface text-ink" />
 
       {/* Categories */}
       <section className="container-x py-24 md:py-32">
@@ -46,7 +46,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       </section>
 
       {/* Offers */}
-      <section className="bg-cream-2/60 py-24 dark:bg-surface-dark md:py-32">
+      <section className="bg-surface-2/60 py-24  md:py-32">
         <div className="container-x">
           <div className="flex flex-wrap items-end justify-between gap-6">
             <SectionHeading eyebrow={t("offersEyebrow")} title={t("offersTitle")} text={t("offersText")} />

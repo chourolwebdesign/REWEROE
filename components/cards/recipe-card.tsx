@@ -11,7 +11,7 @@ export async function RecipeCard({ r, locale, className, large }: { r: Recipe; l
   const t = await getTranslations("common");
   return (
     <Link href={`/rezepte/${r.slug}`} className={cn("group flex flex-col overflow-hidden rounded-[12px] bg-card card-hover", className)}>
-      <div className={cn("relative overflow-hidden bg-cream-2", large ? "aspect-[16/10]" : "aspect-[4/5]")}>
+      <div className={cn("relative overflow-hidden bg-surface-2", large ? "aspect-[16/10]" : "aspect-[4/5]")}>
         <SmartImage src={r.image.src} alt={tx(r.image.alt, locale)} blur={getBlur(r.image.src)} fill sizes={large ? "(max-width:1024px) 100vw, 60vw" : "(max-width: 640px) 100vw, 33vw"} className="img-zoom object-cover" />
         <span className="mono absolute left-3 top-3 rounded-[3px] bg-cream/90 px-1.5 py-0.5 text-[10px] uppercase tracking-wider text-forest backdrop-blur">{t(`season.${r.season}`)}</span>
       </div>

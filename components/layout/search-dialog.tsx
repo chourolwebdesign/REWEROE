@@ -62,7 +62,7 @@ export function SearchDialog({ index }: { index: SearchEntry[] }) {
               {results.map((e) => (
                 <li key={`${e.type}-${e.slug}`}>
                   <Link href={hrefFor(e)} onClick={() => setSearchOpen(false)} className="flex items-center gap-3 rounded-[10px] px-3 py-2 transition-colors hover:bg-forest/5">
-                    <span className="relative h-12 w-10 shrink-0 overflow-hidden rounded-[6px] bg-cream-2"><SmartImage src={e.image} alt="" fill sizes="40px" className="object-cover" /></span>
+                    <span className="relative h-12 w-10 shrink-0 overflow-hidden rounded-[6px] bg-surface-2"><SmartImage src={e.image} alt="" fill sizes="40px" className="object-cover" /></span>
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-sm font-medium">{tx(e.title, locale)}</span>
                       {e.sub && <span className="block truncate text-xs text-ink-muted">{tx(e.sub, locale)}</span>}

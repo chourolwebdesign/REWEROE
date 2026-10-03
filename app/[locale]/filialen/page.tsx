@@ -1,0 +1,50 @@
+import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { PageHero } from "@/components/brand/page-hero";
+import { SectionHeading } from "@/components/brand/section-heading";
+import { StoreFinder, type FinderStore } from "@/components/signature/store-finder";
+import { PfandKompass } from "@/components/signature/pfand-kompass";
+import { ProductCard } from "@/components/commerce/product-card";
+import { Reveal } from "@/components/motion/reveal";
+import { getRegionalProducts, getSettings, getStores } from "@/lib/content";
+import { toCardProduct } from "@/lib/view-models";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "stores" });
+  return { title: t("title"), description: t("text") };
+}
+
+export function toFinderStore(s: ReturnType<typeof getStores>[number]): FinderStore {
+  return {
+    slug: s.slug, name: s.name, coords: s.coords, district: s.address.district, zip: s.address.zip, city: s.address.city,
+    address: s.address.street ? `${s.address.street}, ${s.address.zip} ${s.address.city}` : `${s.address.zip} ${s.address.city}-${s.address.district}`,
+    addressPending: s.address.status === "pending", hoursPending: s.hoursStatus === "pending", hours: s.hours, services: s.services, intro: s.intro,
+  };
+}
+
+export default async function StoresPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations("stores");
+  const settings = getSettings();
+  const stores = getStores().map(toFinderStore);
+  const regional = getRegionalProducts().slice(0, 4).map((p) => toCardProduct(p, locale));
+
+  return (
+    <>
+      <PageHero eyebrow={t("eyebrow")} title={t("title")} text={t("text")} image="/images/placeholders/filiale-roedelheim-aussen.jpg" compact />
+      <section className="border-b border-line"><StoreFinder stores={stores} /></section>
+
+      <section className="container-x py-20 md:py-28">
+        <SectionHeading eyebrow={t("pfandEyebrow")} title={t("pfandTitle")} text={t("pfandText")} />
+        <Reveal className="mt-10"><PfandKompass types={settings.pfand.types} /></Reveal>
+      </section>
+
+      <section className="container-x pb-24">
+        <SectionHeading eyebrow={t("regionalEyebrow")} title={t("regionalTitle")} />
+        <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4">{regional.map((p) => <ProductCard key={p.slug} p={p} />)}</div>
+      </section>
+    </>
+  );
+}

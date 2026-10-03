@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useMounted, useTick } from "@/lib/hooks";
 import { useLocale, useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { tx, type L10n } from "@/lib/l10n";
@@ -18,18 +18,11 @@ export function pickSlot(slots: Slot[], h: number) {
 export function FreshnessClock({ slots, className, inverse }: { slots: Slot[]; className?: string; inverse?: boolean }) {
   const locale = useLocale();
   const t = useTranslations("freshness");
-  const [slot, setSlot] = useState<Slot | null>(null);
-  const [time, setTime] = useState("");
-
-  useEffect(() => {
-    const tick = () => {
-      setSlot(pickSlot(slots, berlinHour()));
-      setTime(new Intl.DateTimeFormat("de-DE", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Berlin" }).format(new Date()));
-    };
-    tick();
-    const id = setInterval(tick, 30_000);
-    return () => clearInterval(id);
-  }, [slots]);
+  const mounted = useMounted();
+  const tick = useTick(30_000);
+  void tick;
+  const slot = mounted ? pickSlot(slots, berlinHour()) : null;
+  const time = mounted ? new Intl.DateTimeFormat("de-DE", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Berlin" }).format(new Date()) : "";
 
   return (
     <div className={cn("mono inline-flex items-center gap-3 rounded-full border px-3 py-1.5 text-[11px] uppercase tracking-[0.16em]", inverse ? "border-cream/25 bg-cream/5 text-cream/90" : "border-line bg-card text-forest", className)} aria-live="polite">

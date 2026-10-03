@@ -39,7 +39,6 @@ export function SiteHeader({ categories, merchant, logoSrc }: Props) {
   const locale = useLocale();
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const [onDark, setOnDark] = useState(false);
   const [mega, setMega] = useState<null | "categories" | "more">(null);
   const lines = useCart((s) => s.lines);
   const lastAdded = useCart((s) => s.lastAdded);
@@ -54,14 +53,10 @@ export function SiteHeader({ categories, merchant, logoSrc }: Props) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
-    setOnDark(Boolean(document.querySelector("[data-header-theme='dark']")));
-    setMega(null);
-    setMenuOpen(false);
-  }, [pathname, setMenuOpen]);
-
-  const inverse = onDark && !scrolled && !mega;
-  const textCls = inverse ? "text-cream" : "text-forest dark:text-cream";
+  void pathname;
+  const closeAll = () => { setMega(null); setMenuOpen(false); };
+  const inverse = false; // colour inversion over dark heroes is CSS-driven (see .site-header in globals.css)
+  const textCls = "text-[color:var(--hdr-fg)]";
 
   return (
     <>
@@ -69,8 +64,11 @@ export function SiteHeader({ categories, merchant, logoSrc }: Props) {
         {t("skip")}
       </a>
       <header
+        data-site-header
+        data-scrolled={scrolled}
+        data-mega={Boolean(mega)}
         className={cn(
-          "fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,border-color] duration-500",
+          "site-header fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,border-color,color] duration-500",
           scrolled || mega ? "glass border-b border-gold/50 shadow-[0_1px_0_0_rgba(201,162,39,.15)]" : "border-b border-transparent",
         )}
         onMouseLeave={() => setMega(null)}
@@ -84,7 +82,8 @@ export function SiteHeader({ categories, merchant, logoSrc }: Props) {
               <div key={item.key} className="relative" onMouseEnter={() => setMega("mega" in item && item.mega ? "categories" : null)}>
                 <Link
                   href={item.href}
-                  className={cn("inline-flex items-center gap-1 rounded-md px-3 py-2 text-[15px] font-medium transition-colors hover:bg-forest/5 dark:hover:bg-cream/10", inverse && "hover:bg-cream/10")}
+                  onClick={closeAll}
+                  className={cn("inline-flex items-center gap-1 whitespace-nowrap rounded-md px-3 py-2 text-[15px] font-medium transition-colors hover:bg-current/10")}
                   aria-haspopup={"mega" in item ? "true" : undefined}
                   aria-expanded={"mega" in item ? mega === "categories" : undefined}
                   onFocus={() => "mega" in item && setMega("categories")}
@@ -97,7 +96,7 @@ export function SiteHeader({ categories, merchant, logoSrc }: Props) {
             <div className="relative" onMouseEnter={() => setMega("more")}>
               <button
                 type="button"
-                className={cn("inline-flex items-center gap-1 rounded-md px-3 py-2 text-[15px] font-medium transition-colors hover:bg-forest/5 dark:hover:bg-cream/10", inverse && "hover:bg-cream/10")}
+                className={cn("inline-flex items-center gap-1 whitespace-nowrap rounded-md px-3 py-2 text-[15px] font-medium transition-colors hover:bg-current/10")}
                 aria-haspopup="true"
                 aria-expanded={mega === "more"}
                 onClick={() => setMega(mega === "more" ? null : "more")}
@@ -109,21 +108,21 @@ export function SiteHeader({ categories, merchant, logoSrc }: Props) {
 
           {/* Right cluster */}
           <div className="flex items-center gap-1 sm:gap-2">
-            <LangSwitch inverse={inverse} />
-            <IconButton label={t("search")} onClick={() => setSearchOpen(true)} inverse={inverse}>
+            <LangSwitch />
+            <IconButton label={t("search")} onClick={() => setSearchOpen(true)}>
               <Search className="h-5 w-5" />
             </IconButton>
-            <Link href={{ pathname: "/konto", query: { tab: "favorites" } }} className={iconBtn(inverse)} aria-label={t("favorites")}>
+            <Link href={{ pathname: "/konto", query: { tab: "favorites" } }} className={iconBtn()} aria-label={t("favorites")}>
               <Heart className="h-5 w-5" />
               {favorites.length > 0 && <Dot n={favorites.length} />}
             </Link>
-            <IconButton label={t("openCart")} onClick={() => setCartOpen(true)} inverse={inverse}>
+            <IconButton label={t("openCart")} onClick={() => setCartOpen(true)}>
               <motion.span key={lastAdded} animate={lastAdded ? { scale: [1, 1.25, 0.95, 1], rotate: [0, -8, 6, 0] } : undefined} transition={{ type: "spring", stiffness: 500, damping: 18 }} className="inline-flex">
                 <ShoppingBag className="h-5 w-5" />
               </motion.span>
               <AnimatePresence>{count > 0 && <Dot n={count} key="cart-dot" />}</AnimatePresence>
             </IconButton>
-            <IconButton label={t("menu")} onClick={() => setMenuOpen(true)} inverse={inverse} className="lg:hidden">
+            <IconButton label={t("menu")} onClick={() => setMenuOpen(true)} className="lg:hidden">
               <Menu className="h-5 w-5" />
             </IconButton>
           </div>
@@ -142,18 +141,18 @@ export function SiteHeader({ categories, merchant, logoSrc }: Props) {
             >
               <div className="container-x grid grid-cols-6 gap-4 py-6">
                 {categories.map((c) => (
-                  <Link key={c.slug} href={`/kategorien/${c.slug}`} className="group rounded-[12px] p-2 transition-colors hover:bg-forest/5">
+                  <Link key={c.slug} href={`/kategorien/${c.slug}`} onClick={closeAll} className="group rounded-[12px] p-2 transition-colors hover:bg-current/10">
                     <div className="relative aspect-[4/5] overflow-hidden rounded-[10px]">
                       <SmartImage src={c.image} alt={tx(c.name, locale)} blur={c.blur} fill sizes="200px" className="img-zoom object-cover" />
                     </div>
-                    <p className="mt-3 font-medium text-forest dark:text-cream">{tx(c.name, locale)}</p>
+                    <p className="mt-3 font-medium">{tx(c.name, locale)}</p>
                     <p className="text-xs text-ink-muted">{tx(c.teaser, locale)}</p>
                   </Link>
                 ))}
               </div>
               <div className="container-x flex items-center justify-between border-t border-line/60 py-3">
                 <span className="eyebrow">{t("megaDiscover")}</span>
-                <Link href="/kategorien" className="mono text-xs uppercase tracking-widest text-forest underline-offset-4 hover:underline dark:text-cream">{t("allCategories")} →</Link>
+                <Link href="/kategorien" onClick={closeAll} className="mono text-xs uppercase tracking-widest underline-offset-4 hover:underline">{t("allCategories")} →</Link>
               </div>
             </motion.div>
           )}
@@ -161,7 +160,7 @@ export function SiteHeader({ categories, merchant, logoSrc }: Props) {
             <motion.div key="mega-more" initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.3 }} className="glass hidden border-t border-line/60 lg:block">
               <div className="container-x grid grid-cols-5 gap-2 py-5">
                 {more.map((m) => (
-                  <Link key={m.key} href={m.href} className="rounded-[10px] px-4 py-3 text-[15px] font-medium text-forest transition-colors hover:bg-forest/5 dark:text-cream">
+                  <Link key={m.key} href={m.href} onClick={closeAll} className="rounded-[10px] px-4 py-3 text-[15px] font-medium transition-colors hover:bg-current/10">
                     {t(m.key)}
                   </Link>
                 ))}
@@ -184,16 +183,16 @@ export function SiteHeader({ categories, merchant, logoSrc }: Props) {
               <ul className="space-y-1">
                 {[...primary, ...more].map((item, i) => (
                   <motion.li key={item.key} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.05 + i * 0.04, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
-                    <Link href={item.href} className="serif block border-b border-cream/10 py-4 text-[2rem] leading-none tracking-tight hover:text-rewe">
+                    <Link href={item.href} onClick={closeAll} className="serif block border-b border-cream/10 py-4 text-[2rem] leading-none tracking-tight hover:text-rewe">
                       {t(item.key)}
                     </Link>
                   </motion.li>
                 ))}
               </ul>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link href="/konto" className="rounded-full border border-cream/30 px-4 py-2 text-sm hover:bg-cream/10">{t("account")}</Link>
-                <Link href="/warenkorb" className="rounded-full border border-cream/30 px-4 py-2 text-sm hover:bg-cream/10">{t("cart")} {count > 0 && `(${count})`}</Link>
-                <LangSwitch inverse className="ml-auto" />
+                <Link href="/konto" onClick={closeAll} className="rounded-full border border-cream/30 px-4 py-2 text-sm hover:bg-cream/10">{t("account")}</Link>
+                <Link href="/warenkorb" onClick={closeAll} className="rounded-full border border-cream/30 px-4 py-2 text-sm hover:bg-cream/10">{t("cart")} {count > 0 && `(${count})`}</Link>
+                <LangSwitch className="ml-auto [--hdr-fg:var(--surface-cream)] [--hdr-bg:var(--brand-forest)]" />
               </div>
             </nav>
             <p className="eyebrow px-5 pb-6 text-cream/50">Wir lieben Lebensmittel.</p>
@@ -204,13 +203,13 @@ export function SiteHeader({ categories, merchant, logoSrc }: Props) {
   );
 }
 
-function iconBtn(inverse: boolean) {
-  return cn("relative inline-flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-forest/5 dark:hover:bg-cream/10", inverse && "hover:bg-cream/10");
+function iconBtn() {
+  return cn("relative inline-flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-current/10");
 }
 
-function IconButton({ children, label, onClick, inverse, className }: { children: React.ReactNode; label: string; onClick: () => void; inverse: boolean; className?: string }) {
+function IconButton({ children, label, onClick, className }: { children: React.ReactNode; label: string; onClick: () => void; className?: string }) {
   return (
-    <button type="button" onClick={onClick} aria-label={label} className={cn(iconBtn(inverse), className)}>
+    <button type="button" onClick={onClick} aria-label={label} className={cn(iconBtn(), className)}>
       {children}
     </button>
   );
@@ -230,19 +229,19 @@ function Dot({ n }: { n: number }) {
   );
 }
 
-function LangSwitch({ inverse, className }: { inverse?: boolean; className?: string }) {
+function LangSwitch({ className }: { className?: string }) {
   const locale = useLocale();
   const pathname = usePathname();
   const t = useTranslations("nav");
   return (
-    <div className={cn("mono inline-flex items-center rounded-full border px-1 text-[11px] uppercase tracking-wider", inverse ? "border-cream/30" : "border-line", className)} aria-label={t("language")}>
+    <div className={cn("mono inline-flex items-center rounded-full border border-current/30 px-1 text-[11px] uppercase tracking-wider", className)} aria-label={t("language")}>
       {(["de", "en"] as const).map((l) => (
         <Link
           key={l}
           href={pathname}
           locale={l}
           hrefLang={l}
-          className={cn("rounded-full px-2 py-1 transition-colors", locale === l ? (inverse ? "bg-cream text-forest" : "bg-forest text-cream dark:bg-cream dark:text-forest") : "opacity-70 hover:opacity-100")}
+          className={cn("rounded-full px-2 py-1 transition-colors", locale === l ? "bg-[color:var(--hdr-fg)] text-[color:var(--hdr-bg)]" : "opacity-70 hover:opacity-100")}
           aria-current={locale === l ? "true" : undefined}
         >
           {l}

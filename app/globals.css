@@ -14,6 +14,8 @@
   --surface-cream: #faf7f2;
   --surface-cream-2: #f3eee5;
   --surface-dark: #0a1210;
+  --surface: #faf7f2;
+  --surface-2: #f3eee5;
   --ink: #1a1a1a;
   --ink-muted: #6b6f6a;
   --price-red: #d0021b;
@@ -28,7 +30,7 @@
   --dur-hover: 700ms;
 
   /* shadcn semantic mapping */
-  --background: var(--surface-cream);
+  --background: var(--surface);
   --foreground: var(--ink);
   --card: #ffffff;
   --card-foreground: var(--ink);
@@ -36,9 +38,9 @@
   --popover-foreground: var(--ink);
   --primary: var(--brand-rewe);
   --primary-foreground: #0a1a10;
-  --secondary: var(--surface-cream-2);
+  --secondary: var(--surface-2);
   --secondary-foreground: var(--brand-forest);
-  --muted: var(--surface-cream-2);
+  --muted: var(--surface-2);
   --muted-foreground: var(--ink-muted);
   --accent: #e9f3dc;
   --accent-foreground: var(--brand-forest);
@@ -52,26 +54,26 @@
   --chart-3: var(--accent-gold);
   --chart-4: var(--brand-forest);
   --chart-5: var(--price-red);
-  --sidebar: var(--surface-cream);
+  --sidebar: var(--surface);
   --sidebar-foreground: var(--ink);
   --sidebar-primary: var(--brand-rewe);
   --sidebar-primary-foreground: #0a1a10;
-  --sidebar-accent: var(--surface-cream-2);
+  --sidebar-accent: var(--surface-2);
   --sidebar-accent-foreground: var(--brand-forest);
   --sidebar-border: var(--line);
   --sidebar-ring: var(--accent-gold);
 }
 
 .dark {
-  --surface-cream: #0a1210;
-  --surface-cream-2: #10201a;
+  --surface: #0a1210;
+  --surface-2: #10201a;
   --ink: #f2efe8;
   --ink-muted: #a7aca6;
   --line: rgba(242, 239, 232, 0.12);
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 32px -12px rgba(0, 0, 0, 0.6);
   --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.5), 0 28px 56px -20px rgba(0, 0, 0, 0.8);
 
-  --background: var(--surface-cream);
+  --background: var(--surface);
   --foreground: var(--ink);
   --card: #0f1b16;
   --card-foreground: var(--ink);
@@ -79,9 +81,9 @@
   --popover-foreground: var(--ink);
   --primary: var(--brand-rewe);
   --primary-foreground: #0a1a10;
-  --secondary: var(--surface-cream-2);
+  --secondary: var(--surface-2);
   --secondary-foreground: var(--ink);
-  --muted: var(--surface-cream-2);
+  --muted: var(--surface-2);
   --muted-foreground: var(--ink-muted);
   --accent: #15291f;
   --accent-foreground: var(--brand-rewe);
@@ -89,11 +91,11 @@
   --border: var(--line);
   --input: var(--line);
   --ring: var(--accent-gold);
-  --sidebar: var(--surface-cream);
+  --sidebar: var(--surface);
   --sidebar-foreground: var(--ink);
   --sidebar-primary: var(--brand-rewe);
   --sidebar-primary-foreground: #0a1a10;
-  --sidebar-accent: var(--surface-cream-2);
+  --sidebar-accent: var(--surface-2);
   --sidebar-accent-foreground: var(--ink);
   --sidebar-border: var(--line);
   --sidebar-ring: var(--accent-gold);
@@ -140,6 +142,9 @@
   --color-gold: var(--accent-gold);
   --color-cream: var(--surface-cream);
   --color-cream-2: var(--surface-cream-2);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-dark: var(--surface-dark);
   --color-ink: var(--ink);
   --color-ink-muted: var(--ink-muted);
   --color-price: var(--price-red);
@@ -211,7 +216,7 @@
   height: 1px;
 }
 @utility glass {
-  background: color-mix(in oklab, var(--surface-cream) 78%, transparent);
+  background: color-mix(in oklab, var(--surface) 78%, transparent);
   backdrop-filter: saturate(160%) blur(14px);
   -webkit-backdrop-filter: saturate(160%) blur(14px);
 }
@@ -239,6 +244,11 @@
   scrollbar-width: none;
   &::-webkit-scrollbar { display: none; }
 }
+
+/* Site header colour model: forest on light pages, cream over dark heroes (CSS :has, no JS) */
+.site-header { --hdr-fg: var(--brand-forest); --hdr-bg: var(--surface); color: var(--hdr-fg); }
+.dark .site-header { --hdr-fg: var(--surface-cream); --hdr-bg: var(--surface); }
+body:has([data-header-theme="dark"]) .site-header:not([data-scrolled="true"]):not([data-mega="true"]) { --hdr-fg: var(--surface-cream); --hdr-bg: var(--brand-forest); }
 
 /* Marquee */
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
@@ -270,6 +280,6 @@
 .prose-editorial strong { font-weight: 600; }
 
 /* Leaflet overrides */
-.leaflet-container { font-family: var(--font-sans); background: var(--surface-cream-2); }
+.leaflet-container { font-family: var(--font-sans); background: var(--surface-2); }
 .leaflet-tile { filter: saturate(0.6) contrast(1.05); }
 .dark .leaflet-tile { filter: invert(1) hue-rotate(180deg) saturate(0.5) brightness(0.85); }

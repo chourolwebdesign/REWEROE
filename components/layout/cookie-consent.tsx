@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useMounted } from "@/lib/hooks";
 import { useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "@/i18n/navigation";
@@ -18,16 +19,16 @@ export function CookieConsent() {
   const consent = usePrefs((s) => s.consent);
   const setConsent = usePrefs((s) => s.setConsent);
   const { cookieOpen, setCookieOpen } = useUi();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
   const [detail, setDetail] = useState(false);
-  const [stats, setStats] = useState(consent.statistics);
-  const [mkt, setMkt] = useState(consent.marketing);
-
-  useEffect(() => setMounted(true), []);
-  useEffect(() => { setStats(consent.statistics); setMkt(consent.marketing); }, [consent]);
+  const [local, setLocal] = useState<{ statistics: boolean; marketing: boolean } | null>(null);
+  const stats = local?.statistics ?? consent.statistics;
+  const mkt = local?.marketing ?? consent.marketing;
+  const setStats = (v: boolean) => setLocal({ statistics: v, marketing: mkt });
+  const setMkt = (v: boolean) => setLocal({ statistics: stats, marketing: v });
 
   const open = mounted && (consent.decidedAt === null || cookieOpen);
-  const close = () => { setCookieOpen(false); setDetail(false); };
+  const close = () => { setCookieOpen(false); setDetail(false); setLocal(null); };
 
   return (
     <AnimatePresence>

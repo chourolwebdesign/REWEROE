@@ -4,7 +4,7 @@ import { useInView, useReducedMotion } from "framer-motion";
 
 export function Counter({ value, suffix = "", className, locale = "de", duration = 1500 }: { value: number; suffix?: string; className?: string; locale?: string; duration?: number }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-10% 0px" });
+  const inView = useInView(ref, { once: true, margin: "10000px 0px -10% 0px" });
   const reduce = useReducedMotion();
   const [n, setN] = useState(reduce ? value : 0);
 

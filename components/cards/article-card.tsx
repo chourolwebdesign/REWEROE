@@ -11,7 +11,7 @@ export async function ArticleCard({ a, locale, className, feature }: { a: Articl
   const t = await getTranslations("magazine");
   return (
     <Link href={`/magazin/${a.slug}`} className={cn("group flex flex-col overflow-hidden rounded-[12px] bg-card card-hover", feature && "md:grid md:grid-cols-[1.4fr_1fr]", className)}>
-      <div className={cn("relative overflow-hidden bg-cream-2", feature ? "aspect-[16/9] md:aspect-auto md:min-h-[420px]" : "aspect-[16/10]")}>
+      <div className={cn("relative overflow-hidden bg-surface-2", feature ? "aspect-[16/9] md:aspect-auto md:min-h-[420px]" : "aspect-[16/10]")}>
         <SmartImage src={a.cover.src} alt={tx(a.cover.alt, locale)} blur={getBlur(a.cover.src)} fill sizes={feature ? "(max-width:768px) 100vw, 60vw" : "(max-width:768px) 100vw, 33vw"} className="img-zoom object-cover" />
       </div>
       <div className={cn("flex flex-1 flex-col p-5", feature && "md:p-10")}>

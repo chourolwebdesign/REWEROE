@@ -7,7 +7,7 @@ const styles: Record<BadgeKind, string> = {
   regional: "bg-forest text-cream",
   neu: "bg-gold text-forest",
   vegan: "bg-emerald text-cream",
-  glutenfrei: "bg-cream-2 text-forest border border-line",
+  glutenfrei: "bg-surface-2 text-forest border border-line",
   angebot: "bg-price text-white",
 };
 

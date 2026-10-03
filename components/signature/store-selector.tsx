@@ -39,7 +39,7 @@ export function StoreSelector({ stores, className, compact }: { stores: StoreLit
     <div className={cn("rounded-[14px] border border-line bg-card p-5 shadow-card", className)}>
       <label className="relative block">
         <MapPin className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted" aria-hidden />
-        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={t("storeSearch")} className="h-12 w-full rounded-[10px] border border-line bg-background pl-10 pr-3 outline-none focus:border-gold" aria-label={t("storeSearch")} />
+        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={t("storeSearch")} className="h-12 w-full rounded-[10px] border border-line bg-surface pl-10 pr-3 outline-none focus:border-gold" aria-label={t("storeSearch")} />
       </label>
       <ul className="mt-3 space-y-2">
         {matches.map((s) => (
