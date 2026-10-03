@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { alternatesFor } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageHero } from "@/components/brand/page-hero";
@@ -16,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale, slug } = await params;
   const t = await getTranslations({ locale, namespace: "category" });
   const c = getCategory(slug);
-  return { title: c ? tx(c.name, locale) : t("allTitle"), description: c ? tx(c.teaser, locale) : t("allText") };
+  return { alternates: alternatesFor(locale, `/kategorien/${slug}`), title: c ? tx(c.name, locale) : t("allTitle"), description: c ? tx(c.teaser, locale) : t("allText") };
 }
 
 export default async function CategoryPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {

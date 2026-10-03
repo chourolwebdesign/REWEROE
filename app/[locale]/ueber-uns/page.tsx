@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { alternatesFor } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageHero } from "@/components/brand/page-hero";
 import { SectionHeading } from "@/components/brand/section-heading";
@@ -13,7 +14,7 @@ import { Leaf, MapPinned, Handshake } from "lucide-react";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const a = getAbout();
-  return { title: tx(a.hero.title, locale), description: tx(a.hero.subtitle, locale) };
+  return { alternates: alternatesFor(locale, "/ueber-uns"), title: tx(a.hero.title, locale), description: tx(a.hero.subtitle, locale) };
 }
 
 const icons = { frische: Leaf, region: MapPinned, fairness: Handshake } as const;

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { alternatesFor } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Clock, Users, ChefHat } from "lucide-react";
@@ -22,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale, slug } = await params;
   const r = getRecipe(slug);
   if (!r) return {};
-  return { title: tx(r.title, locale), description: tx(r.teaser, locale), openGraph: { images: [r.image.src] } };
+  return { alternates: alternatesFor(locale, `/rezepte/${slug}`), title: tx(r.title, locale), description: tx(r.teaser, locale), openGraph: { images: [r.image.src] } };
 }
 
 export default async function RecipePage({ params }: { params: Promise<{ locale: string; slug: string }> }) {

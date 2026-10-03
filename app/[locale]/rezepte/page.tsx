@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { alternatesFor } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageHero } from "@/components/brand/page-hero";
 import { RecipeCard } from "@/components/cards/recipe-card";
@@ -13,7 +14,7 @@ import { getFeaturedRecipe, getRecipes } from "@/lib/content";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "recipes" });
-  return { title: t("title"), description: t("text") };
+  return { alternates: alternatesFor(locale, "/rezepte"), title: t("title"), description: t("text") };
 }
 
 export default async function RecipesPage({ params }: { params: Promise<{ locale: string }> }) {

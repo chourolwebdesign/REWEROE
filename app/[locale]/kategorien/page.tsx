@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { alternatesFor } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageHero } from "@/components/brand/page-hero";
 import { CategoryCard } from "@/components/cards/category-card";
@@ -9,7 +10,7 @@ import { getCategories } from "@/lib/content";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "category" });
-  return { title: t("allTitle"), description: t("allText") };
+  return { alternates: alternatesFor(locale, "/kategorien"), title: t("allTitle"), description: t("allText") };
 }
 
 export default async function CategoriesPage({ params }: { params: Promise<{ locale: string }> }) {

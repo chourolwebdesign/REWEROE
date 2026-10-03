@@ -117,7 +117,7 @@ export function SiteHeader({ categories, merchant, logoSrc }: Props) {
               {favorites.length > 0 && <Dot n={favorites.length} />}
             </Link>
             <IconButton label={t("openCart")} onClick={() => setCartOpen(true)}>
-              <motion.span key={lastAdded} animate={lastAdded ? { scale: [1, 1.25, 0.95, 1], rotate: [0, -8, 6, 0] } : undefined} transition={{ type: "spring", stiffness: 500, damping: 18 }} className="inline-flex">
+              <motion.span key={lastAdded} animate={lastAdded ? { scale: [1, 1.25, 0.95, 1], rotate: [0, -8, 6, 0] } : undefined} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], times: [0, 0.35, 0.7, 1] }} className="inline-flex">
                 <ShoppingBag className="h-5 w-5" />
               </motion.span>
               <AnimatePresence>{count > 0 && <Dot n={count} key="cart-dot" />}</AnimatePresence>

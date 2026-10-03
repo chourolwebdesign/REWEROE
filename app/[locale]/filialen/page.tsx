@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { alternatesFor } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageHero } from "@/components/brand/page-hero";
 import { SectionHeading } from "@/components/brand/section-heading";
@@ -12,7 +13,7 @@ import { toCardProduct } from "@/lib/view-models";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "stores" });
-  return { title: t("title"), description: t("text") };
+  return { alternates: alternatesFor(locale, "/filialen"), title: t("title"), description: t("text") };
 }
 
 export function toFinderStore(s: ReturnType<typeof getStores>[number]): FinderStore {

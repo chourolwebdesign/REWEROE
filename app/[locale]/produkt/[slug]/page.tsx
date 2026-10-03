@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { alternatesFor } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
@@ -31,7 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale, slug } = await params;
   const p = getProduct(slug);
   if (!p) return {};
-  return { title: tx(p.name, locale), description: `${tx(p.subtitle, locale)} — ${tx(p.origin.story, locale)}`, openGraph: { images: [p.images[0].src] } };
+  return { alternates: alternatesFor(locale, `/produkt/${slug}`), title: tx(p.name, locale), description: `${tx(p.subtitle, locale)} — ${tx(p.origin.story, locale)}`, openGraph: { images: [p.images[0].src] } };
 }
 
 export default async function ProductPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
@@ -85,6 +86,7 @@ export default async function ProductPage({ params }: { params: Promise<{ locale
           {card.pfand > 0 && <p className="mono -mt-3 text-[11px] uppercase tracking-wider text-emerald">{t("pfandNote", { amount: formatPrice(card.pfand, locale) })}</p>}
           <BuyBox p={card} />
 
+          <h2 className="sr-only">{t("origin")} · {t("nutritionTitle")}</h2>
           <Accordion type="single" collapsible defaultValue="origin" className="border-t border-line">
             <AccordionItem value="origin">
               <AccordionTrigger className="serif text-lg">{t("origin")}</AccordionTrigger>

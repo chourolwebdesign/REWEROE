@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { alternatesFor } from "@/lib/seo";
 import { Suspense } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { AccountPanel } from "@/components/commerce/account-panel";
@@ -10,7 +11,7 @@ import { toCardProduct } from "@/lib/view-models";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "account" });
-  return { title: t("eyebrow"), robots: { index: false } };
+  return { alternates: alternatesFor(locale, "/konto"), title: t("eyebrow"), robots: { index: false } };
 }
 
 export default async function AccountPage({ params }: { params: Promise<{ locale: string }> }) {

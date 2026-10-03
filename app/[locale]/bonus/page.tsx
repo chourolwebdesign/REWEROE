@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { alternatesFor } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageHero } from "@/components/brand/page-hero";
 import { SectionHeading } from "@/components/brand/section-heading";
@@ -11,7 +12,7 @@ import { getBonus, getSettings } from "@/lib/content";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const b = getBonus();
-  return { title: tx(b.hero.title, locale), description: tx(b.hero.subtitle, locale) };
+  return { alternates: alternatesFor(locale, "/bonus"), title: tx(b.hero.title, locale), description: tx(b.hero.subtitle, locale) };
 }
 
 export default async function BonusPage({ params }: { params: Promise<{ locale: string }> }) {

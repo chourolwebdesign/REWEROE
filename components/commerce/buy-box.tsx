@@ -21,7 +21,7 @@ export function BuyBox({ p }: { p: CardProduct }) {
         <QuantityStepper value={qty} onChange={setQty} min={1} />
         <div className="flex-1"><AddToCart item={toCartItem(p)} qty={qty} /></div>
         <button type="button" onClick={() => toggle(p.slug)} aria-pressed={fav} aria-label={fav ? t("unfavorite") : t("favorite")} className={cn("inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] border border-line transition-colors hover:bg-forest/5", fav && "border-price/40 bg-price/5")}>
-          <motion.span animate={fav ? { scale: [1, 1.35, 1] } : { scale: 1 }} transition={{ type: "spring", stiffness: 500, damping: 16 }} className="inline-flex"><Heart className={cn("h-4 w-4", fav && "fill-price text-price")} /></motion.span>
+          <motion.span animate={fav ? { scale: [1, 1.35, 1] } : { scale: 1 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1], times: [0, 0.5, 1] }} className="inline-flex"><Heart className={cn("h-4 w-4", fav && "fill-price text-price")} /></motion.span>
         </button>
       </div>
       <ul className="mono space-y-1.5 text-[11px] uppercase tracking-wider text-ink-muted">

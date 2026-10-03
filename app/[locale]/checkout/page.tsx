@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { alternatesFor } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { CheckoutFlow } from "@/components/commerce/checkout-flow";
 import { getSettings } from "@/lib/content";
@@ -6,7 +7,7 @@ import { getSettings } from "@/lib/content";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "checkout" });
-  return { title: t("title"), robots: { index: false } };
+  return { alternates: alternatesFor(locale, "/checkout"), title: t("title"), robots: { index: false } };
 }
 
 export default async function CheckoutPage({ params }: { params: Promise<{ locale: string }> }) {

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { alternatesFor } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageHero } from "@/components/brand/page-hero";
 import { FlipBrochure, type BrochurePage } from "@/components/signature/flip-brochure";
@@ -9,7 +10,7 @@ import { tx } from "@/lib/l10n";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "offers" });
-  return { title: t("title"), description: t("text") };
+  return { alternates: alternatesFor(locale, "/angebote"), title: t("title"), description: t("text") };
 }
 
 export default async function OffersPage({ params }: { params: Promise<{ locale: string }> }) {

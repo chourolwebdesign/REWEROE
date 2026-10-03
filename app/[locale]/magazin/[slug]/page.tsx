@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { alternatesFor } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Breadcrumbs } from "@/components/brand/breadcrumbs";
@@ -18,7 +19,7 @@ export function generateStaticParams() { return getArticles().map((a) => ({ slug
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }): Promise<Metadata> {
   const { locale, slug } = await params;
   const a = getArticle(slug);
-  return a ? { title: tx(a.title, locale), description: tx(a.excerpt, locale), openGraph: { type: "article", images: [a.cover.src], publishedTime: a.publishedAt } } : {};
+  return a ? { alternates: alternatesFor(locale, `/magazin/${slug}`), title: tx(a.title, locale), description: tx(a.excerpt, locale), openGraph: { type: "article", images: [a.cover.src], publishedTime: a.publishedAt } } : {};
 }
 
 export default async function ArticlePage({ params }: { params: Promise<{ locale: string; slug: string }> }) {

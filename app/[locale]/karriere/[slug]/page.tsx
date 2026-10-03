@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { alternatesFor } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageHero } from "@/components/brand/page-hero";
@@ -16,7 +17,7 @@ export function generateStaticParams() { return getJobs().map((j) => ({ slug: j.
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }): Promise<Metadata> {
   const { locale, slug } = await params;
   const j = getJob(slug);
-  return j ? { title: tx(j.title, locale), description: tx(j.teaser, locale) } : {};
+  return j ? { alternates: alternatesFor(locale, `/karriere/${slug}`), title: tx(j.title, locale), description: tx(j.teaser, locale) } : {};
 }
 
 export default async function JobPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {

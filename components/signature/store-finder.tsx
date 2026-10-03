@@ -56,6 +56,7 @@ export function StoreFinder({ stores }: { stores: FinderStore[] }) {
   return (
     <div className="grid min-h-[70vh] lg:grid-cols-[420px_1fr]">
       <aside className="order-2 space-y-4 p-5 lg:order-1 lg:max-h-[80vh] lg:overflow-y-auto">
+        <h2 className="sr-only">{t("mapTitle")}</h2>
         <button type="button" onClick={locate} className="inline-flex w-full items-center justify-center gap-2 rounded-[10px] border border-line px-4 py-3 text-sm font-medium transition-colors hover:bg-forest hover:text-cream">
           <LocateFixed className={cn("h-4 w-4", geo === "loading" && "animate-spin")} /> {geo === "loading" ? t("locating") : t("near")}
         </button>

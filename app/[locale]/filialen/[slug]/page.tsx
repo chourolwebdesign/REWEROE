@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { alternatesFor } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { MapPin, Phone, Mail, Navigation } from "lucide-react";
@@ -20,7 +21,7 @@ export function generateStaticParams() { return getStores().map((s) => ({ slug: 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }): Promise<Metadata> {
   const { locale, slug } = await params;
   const s = getStore(slug);
-  return s ? { title: s.name, description: tx(s.intro, locale) } : {};
+  return s ? { alternates: alternatesFor(locale, `/filialen/${slug}`), title: s.name, description: tx(s.intro, locale) } : {};
 }
 
 const days: Weekday[] = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];

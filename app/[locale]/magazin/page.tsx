@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { alternatesFor } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageHero } from "@/components/brand/page-hero";
 import { ArticleCard } from "@/components/cards/article-card";
@@ -8,7 +9,7 @@ import { getArticles } from "@/lib/content";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "magazine" });
-  return { title: t("title"), description: t("text") };
+  return { alternates: alternatesFor(locale, "/magazin"), title: t("title"), description: t("text") };
 }
 
 export default async function MagazinePage({ params }: { params: Promise<{ locale: string }> }) {

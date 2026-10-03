@@ -11,6 +11,7 @@ import { Providers } from "@/components/layout/providers";
 import { JsonLd } from "@/components/seo/json-ld";
 import { getArticles, getCategories, getPrimaryStore, getProducts, getRecipes, getSettings } from "@/lib/content";
 import { getBlur } from "@/lib/blur";
+import { alternatesFor, siteOrigin } from "@/lib/seo";
 import "@/app/globals.css";
 
 export function generateStaticParams() {
@@ -22,11 +23,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const t = await getTranslations({ locale, namespace: "meta" });
   const s = getSettings();
   return {
-    metadataBase: new URL(s.brand.siteUrl),
+    metadataBase: new URL(siteOrigin(s.brand.siteUrl)),
     title: { default: t("defaultTitle"), template: `%s · ${t("siteName")}` },
     description: t("defaultDescription"),
     applicationName: t("siteName"),
-    alternates: { canonical: locale === "de" ? "/" : "/en", languages: { de: "/", en: "/en", "x-default": "/" } },
+    alternates: alternatesFor(locale, ""),
     openGraph: { type: "website", locale: locale === "de" ? "de_DE" : "en_GB", siteName: t("siteName"), title: t("defaultTitle"), description: t("defaultDescription"), images: ["/images/placeholders/hero-tazelik.jpg"] },
     twitter: { card: "summary_large_image" },
     robots: { index: true, follow: true },

@@ -165,9 +165,9 @@ Blur-up: `scripts/blur.mjs` → `content/blur.json` (base64 10px LQIP); `<SmartI
 ## 9. Çalışma Sırası (brief §10) ve durum
 
 1. ✅ PROMPT-TASARIM.md
-2. ⏳ İskelet + content + placeholder görseller
-3. ⏳ Tasarım sistemi bileşenleri
-4. ⏳ Ana sayfa  → *(brief'e göre onay noktası; otonom çalışmada onay beklenmeden devam edildi — geri bildirimle revize edilir)*
-5. ⏳ Kategoriler → Ürün detay (Produktreise) → Rezepte (Alle Zutaten) → Filialen (Pfand-Kompass) → Angebote → diğerleri
-6. ⏳ Yasal placeholder sistemi
-7. ⏳ Build + Lighthouse + mobil test raporu (`docs/QA-REPORT.md`)
+2. ✅ İskelet + content (`content/*.json`, 24 ürün, 8 tarif, 12 erzeuger, 6 makale, 5 ilan) + 72 Higgsfield placeholder görseli
+3. ✅ Tasarım sistemi bileşenleri (`components/brand|commerce|motion|signature|layout`)
+4. ✅ Ana sayfa  → *(brief'e göre onay noktası; otonom çalışmada onay beklenmeden devam edildi — geri bildirimle revize edilir)*
+5. ✅ Kategoriler → Ürün detay (Produktreise) → Rezepte (Alle Zutaten) → Filialen (Pfand-Kompass) → Angebote → Magazin, Über uns, Nachhaltigkeit, Karriere, Bonus, Kontakt, Konto, Login, Warenkorb, Checkout, 404
+6. ✅ Yasal placeholder sistemi (`app/[locale]/(legal)/[legal]`)
+7. ✅ Build + Lighthouse + mobil test raporu → `docs/QA-REPORT.md`

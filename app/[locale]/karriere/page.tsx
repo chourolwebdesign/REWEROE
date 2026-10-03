@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { alternatesFor } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { MapPin, Briefcase, Play } from "lucide-react";
 import { Link } from "@/i18n/navigation";
@@ -15,7 +16,7 @@ import { getJobs, getPrimaryStore, getSettings } from "@/lib/content";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "career" });
-  return { title: t("title"), description: t("text") };
+  return { alternates: alternatesFor(locale, "/karriere"), title: t("title"), description: t("text") };
 }
 
 export function jobLd(job: ReturnType<typeof getJobs>[number], locale: string) {

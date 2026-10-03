@@ -62,7 +62,7 @@ export function JourneyMap({ from, to, fromLabel, toLabel, distanceKm, story, in
       </svg>
       <div className="flex flex-col justify-center">
         <p className="eyebrow">{t("journeyEyebrow")}</p>
-        <h3 className="mt-3 text-forest dark:text-cream">{t("journeyTitle")}</h3>
+        <h2 className="mt-3 text-[clamp(1.5rem,2vw,2rem)] text-forest dark:text-cream">{t("journeyTitle")}</h2>
         <dl className="mono mt-6 grid grid-cols-3 gap-4 border-y border-line py-4 text-[11px] uppercase tracking-wider">
           <div><dt className="text-ink-muted">{t("journeyFrom")}</dt><dd className="mt-1 text-sm normal-case tracking-normal">{fromLabel}</dd></div>
           <div><dt className="text-ink-muted">{t("journeyTo")}</dt><dd className="mt-1 text-sm normal-case tracking-normal">{toLabel}</dd></div>

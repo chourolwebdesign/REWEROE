@@ -65,6 +65,7 @@
 }
 
 .dark {
+  --price-red: #ff6471; /* AA contrast on dark cards; light mode keeps the classic #d0021b */
   --surface: #0a1210;
   --surface-2: #10201a;
   --ink: #f2efe8;
@@ -255,6 +256,11 @@ body:has([data-header-theme="dark"]) .site-header:not([data-scrolled="true"]):no
 .marquee-track { animation: marquee 40s linear infinite; }
 .marquee:hover .marquee-track { animation-duration: 80s; }
 @media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
+
+/* Hero character reveal (CSS only) */
+@keyframes char-in { from { opacity: 0; transform: translateY(0.6em); filter: blur(6px); } to { opacity: 1; transform: none; filter: blur(0); } }
+.char-in { animation: char-in 0.7s var(--ease-out-expo) both; }
+@media (prefers-reduced-motion: reduce) { .char-in { animation: none; } }
 
 /* Ken Burns */
 @keyframes kenburns { from { transform: scale(1.08) translateY(0); } to { transform: scale(1.18) translateY(-2%); } }

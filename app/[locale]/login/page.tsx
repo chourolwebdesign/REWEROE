@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { alternatesFor } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { LoginForm } from "@/components/commerce/login-form";
 import { SmartImage } from "@/components/ui/smart-image";
@@ -7,7 +8,7 @@ import { getBlur } from "@/lib/blur";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "account" });
-  return { title: t("login"), robots: { index: false } };
+  return { alternates: alternatesFor(locale, "/login"), title: t("login"), robots: { index: false } };
 }
 
 export default async function LoginPage({ params }: { params: Promise<{ locale: string }> }) {

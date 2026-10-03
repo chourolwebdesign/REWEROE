@@ -27,27 +27,27 @@ export function ProductCard({ p, className, showCountdown, priority }: { p: Card
 
   return (
     <article className={cn("group relative flex flex-col overflow-hidden rounded-[12px] bg-card card-hover", className)}>
-      <Link href={`/produkt/${p.slug}`} className="relative block aspect-[4/5] overflow-hidden bg-surface-2" aria-label={p.name}>
-        <SmartImage src={p.image.src} alt={p.image.alt} blur={p.image.blur} fill sizes="(max-width: 640px) 50vw, (max-width: 1280px) 33vw, 320px" className="img-zoom object-cover" priority={priority} />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-forest/40 via-transparent to-transparent opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
-        <Badges badges={p.badges} discount={p.discount} className="absolute left-3 top-3" />
-      </Link>
-
-      <button
-        type="button"
-        onClick={() => toggle(p.slug)}
-        aria-pressed={fav}
-        aria-label={fav ? tp("unfavorite") : tp("favorite")}
-        className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-cream/90 text-forest backdrop-blur transition-colors hover:bg-white"
-      >
-        <motion.span animate={fav ? { scale: [1, 1.35, 1] } : { scale: 1 }} transition={{ type: "spring", stiffness: 500, damping: 16 }} className="inline-flex">
-          <Heart className={cn("h-4 w-4", fav && "fill-price text-price")} />
-        </motion.span>
-      </button>
-
-      <div className="absolute right-3 top-[calc(80%-3.25rem)] flex flex-col gap-2 md:translate-x-3 md:opacity-0 md:transition-all md:duration-500 md:ease-[cubic-bezier(.22,1,.36,1)] md:group-hover:translate-x-0 md:group-hover:opacity-100 md:group-focus-within:translate-x-0 md:group-focus-within:opacity-100">
-        <AddToCart item={toCartItem(p)} variant="icon" />
-        <button type="button" onClick={() => setQuick(true)} aria-label={t("quickView")} className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-cream/90 text-forest shadow-card backdrop-blur hover:bg-white"><Eye className="h-4 w-4" /></button>
+      <div className="relative aspect-[4/5] overflow-hidden bg-surface-2">
+        <Link href={`/produkt/${p.slug}`} className="absolute inset-0 block" aria-label={p.name}>
+          <SmartImage src={p.image.src} alt={p.image.alt} blur={p.image.blur} fill sizes="(max-width: 640px) 50vw, (max-width: 1280px) 33vw, 320px" className="img-zoom object-cover" priority={priority} />
+          <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-forest/40 via-transparent to-transparent opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
+        </Link>
+        <Badges badges={p.badges} discount={p.discount} className="pointer-events-none absolute left-3 top-3 max-w-[calc(100%-4rem)]" />
+        <button
+          type="button"
+          onClick={() => toggle(p.slug)}
+          aria-pressed={fav}
+          aria-label={fav ? tp("unfavorite") : tp("favorite")}
+          className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-cream/90 text-forest backdrop-blur transition-colors hover:bg-white"
+        >
+          <motion.span animate={fav ? { scale: [1, 1.35, 1] } : { scale: 1 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1], times: [0, 0.5, 1] }} className="inline-flex">
+            <Heart className={cn("h-4 w-4", fav && "fill-price text-price")} />
+          </motion.span>
+        </button>
+        <div className="absolute bottom-3 right-3 flex flex-col gap-2 md:translate-x-3 md:opacity-0 md:transition-all md:duration-500 md:ease-[cubic-bezier(.22,1,.36,1)] md:group-hover:translate-x-0 md:group-hover:opacity-100 md:group-focus-within:translate-x-0 md:group-focus-within:opacity-100">
+          <AddToCart item={toCartItem(p)} variant="icon" />
+          <button type="button" onClick={() => setQuick(true)} aria-label={t("quickView")} className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-cream/90 text-forest shadow-card backdrop-blur hover:bg-white"><Eye className="h-4 w-4" /></button>
+        </div>
       </div>
 
       <div className="flex flex-1 flex-col gap-2 p-4">

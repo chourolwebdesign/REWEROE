@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { alternatesFor } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Breadcrumbs } from "@/components/brand/breadcrumbs";
@@ -19,7 +20,7 @@ export function generateStaticParams() { return getLegalPages().map((l) => ({ le
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; legal: string }> }): Promise<Metadata> {
   const { locale, legal } = await params;
   const page = getLegalPage(legal);
-  return page ? { title: tx(page.title, locale), robots: { index: page.status === "published", follow: true } } : {};
+  return page ? { alternates: alternatesFor(locale, `/${legal}`), title: tx(page.title, locale), robots: { index: page.status === "published", follow: true } } : {};
 }
 
 export default async function LegalPage({ params }: { params: Promise<{ locale: string; legal: string }> }) {
