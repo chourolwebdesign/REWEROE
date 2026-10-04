@@ -26,7 +26,8 @@ const OLD_ROUTES: [string, string][] = [
   ["/login", "/"],
   ["/agb", "/impressum"],
   ["/widerruf", "/impressum"],
-  ["/karriere/:slug", "/karriere"],
+  // alte Stellen-Detailseiten; /karriere/bewerben ist eine echte Seite
+  ["/karriere/:slug((?!bewerben$).*)", "/karriere"],
 ];
 
 const nextConfig: NextConfig = {
@@ -37,6 +38,8 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     optimizePackageImports: ["lucide-react"],
+    // Bewerbung mit Anhängen (bis 4 MB) + Formular-Overhead; Vercel nimmt höchstens 4,5 MB an.
+    serverActions: { bodySizeLimit: "4.5mb" },
   },
   async redirects() {
     return OLD_ROUTES.map(([source, destination]) => ({ source, destination, permanent: true }));
@@ -50,6 +53,14 @@ const nextConfig: NextConfig = {
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "X-Frame-Options", value: "DENY" },
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), interest-cohort=()" },
+        ],
+      },
+      {
+        source: "/sw.js",
+        headers: [
+          { key: "Content-Type", value: "application/javascript; charset=utf-8" },
+          { key: "Cache-Control", value: "no-cache, no-store, must-revalidate" },
+          { key: "Content-Security-Policy", value: "default-src 'self'; script-src 'self'" },
         ],
       },
       {

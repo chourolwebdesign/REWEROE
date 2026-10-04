@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/brand/logo";
+import { InstallApp } from "@/components/pwa/install-app";
 import { InstagramIcon } from "@/components/ui/icons";
 import { markt } from "@/content/markt";
 import { weekRows } from "@/lib/hours";
@@ -9,7 +10,7 @@ export function SiteFooter() {
   const year = new Date().getFullYear();
   return (
     <footer className="on-dark bg-night pb-28 text-white lg:pb-0">
-      <div className="wrap grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr] lg:gap-20 lg:py-24">
+      <div className="wrap grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_0.85fr_1fr] lg:gap-14 lg:py-24">
         <div className="grid content-start gap-6 md:col-span-2 lg:col-span-1">
           <Logo tone="light" height={38} />
           <p className="max-w-[38ch] text-lede text-white/70">
@@ -71,6 +72,23 @@ export function SiteFooter() {
             </li>
           </ul>
         </div>
+
+        <nav aria-label="Service">
+          <h2 className="text-eyebrow text-white/45">Service</h2>
+          <ul className="mt-4 grid">
+            {[
+              { href: "/karriere/bewerben", label: "Bewerben in 60 Sekunden" },
+              { href: "/angebote#kalender", label: "Markt-Kalender abonnieren" },
+            ].map((item) => (
+              <li key={item.href}>
+                <Link href={item.href} className="inline-flex min-h-11 items-center text-white/85 hover:text-white hover:underline hover:underline-offset-4">
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <InstallApp variant="glass" size="sm" className="mt-4" />
+        </nav>
       </div>
 
       <div className="border-t border-white/10">

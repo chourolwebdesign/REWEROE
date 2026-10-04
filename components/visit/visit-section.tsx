@@ -1,10 +1,12 @@
 import Image from "next/image";
 import { MapPin, Navigation, Phone } from "lucide-react";
+import { CalendarSubscribe } from "@/components/live/calendar-subscribe";
 import { OpenStatus } from "@/components/live/open-status";
 import { ButtonLink } from "@/components/ui/button";
 import { markt } from "@/content/markt";
 import { berlinNow, formatDayMonth, formatTime, upcomingSpecialDays, weekRows, WEEKDAYS_SHORT } from "@/lib/hours";
 import { media } from "@/lib/media";
+import { absoluteUrl } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 /** Öffnungszeiten (mit Live-Status und kommenden Sondertagen) und Anfahrt (statische Karte, keine Drittanbieter). */
@@ -13,7 +15,7 @@ export function VisitSection({ className, headingLevel = "h3" }: { className?: s
   const specials = upcomingSpecialDays(berlinNow(new Date()).date, 45);
   return (
     <div className={cn("grid gap-3 md:gap-4 lg:grid-cols-[0.9fr_1.1fr]", className)}>
-      <section aria-labelledby="zeiten-titel" className="reveal flex flex-col rounded-[1.75rem] bg-soft p-6 md:p-9">
+      <section aria-labelledby="zeiten-titel" className="reveal relative z-10 flex flex-col rounded-[1.75rem] bg-soft p-6 md:p-9">
         <H id="zeiten-titel" className="text-h3">
           Öffnungszeiten
         </H>
@@ -53,6 +55,10 @@ export function VisitSection({ className, headingLevel = "h3" }: { className?: s
         ) : (
           <p className="mt-5 text-[0.9375rem] text-muted">An Sonn- und Feiertagen geschlossen.</p>
         )}
+        <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2">
+          <CalendarSubscribe url={absoluteUrl("/kalender.ics")} variant="white" size="sm" />
+          <p className="text-[0.875rem] text-muted">Feiertage automatisch im Handy-Kalender</p>
+        </div>
         <a
           href={`tel:${markt.phone.e164}`}
           className="mt-8 flex items-center justify-between gap-4 rounded-2xl bg-white p-5 transition-colors hover:bg-soft-2 lg:mt-auto"

@@ -10,6 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/kontakt", priority: 0.8, changeFrequency: "monthly" },
     { path: "/aktuelles", priority: 0.6, changeFrequency: "weekly" },
     { path: "/karriere", priority: 0.6, changeFrequency: "monthly" },
+    { path: "/karriere/bewerben", priority: 0.6, changeFrequency: "monthly" },
     { path: "/impressum", priority: 0.2, changeFrequency: "yearly" },
     { path: "/datenschutz", priority: 0.2, changeFrequency: "yearly" },
   ];

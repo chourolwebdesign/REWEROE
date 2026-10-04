@@ -10,6 +10,14 @@ Stand: 04.10.2026. Alles hier fehlt auf der Website oder ist als Lücke markiert
 - [ ] **Datenschutzerklärung** prüfen lassen (`app/datenschutz/page.tsx`): Hosting-Vertrag/AVV mit Vercel (läuft über das Konto der Agentur), Aufbewahrungsdauer der Server-Logs.
 - [ ] **Domain** festlegen (z. B. rewe-roedelheim.de) → in Vercel verbinden, `SITE_URL` setzen, dann `SITE_INDEXABLE=true`.
 
+## Online-Bewerbung freischalten
+
+- [ ] **E-Mail-Adresse für Bewerbungen** (z. B. bewerbung@… oder das Postfach der Marktleitung) → `BEWERBUNG_TO`.
+- [ ] **Versandweg**: SMTP-Zugang des Markt-Postfachs (Server, Port, Benutzer, Passwort) **oder** Resend-Konto mit verifizierter Domain → Vercel-Umgebungsvariablen, dann neu deployen.
+- [ ] Eingangsbestätigung an Bewerber gewünscht? (`BEWERBUNG_CONFIRM=true`)
+- [ ] **Datenschutz**: Name des E-Mail-Dienstleisters eintragen (`app/datenschutz/page.tsx`, Abschnitt „Bewerbung“), AVV abschließen.
+- [ ] Wer liest die Bewerbungen und löscht sie nach 6 Monaten (Talentpool: 12 Monate)?
+
 ## Bildrechte
 
 - [ ] **Instagram-Fotos und Clip** (@rewealialamyaar): Freigabe des Markts für die Website (Fotograf/Urheber klären).
@@ -27,3 +35,11 @@ Stand: 04.10.2026. Alles hier fehlt auf der Website oder ist als Lücke markiert
 - [ ] **Team**: Namen/Fotos, falls gewünscht (Freigaben der Personen nötig).
 - [ ] **Google-Unternehmensprofil**-Link (Bewertungen) und Feedback-Seite (Projekt rewe-feedback), sobald live.
 - [ ] Neue **Aktuelles-Beiträge** (Aktionen, Feste, Spenden) mit Datum und Fotos.
+- [ ] **Termine im Markt** (Verkostung, Aktionstag, Kinderaktion) → `content/termine.ts`; erscheinen auf der Startseite und im Markt-Kalender.
+- [ ] **Aushang** (`/aushang`) ausdrucken und im Markt aufhängen – nach dem Domainwechsel neu drucken.
+
+## Ideen für später (nur mit echten Zahlen)
+
+- [ ] **„Wann ist es ruhig?“**: durchschnittliche Kassenbons pro Stunde und Wochentag aus dem Kassenbericht → Grafik der ruhigen Zeiten.
+- [ ] **Pfand-Zähler**: Monatsauswertung des Pfandautomaten → „Diesen Monat haben unsere Kunden … Flaschen zurückgebracht“.
+- [ ] **Einkaufs-Entdecker für Kinder**: kleines Suchspiel im Markt; eine Belohnung an der Kasse entscheidet die Marktleitung.
