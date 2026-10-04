@@ -1,107 +1,201 @@
 /**
- * Single source for the store's opening state: header StoreChip, Frische-Uhr dot, store-teaser chip,
- * Filiale page, StoreFinder. Pure functions, Europe/Berlin aware, Hessen public holidays, unit-testable.
+ * Öffnungsstatus des Markts, immer als Berliner Wandzeit gerechnet – egal, wo der Besucher sitzt.
+ * Die Zeitumstellung ist dadurch automatisch richtig.
+ *
+ * Reihenfolge: bestätigte Sonderzeiten > Feiertage Hessen > reguläre Zeiten, begrenzt durch die
+ * gesetzlichen Schlusszeiten nach § 3 Abs. 2 HLöG (Gründonnerstag 20 Uhr, 24.12. und 31.12. 14 Uhr).
+ * Aus dem Gesetz abgeleitete Zeiten sind „vorläufig“, bis der Markt sie in content/markt.ts bestätigt.
  */
-import type { Weekday } from "@/lib/content/types";
+import { markt } from "@/content/markt";
+import type { HoursConfig, TimeRange, Weekday } from "./types";
 
-export type Hours = Record<Weekday, [string, string] | null>;
-export type HoursStatus = "pending" | "published";
-
-export type OpenState =
-  | { kind: "pending" }
-  | { kind: "open"; closesAt: string; closesInMin: number }
-  | { kind: "closed"; opensDay: Weekday; opensAt: string; today: boolean };
-
-/** Minimal translator shape shared by next-intl's `t` and test doubles. */
-export type Translate = (key: string, values?: Record<string, string | number>) => string;
-
-const TZ = "Europe/Berlin";
-const DAYS: Weekday[] = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
-const WEEKDAY_FROM_SHORT: Record<string, Weekday> = { Sun: "sun", Mon: "mon", Tue: "tue", Wed: "wed", Thu: "thu", Fri: "fri", Sat: "sat" };
-
-const pad2 = (n: number) => String(n).padStart(2, "0");
-const isoOf = (y: number, m: number, d: number) => `${y}-${pad2(m)}-${pad2(d)}`;
-export const toMinutes = (hhmm: string) => { const [h, m] = hhmm.split(":").map(Number); return h * 60 + (m || 0); };
-
-/** Calendar facts of `now` in Europe/Berlin. */
-export function berlinParts(now: Date) {
-  const parts = new Intl.DateTimeFormat("en-US", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit", weekday: "short", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(now);
-  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
-  const y = Number(get("year")), m = Number(get("month")), d = Number(get("day"));
-  const hour = Number(get("hour")) % 24; // some engines print "24" for midnight
-  return { y, m, d, iso: isoOf(y, m, d), weekday: WEEKDAY_FROM_SHORT[get("weekday")] ?? "mon", minutes: hour * 60 + Number(get("minute")) };
+export interface DayPlan {
+  date: string;
+  weekday: Weekday;
+  hours: TimeRange | null;
+  /** z. B. „Tag der Deutschen Einheit“ oder „Heiligabend“; null an normalen Tagen */
+  label: string | null;
+  /** true, wenn die Zeit aus dem Gesetz abgeleitet und vom Markt noch nicht bestätigt ist */
+  provisional: boolean;
 }
 
-/** Gregorian Easter Sunday (anonymous algorithm) as [month, day]. */
-export function easterSunday(y: number): [number, number] {
-  const a = y % 19, b = Math.floor(y / 100), c = y % 100, d = Math.floor(b / 4), e = b % 4;
+export interface OpenStatus {
+  open: boolean;
+  today: DayPlan;
+  closesAt: string | null;
+  next: { plan: DayPlan; inDays: number } | null;
+  /** „Jetzt geöffnet · bis 22 Uhr“ / „Geschlossen · öffnet morgen um 7 Uhr“ */
+  text: string;
+  short: "Geöffnet" | "Geschlossen";
+}
+
+export const WEEKDAYS = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"] as const;
+export const WEEKDAYS_SHORT = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"] as const;
+const LEGAL_LIMITS = [
+  { rule: "gruendonnerstag", latest: "20:00", label: "Gründonnerstag" },
+  { rule: "12-24", latest: "14:00", label: "Heiligabend" },
+  { rule: "12-31", latest: "14:00", label: "Silvester" },
+] as const;
+
+// ---------- Kalender (reine UTC-Rechnung ohne Zeitzoneneffekte) ----------
+
+const pad = (n: number) => String(n).padStart(2, "0");
+const isoFromUtc = (d: Date) => `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`;
+const utcFromIso = (iso: string) => {
+  const [y, m, d] = iso.split("-").map(Number);
+  return new Date(Date.UTC(y, m - 1, d));
+};
+export const addDays = (iso: string, n: number) => {
+  const d = utcFromIso(iso);
+  d.setUTCDate(d.getUTCDate() + n);
+  return isoFromUtc(d);
+};
+export const weekdayOf = (iso: string) => utcFromIso(iso).getUTCDay() as Weekday;
+export const toMinutes = (hhmm: string) => {
+  const [h, m] = hhmm.split(":").map(Number);
+  return h * 60 + m;
+};
+
+/** „07:00“ → „7 Uhr“, „07:30“ → „7:30 Uhr“ */
+export function formatTime(hhmm: string) {
+  const [h, m] = hhmm.split(":").map(Number);
+  return m ? `${h}:${pad(m)} Uhr` : `${h} Uhr`;
+}
+
+/** „2026-10-05“ → „05.10.“ */
+export const formatDayMonth = (iso: string) => `${iso.slice(8, 10)}.${iso.slice(5, 7)}.`;
+
+const berlinFormat = new Intl.DateTimeFormat("en-GB", {
+  timeZone: "Europe/Berlin",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h23",
+});
+
+/** Berliner Wandzeit zu einem Zeitpunkt. */
+export function berlinNow(now: Date): { date: string; minutes: number } {
+  const p: Record<string, string> = {};
+  for (const part of berlinFormat.formatToParts(now)) p[part.type] = part.value;
+  return { date: `${p.year}-${p.month}-${p.day}`, minutes: (Number(p.hour) % 24) * 60 + Number(p.minute) };
+}
+
+// ---------- Feiertage Hessen ----------
+
+/** Ostersonntag (anonymer gregorianischer Algorithmus) als ISO-Datum. */
+export function easterSunday(year: number): string {
+  const a = year % 19, b = Math.floor(year / 100), c = year % 100, d = Math.floor(b / 4), e = b % 4;
   const f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30;
   const i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451);
   const month = Math.floor((h + l - 7 * m + 114) / 31), day = ((h + l - 7 * m + 114) % 31) + 1;
-  return [month, day];
+  return `${year}-${pad(month)}-${pad(day)}`;
 }
 
-function shiftIso(y: number, m: number, d: number, days: number) {
-  const t = new Date(Date.UTC(y, m - 1, d + days));
-  return { iso: isoOf(t.getUTCFullYear(), t.getUTCMonth() + 1, t.getUTCDate()), weekday: DAYS[t.getUTCDay()] };
+/** Gesetzliche Feiertage in Hessen (HFeiertagsG § 1): ISO-Datum → Name. */
+export function hessenHolidays(year: number): Map<string, string> {
+  const easter = easterSunday(year);
+  return new Map([
+    [`${year}-01-01`, "Neujahr"],
+    [addDays(easter, -2), "Karfreitag"],
+    [easter, "Ostersonntag"],
+    [addDays(easter, 1), "Ostermontag"],
+    [`${year}-05-01`, "Tag der Arbeit"],
+    [addDays(easter, 39), "Christi Himmelfahrt"],
+    [addDays(easter, 49), "Pfingstsonntag"],
+    [addDays(easter, 50), "Pfingstmontag"],
+    [addDays(easter, 60), "Fronleichnam"],
+    [`${year}-10-03`, "Tag der Deutschen Einheit"],
+    [`${year}-12-25`, "1. Weihnachtsfeiertag"],
+    [`${year}-12-26`, "2. Weihnachtsfeiertag"],
+  ]);
 }
 
-/** Public holidays in Hessen (store closed): fixed dates + the five Easter-based ones. */
-export function hessenHolidays(y: number): string[] {
-  const [em, ed] = easterSunday(y);
-  const easterBased = [-2, 1, 39, 50, 60].map((off) => shiftIso(y, em, ed, off).iso); // Karfreitag, Ostermontag, Christi Himmelfahrt, Pfingstmontag, Fronleichnam
-  return [`${y}-01-01`, `${y}-05-01`, `${y}-10-03`, `${y}-12-25`, `${y}-12-26`, ...easterBased];
+const holidayCache = new Map<number, Map<string, string>>();
+function holiday(iso: string) {
+  const year = Number(iso.slice(0, 4));
+  if (!holidayCache.has(year)) holidayCache.set(year, hessenHolidays(year));
+  return holidayCache.get(year)!.get(iso) ?? null;
 }
-export const isHessenHoliday = (iso: string) => hessenHolidays(Number(iso.slice(0, 4))).includes(iso);
 
-/**
- * Opening state at `now` (Europe/Berlin). Sunday and holidays count as closed; when closed, walks forward
- * up to 7 days to the next day with hours. `status === "pending"` short-circuits to `{ kind: "pending" }`.
- */
-export function openState(hours: Hours, status: HoursStatus = "published", now: Date = new Date()): OpenState {
-  if (status === "pending") return { kind: "pending" };
-  const p = berlinParts(now);
-  const today = isHessenHoliday(p.iso) ? null : hours[p.weekday];
-  if (today) {
-    const [open, close] = [toMinutes(today[0]), toMinutes(today[1])];
-    if (p.minutes >= open && p.minutes < close) return { kind: "open", closesAt: today[1], closesInMin: close - p.minutes };
-    if (p.minutes < open) return { kind: "closed", opensDay: p.weekday, opensAt: today[0], today: true };
+function legalLimit(iso: string) {
+  const maundyThursday = addDays(easterSunday(Number(iso.slice(0, 4))), -3);
+  return LEGAL_LIMITS.find((l) => (l.rule === "gruendonnerstag" ? iso === maundyThursday : iso.slice(5) === l.rule)) ?? null;
+}
+
+// ---------- Tagesplan & Status ----------
+
+export function dayPlan(date: string, cfg: HoursConfig = markt.hours): DayPlan {
+  const weekday = weekdayOf(date);
+  const special = cfg.specialDays.find((s) => s.date === date);
+  if (special) return { date, weekday, hours: special.hours, label: special.label, provisional: false };
+
+  const holidayName = holiday(date);
+  if (holidayName) return { date, weekday, hours: null, label: holidayName, provisional: false };
+
+  const regular = cfg.regular[weekday];
+  if (!regular) return { date, weekday, hours: null, label: null, provisional: false };
+
+  const limit = legalLimit(date);
+  if (limit && toMinutes(regular[1]) > toMinutes(limit.latest)) {
+    return { date, weekday, hours: [regular[0], limit.latest], label: limit.label, provisional: true };
   }
-  for (let i = 1; i <= 7; i++) {
-    const next = shiftIso(p.y, p.m, p.d, i);
-    const h = isHessenHoliday(next.iso) ? null : hours[next.weekday];
-    if (h) return { kind: "closed", opensDay: next.weekday, opensAt: h[0], today: false };
-  }
-  return { kind: "pending" };
+  return { date, weekday, hours: regular, label: null, provisional: false };
 }
 
-/** "2 h 14 min" / "14 min" — locale-neutral units. */
-export function formatDuration(minutes: number): string {
-  const h = Math.floor(minutes / 60), m = minutes % 60;
-  return h > 0 ? `${h} h ${pad2(m)} min` : `${m} min`;
+function whenText(plan: DayPlan, inDays: number) {
+  if (inDays === 0) return "heute";
+  if (inDays === 1) return "morgen";
+  if (inDays === 2) return WEEKDAYS[plan.weekday];
+  return `${WEEKDAYS[plan.weekday]}, ${formatDayMonth(plan.date)},`;
 }
 
-/** Below this many minutes the open state says "schließt in …" instead of "bis 22:00". */
-export const CLOSES_SOON_MIN = 180;
+export function openStatus(now: Date = new Date(), cfg: HoursConfig = markt.hours): OpenStatus {
+  const { date, minutes } = berlinNow(now);
+  const today = dayPlan(date, cfg);
 
-/**
- * Full sentence for the Filiale page / finder, from `common.*` keys:
- * "Geöffnet · schließt in 2 h 14 min" (≤ 3 h) · "Geöffnet · bis 22:00" · "Geschlossen · öffnet Mo 07:00" ·
- * "Geschlossen · öffnet 07:00" (today) · "Öffnungszeiten folgen".
- */
-export function formatOpenState(s: OpenState, t: Translate): { text: string; tone: "open" | "closed" | "pending" } {
-  if (s.kind === "pending") return { text: t("hoursPendingShort"), tone: "pending" };
-  if (s.kind === "open") {
-    return { text: s.closesInMin <= CLOSES_SOON_MIN ? t("openClosesIn", { time: formatDuration(s.closesInMin) }) : t("openUntil", { time: s.closesAt }), tone: "open" };
+  if (today.hours && minutes >= toMinutes(today.hours[0]) && minutes < toMinutes(today.hours[1])) {
+    const left = toMinutes(today.hours[1]) - minutes;
+    const text = left <= 60 ? `Geöffnet · schließt in ${left} Min.` : `Jetzt geöffnet · bis ${formatTime(today.hours[1])}`;
+    return { open: true, today, closesAt: today.hours[1], next: null, text, short: "Geöffnet" };
   }
-  return { text: s.today ? t("closedOpensToday", { time: s.opensAt }) : t("closedOpens", { day: t(`days.${s.opensDay}`), time: s.opensAt }), tone: "closed" };
+
+  for (let n = 0; n <= 14; n++) {
+    const plan = n === 0 ? today : dayPlan(addDays(date, n), cfg);
+    if (!plan.hours) continue;
+    if (n === 0 && minutes >= toMinutes(plan.hours[0])) continue;
+    const text = `Geschlossen · öffnet ${whenText(plan, n)} um ${formatTime(plan.hours[0])}`;
+    return { open: false, today, closesAt: null, next: { plan, inDays: n }, text, short: "Geschlossen" };
+  }
+  return { open: false, today, closesAt: null, next: null, text: "Geschlossen", short: "Geschlossen" };
 }
 
-/** Two-part rendering for chips: state word (Figtree) + detail (mono data): "Geöffnet" · "bis 22:00". */
-export function storeChipParts(s: OpenState, t: Translate): { state: string; detail: string | null; tone: "open" | "closed" | "pending" } {
-  if (s.kind === "pending") return { state: t("hoursPendingShort"), detail: null, tone: "pending" };
-  if (s.kind === "open") {
-    return { state: t("open"), detail: s.closesInMin <= CLOSES_SOON_MIN ? t("closesIn", { time: formatDuration(s.closesInMin) }) : t("until", { time: s.closesAt }), tone: "open" };
+/** Besondere Tage (Feiertage, Sonderzeiten, gesetzliche Schlusszeiten) ab `from` für `days` Tage. */
+export function upcomingSpecialDays(from: string, days: number, cfg: HoursConfig = markt.hours): DayPlan[] {
+  const list: DayPlan[] = [];
+  for (let n = 0; n < days; n++) {
+    const plan = dayPlan(addDays(from, n), cfg);
+    // Feiertage an Tagen, an denen ohnehin geschlossen ist (Ostersonntag, Pfingstsonntag), ändern nichts.
+    if (plan.label && !(cfg.regular[plan.weekday] === null && plan.hours === null)) list.push(plan);
   }
-  return { state: t("closed"), detail: s.today ? t("opensTodayAt", { time: s.opensAt }) : t("opensDayAt", { day: t(`days.${s.opensDay}`), time: s.opensAt }), tone: "closed" };
+  return list;
+}
+
+/** Wochentabelle Mo–So mit zusammengefassten Zeilen, z. B. „Montag – Samstag · 7 – 22 Uhr“. */
+export function weekRows(cfg: HoursConfig = markt.hours) {
+  const order: Weekday[] = [1, 2, 3, 4, 5, 6, 0];
+  const rows: { from: Weekday; to: Weekday; hours: TimeRange | null }[] = [];
+  for (const d of order) {
+    const h = cfg.regular[d];
+    const last = rows.at(-1);
+    if (last && JSON.stringify(last.hours) === JSON.stringify(h)) last.to = d;
+    else rows.push({ from: d, to: d, hours: h });
+  }
+  return rows.map((r) => ({
+    ...r,
+    days: r.from === r.to ? WEEKDAYS[r.from] : `${WEEKDAYS[r.from]} – ${WEEKDAYS[r.to]}`,
+    daysShort: r.from === r.to ? WEEKDAYS_SHORT[r.from] : `${WEEKDAYS_SHORT[r.from]} – ${WEEKDAYS_SHORT[r.to]}`,
+    time: r.hours ? `${formatTime(r.hours[0]).replace(" Uhr", "")} – ${formatTime(r.hours[1])}` : "geschlossen",
+  }));
 }

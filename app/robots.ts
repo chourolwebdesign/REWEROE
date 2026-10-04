@@ -1,7 +1,8 @@
 import type { MetadataRoute } from "next";
-import { getSettings } from "@/lib/content";
+import { INDEXABLE, SITE_URL } from "@/lib/site";
 
+/** Vorschau und vercel.app: alles gesperrt. Mit SITE_INDEXABLE=true: alles erlaubt + Sitemap. */
 export default function robots(): MetadataRoute.Robots {
-  const base = getSettings().brand.siteUrl;
-  return { rules: [{ userAgent: "*", allow: "/", disallow: ["/checkout", "/konto", "/warenkorb"] }], sitemap: `${base}/sitemap.xml` };
+  if (!INDEXABLE) return { rules: { userAgent: "*", disallow: "/" } };
+  return { rules: { userAgent: "*", allow: "/" }, sitemap: `${SITE_URL}/sitemap.xml`, host: SITE_URL };
 }

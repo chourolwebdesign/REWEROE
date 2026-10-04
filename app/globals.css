@@ -1,460 +1,235 @@
 @import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
 
-@custom-variant dark (@media (prefers-color-scheme: dark));
+/* ───────────── Tokens („Story“-Relaunch, siehe docs/superpowers/specs/2026-10-04-story-relaunch-design.md) ───────────── */
+@theme {
+  --color-red: #cc071e;
+  --color-red-hover: #b00619;
+  --color-red-bright: #ff5a6b; /* Rot auf dunklem Grund */
+  --color-red-tint: #fcebed;
+  --color-ink: #121212;
+  --color-ink-2: #2b2925;
+  --color-night: #0c0c0c;
+  --color-paper: #ffffff;
+  --color-soft: #f4f2ed;
+  --color-soft-2: #ebe8e1;
+  --color-muted: #625e58;
+  --color-line: #e6e2da;
+  --color-open: #15803d;
+  --color-open-bright: #4ade80;
+  --color-yellow: #ffcc00;
+  --color-bio: #1e6b3a;
 
-/* ─────────────────────────────────────────────────────────────────────────
-   1. Design tokens — light (REWE: white paper · anthracite ink · one red)
-   ───────────────────────────────────────────────────────────────────────── */
-:root {
-  color-scheme: light dark;  /* form controls, scrollbars and UA defaults follow the OS scheme like the tokens below */
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
-  /* surfaces */
-  --paper: #FFFFFF;          /* page, header, cards, sheets */
-  --surface: #F5F5F4;        /* section bands, image frames behind cut-outs, offers band, brochure stage */
-  --surface-2: #ECECEB;      /* pressed/selected neutral, skeletons, table head rows, icon-button hover */
-  --card: #FFFFFF;
+  --radius-card: 1.5rem;
+  --radius-media: 1.75rem;
 
-  /* ink */
-  --ink: #141414;            /* headlines, body, 2 px rules, ink buttons */
-  --ink-2: #2A2A2A;          /* long-form prose */
-  --ink-muted: #5C5C5C;      /* captions, Grundpreis, Pfand, struck prices, eyebrow words, placeholders */
+  --shadow-soft: 0 1px 2px rgb(18 18 18 / 0.05), 0 12px 32px rgb(18 18 18 / 0.08);
+  --shadow-lift: 0 30px 80px rgb(18 18 18 / 0.1), 0 0 0 1px rgb(18 18 18 / 0.04);
+  --shadow-stage: 0 40px 120px rgb(0 0 0 / 0.6), 0 0 0 1px rgb(255 255 255 / 0.12);
 
-  /* lines */
-  --line: #CFCFCC;           /* 1 px hairlines, card borders, dividers (decorative) */
-  --line-strong: #141414;    /* 2 px section rules, outline buttons */
-  --line-input: #767676;     /* input / checkbox / radio / switch-track boundary (WCAG 1.4.11 ≥ 3:1) */
-
-  /* red — fills vs text are separate jobs */
-  --red: #CC071E;            /* FILL: primary CTA, discount badge, count dot, progress fill, marker */
-  --red-hover: #A80619;      /* primary CTA hover */
-  --red-deep: #800413;       /* primary CTA pressed */
-  --red-tint: #FBE9EB;       /* selected radio cards, progress track inside blocks — never a text bg larger than a chip */
-  --red-text: #CC071E;       /* TEXT/STROKE red on light surfaces; flips to signal red in dark + .on-block */
-  --red-brand: #CC071E;      /* logo block + footer rule: never changes */
-
-  /* green (fenced: Bio · Regional · Nachhaltigkeit · Mehrweg · open state) */
-  --bio: #0E6B34;            /* fill (white text 6.62:1) */
-  --bio-text: #0E6B34;       /* text/stroke; flips in dark */
-  --bio-tint: #E7F1EA;
-
-  /* fenced sub-brand accents */
-  --regional: #FFCC00;       /* Regional lockup field, 8×8 „Aus deiner Region" square — ink text only */
-  --petrol: #0B5E6B;         /* REWE Bonus module only */
-  --petrol-text: #0B5E6B;
-  --bonus-yellow: #FBE8A6;   /* numerals on petrol only */
-
-  /* semantics */
-  --error: #B3261E;          /* form errors, geo-denied, destructive — always with icon + text */
-  --price: var(--ink);       /* regular price */
-  --price-offer: var(--red-text);
-  --focus: var(--ink);       /* 2 px ring, offset 3 px — sits on the page surface, never on the control */
-  --selection: color-mix(in oklab, var(--red) 18%, transparent);
-
-  /* anthracite block tokens (consumed by .on-block) */
-  --block: #141414;
-  --block-ink: #FFFFFF;
-  --block-muted: #A6A6A6;
-  --block-line: #333333;
-  --block-red: #F4566A;      /* signal red on anthracite (5.60:1) */
-  --block-bio: #5FC68A;
-
-  /* display weight (drops one step on dark surfaces — irradiation) */
-  --fw-display: 800;
-
-  /* elevation — Swiss sheets do not float; only overlays get a shadow */
-  --shadow-card: none;
-  --shadow-lift: none;
-  --shadow-pop: 0 1px 0 rgb(20 20 20 / .06), 0 16px 32px -16px rgb(20 20 20 / .22);
-
-  /* motion */
-  --ease-out-expo: cubic-bezier(.22, 1, .36, 1);
-  --ease-ui: cubic-bezier(.2, 0, 0, 1);
-  --dur-ui: 180ms;           /* colour, border, underline */
-  --dur-move: 240ms;         /* stepper morph, mega menu, sheet */
-  --dur-reveal: 600ms;       /* section entrance */
-  --dur-hover: 500ms;        /* image scale */
-  --dur-page: 400ms;         /* template fade */
-
-  /* shadcn semantic mapping */
-  --background: var(--paper);
-  --foreground: var(--ink);
-  --card-foreground: var(--ink);
-  --popover: var(--card);
-  --popover-foreground: var(--ink);
-  --primary: var(--red);
-  --primary-foreground: #FFFFFF;
-  --secondary: var(--surface);
-  --secondary-foreground: var(--ink);
-  --muted: var(--surface);
-  --muted-foreground: var(--ink-muted);
-  --accent: var(--surface-2);
-  --accent-foreground: var(--ink);
-  --destructive: var(--error);
-  --border: var(--line);
-  --input: var(--line-input);
-  --ring: var(--focus);
-  --radius: 0.125rem;        /* 2 px → shadcn sm/md/lg collapse to 1.2–3.2 px */
-  --chart-1: var(--red);
-  --chart-2: var(--ink);
-  --chart-3: var(--ink-muted);
-  --chart-4: var(--bio);
-  --chart-5: var(--line);
-  --sidebar: var(--paper);
-  --sidebar-foreground: var(--ink);
-  --sidebar-primary: var(--red);
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: var(--surface);
-  --sidebar-accent-foreground: var(--ink);
-  --sidebar-border: var(--line);
-  --sidebar-ring: var(--focus);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ─────────────────────────────────────────────────────────────────────────
-   2. Dark mode — designed, not inverted (OS-driven; no toggle)
-   ───────────────────────────────────────────────────────────────────────── */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: #111111;
-    --surface: #1A1A1A;
-    --surface-2: #222222;
-    --card: #171717;
-    --ink: #F2F2F2;
-    --ink-2: #E4E4E4;
-    --ink-muted: #A6A6A6;
-    --line: #3A3A3A;
-    --line-strong: #F2F2F2;
-    --line-input: #8A8A8A;
-    --red: #D9102A;          /* lifted fill: ≥ 3.07:1 against every dark surface, white text 5.18:1 */
-    --red-hover: #D9102A;    /* hover is signalled by the inset ring (see .btn-primary) — a fill step would be invisible or fail AA */
-    --red-deep: #CC071E;     /* pressed (momentary) */
-    --red-tint: #2A1216;
-    --red-text: #F4566A;     /* signal red: ≥ 4.84:1 on every dark surface incl. #222222 */
-    --bio-text: #5FC68A;
-    --bio-tint: #12301F;
-    --petrol-text: #3FA3B2;
-    --error: #FF7A85;
-    --focus: #F2F2F2;
-    --block: #1F1F1F;        /* blocks sit ABOVE the page in dark (lighter than #111111) + 1 px seam */
-    --block-line: #3A3A3A;
-    --fw-display: 700;
-    --shadow-pop: 0 1px 0 rgb(0 0 0 / .6), 0 16px 32px -16px rgb(0 0 0 / .8);
-    --primary-foreground: #FFFFFF;
-    --selection: color-mix(in oklab, var(--red) 28%, transparent);
-  }
+/* ───────────── Typo-Skala ───────────── */
+@utility text-hero {
+  font-size: clamp(2.75rem, 1.55rem + 5.2vw, 6rem);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
 }
-
-/* ─────────────────────────────────────────────────────────────────────────
-   3. Tailwind theme (utilities)
-   ───────────────────────────────────────────────────────────────────────── */
-@theme inline {
-  /* shadcn */
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-
-  /* brand vocabulary → bg-paper, text-ink, border-line, text-red-text, bg-red, … */
-  --color-paper: var(--paper);
-  --color-surface: var(--surface);
-  --color-surface-2: var(--surface-2);
-  --color-ink: var(--ink);
-  --color-ink-2: var(--ink-2);
-  --color-ink-muted: var(--ink-muted);
-  --color-line: var(--line);
-  --color-line-strong: var(--line-strong);
-  --color-line-input: var(--line-input);
-  --color-red: var(--red);
-  --color-red-hover: var(--red-hover);
-  --color-red-deep: var(--red-deep);
-  --color-red-tint: var(--red-tint);
-  --color-red-text: var(--red-text);
-  --color-red-brand: var(--red-brand);
-  --color-bio: var(--bio);
-  --color-bio-text: var(--bio-text);
-  --color-bio-tint: var(--bio-tint);
-  --color-regional: var(--regional);
-  --color-petrol: var(--petrol);
-  --color-petrol-text: var(--petrol-text);
-  --color-bonus-yellow: var(--bonus-yellow);
-  --color-error: var(--error);
-  --color-price: var(--price);
-  --color-price-offer: var(--price-offer);
-  --color-focus: var(--focus);
-  --color-block: var(--block);
-  --color-block-ink: var(--block-ink);
-  --color-block-muted: var(--block-muted);
-  --color-block-line: var(--block-line);
-  --color-block-red: var(--block-red);
-  --color-block-bio: var(--block-bio);
-
-  /* fonts (set in app/fonts.ts) */
-  --font-display: var(--font-schibsted), "Helvetica Neue", Arial, sans-serif;
-  --font-sans: var(--font-figtree), "Helvetica Neue", Arial, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace;
-  --font-heading: var(--font-display);
-
-  /* radius scale (shadcn derives from --radius = 2 px) */
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
-
-  --shadow-card: var(--shadow-card);
-  --shadow-lift: var(--shadow-lift);
-  --shadow-pop: var(--shadow-pop);
-  --ease-expo: var(--ease-out-expo);
-  --ease-ui: var(--ease-ui);
+@utility text-h1 {
+  font-size: clamp(2.5rem, 1.6rem + 3.8vw, 5rem);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
 }
-
-/* ─────────────────────────────────────────────────────────────────────────
-   4. Base
-   ───────────────────────────────────────────────────────────────────────── */
-@layer base {
-  * { @apply border-border outline-ring/60; }
-  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; font-synthesis-weight: none; }
-  body {
-    @apply bg-background text-foreground antialiased;
-    font-family: var(--font-sans);
-    font-size: clamp(1rem, 0.98rem + 0.1vw, 1.0625rem);   /* 16 → 17 px */
-    line-height: 1.6;
-  }
-  h1, h2, h3 {
-    font-family: var(--font-display);
-    font-weight: var(--fw-display);
-    text-wrap: balance;
-    hyphens: auto;
-    hyphenate-limit-chars: 10 4 4;
-    overflow-wrap: normal;
-  }
-  h1 { font-size: clamp(2.75rem, 1.17rem + 6.48vw, 7rem); line-height: 0.95; letter-spacing: -0.035em; }   /* 44 → 112 */
-  h2 { font-size: clamp(2rem, 1.35rem + 2.67vw, 3.75rem); line-height: 1.02; letter-spacing: -0.025em; }   /* 32 → 60 */
-  h3 { font-size: clamp(1.375rem, 1.19rem + 0.76vw, 1.875rem); line-height: 1.15; letter-spacing: -0.015em; font-weight: 700; } /* 22 → 30 */
-  h4 { font-family: var(--font-sans); font-weight: 600; font-size: clamp(1.125rem, 1.08rem + 0.19vw, 1.25rem); line-height: 1.3; letter-spacing: -0.005em; }
-  @media (max-width: 640px) { h1 { letter-spacing: -0.025em; line-height: 1; } }
-  p { text-wrap: pretty; }
-  ::selection { background: var(--selection); }
-  :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 2px; }
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-  }
-}
-
-/* ─────────────────────────────────────────────────────────────────────────
-   5. Utilities
-   ───────────────────────────────────────────────────────────────────────── */
-@utility container-x {
-  width: 100%;
-  margin-inline: auto;
-  padding-inline: clamp(1rem, 4vw, 3.5rem);
-  max-width: 90rem;
-}
-
-/* Eyebrow: Figtree 600, sentence case, muted word, red numeral. <p class="eyebrow eyebrow-num" data-num="03">Angebote</p> */
-@utility eyebrow {
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: clamp(0.75rem, 0.73rem + 0.1vw, 0.8125rem);
+@utility text-h2 {
+  font-size: clamp(2.125rem, 1.45rem + 2.9vw, 4rem);
   line-height: 1;
-  letter-spacing: 0.02em;
-  text-transform: none;
-  font-variant-numeric: tabular-nums lining-nums;
-  color: var(--ink-muted);
+  letter-spacing: -0.03em;
 }
-@utility eyebrow-num {
-  &::before { content: attr(data-num) " — "; color: var(--red-text); font-weight: 700; }
+@utility text-h3 {
+  font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
 }
-/* Auto-numbered sections: <div class="numbered"> … <section data-numbered> <p class="eyebrow eyebrow-auto">Sortiment</p> */
-.numbered { counter-reset: section; }
-.numbered [data-numbered] { counter-increment: section; }
-@utility eyebrow-auto {
-  &::before { content: counter(section, decimal-leading-zero) " — "; color: var(--red-text); font-weight: 700; }
+@utility text-lede {
+  font-size: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
+  line-height: 1.5;
 }
-/* 8×8 px Regional yellow square — the REWE shelf-sign quoted as a mark. Never a text background. */
-@utility eyebrow-regional {
-  &::before { content: ""; display: inline-block; width: .5rem; height: .5rem; margin-right: .5rem; background: var(--regional); vertical-align: .05em; }
-}
-/* 24×3 px REWE-Strich — section openers on inner pages that have no numeral */
-@utility eyebrow-rule {
-  &::before { content: ""; display: inline-block; width: 1.5rem; height: 3px; margin-right: .625rem; vertical-align: .22em; background: var(--red); }
+@utility wrap {
+  width: 100%;
+  max-width: 82.5rem;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 0.6rem + 1.8vw, 1.75rem);
 }
 
-/* Numeric sans — replaces every former `.mono` call site (prices, meta, counters). NOT monospace. */
-@utility num { font-family: var(--font-sans); font-weight: 500; font-variant-numeric: tabular-nums lining-nums; letter-spacing: 0; }
-/* True mono — instrument data only: Frische-Uhr time, Countdown digits, Pfand-Kompass lines, Bonus readouts, brochure folio, kbd, map labels */
-@utility data { font-family: var(--font-mono); font-weight: 500; font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; font-variant-numeric: tabular-nums; }
-@utility data-lg { font-family: var(--font-mono); font-weight: 500; font-size: .8125rem; letter-spacing: .02em; text-transform: none; font-variant-numeric: tabular-nums; }
-/* Display face for non-heading elements (quotes, numerals, nav items, titles) */
-@utility display { font-family: var(--font-display); font-weight: var(--fw-display); letter-spacing: -0.02em; }
-
-/* Rules and frames */
-@utility rule { border-top: 1px solid var(--line); }
-@utility rule-strong { border-top: 2px solid var(--line-strong); }
-@utility rule-b { border-bottom: 1px solid var(--line); }
-@utility frame { border: 1px solid var(--line); }
-@utility brand-rule { border-top: 2px solid var(--red-brand); }
-
-/* Prices */
-@utility price { font-family: var(--font-sans); font-weight: 700; line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums lining-nums; color: var(--price); font-size: clamp(1.25rem, 1.16rem + 0.38vw, 1.5rem); }
-@utility price-sm { font-size: 1rem; letter-spacing: -0.01em; }
-@utility price-lg { font-size: clamp(1.75rem, 1.47rem + 1.14vw, 2.5rem); }
-@utility price-poster { font-family: var(--font-display); font-weight: var(--fw-display); font-size: clamp(3.5rem, 2.57rem + 3.81vw, 6rem); line-height: .9; letter-spacing: -0.04em; font-variant-numeric: proportional-nums lining-nums; }
-@utility price-offer { color: var(--price-offer); }
-@utility price-old { font-family: var(--font-sans); font-weight: 500; font-size: .875rem; color: var(--ink-muted); text-decoration: line-through; text-decoration-thickness: 1.5px; font-variant-numeric: tabular-nums lining-nums; }
-@utility price-meta { font-family: var(--font-sans); font-weight: 500; font-size: .75rem; letter-spacing: .01em; line-height: 1.3; color: var(--ink-muted); font-variant-numeric: tabular-nums lining-nums; }
-
-/* Context switches */
-@utility on-block {
-  background: var(--block);
-  color: var(--block-ink);
-  --paper: var(--block);
-  --card: var(--block);
-  --surface: #262626;
-  --surface-2: #2E2E2E;
-  --ink: var(--block-ink);
-  --ink-2: var(--block-ink);
-  --ink-muted: var(--block-muted);
-  --line: var(--block-line);
-  --line-strong: var(--block-ink);
-  --line-input: #8A8A8A;
-  --red-text: var(--block-red);
-  --price: var(--block-ink);
-  --price-offer: var(--block-red);
-  --bio-text: var(--block-bio);
-  --focus: var(--block-ink);
-  --fw-display: 700;
-}
-@media (prefers-color-scheme: dark) { .on-block { border-top: 1px solid #3A3A3A; } }   /* seam: block (#1F1F1F) vs page (#111111) */
-/* Light island nested inside a block (brochure sheet, Knaller plate, quick-view) */
-@utility on-paper {
-  background: #FFFFFF;
-  color: #141414;
-  --paper: #FFFFFF; --card: #FFFFFF; --surface: #F5F5F4; --surface-2: #ECECEB;
-  --ink: #141414; --ink-2: #2A2A2A; --ink-muted: #5C5C5C;
-  --line: #CFCFCC; --line-strong: #141414; --line-input: #767676;
-  --red-text: #CC071E; --price: #141414; --price-offer: #CC071E; --bio-text: #0E6B34; --focus: #141414; --fw-display: 800;
+@layer base {
+  html {
+    color-scheme: light;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 3px;
+    border-radius: 0.5rem;
+  }
+  .on-dark :focus-visible {
+    outline-color: #fff;
+  }
+  ::selection {
+    background: var(--color-red);
+    color: #fff;
+  }
+  [id] {
+    scroll-margin-top: 6rem;
+  }
 }
 
-/* Header is opaque paper on every page (sticky). Vars kept for LangSwitch. */
-@utility glass { background: var(--paper); }
-.site-header { --hdr-fg: var(--ink); --hdr-bg: var(--paper); color: var(--hdr-fg); background: var(--hdr-bg); }   /* opaque on every page (G2 adds bg-paper + sticky) */
-
-
-/* Hover: cards do not lift — their edge sharpens */
-@utility card-hover {
-  transition: border-color var(--dur-ui) var(--ease-ui);
-  &:hover { border-color: var(--line-strong); }
+/* ───────────── Einblenden beim Scrollen ─────────────
+   Einmalig per IntersectionObserver (components/motion/reveal-observer.tsx). Versteckt wird nur, wenn JS läuft
+   (html.js) – ohne JS, für Crawler und Screenshots bleibt alles sichtbar. */
+.reveal {
+  transition:
+    opacity 0.8s var(--ease-out-expo),
+    transform 0.8s var(--ease-out-expo);
 }
-@utility img-zoom {
-  transition: transform var(--dur-hover) var(--ease-out-expo);
-  .group:hover & { transform: scale(1.02); }
-}
-/* One photographic grade for every photograph (not for product cut-outs on white) */
-@utility img-grade { filter: saturate(1) contrast(1.04); }
-@media (prefers-color-scheme: dark) { .img-grade { filter: saturate(1) contrast(1.04) brightness(.92); } }
-@utility hide-scrollbar {
-  scrollbar-width: none;
-  &::-webkit-scrollbar { display: none; }
-}
-/* The only text-on-photo overlay (Magazin article, Rezept detail, 404): ink-based, bottom-weighted but covering the whole
-   text column — breadcrumbs and eyebrow at the top of the hero need ≥ 4.5:1 on bright photos too (.3 ink floor). */
-@utility scrim-editorial { background: linear-gradient(to top, rgb(20 20 20 / .82) 0%, rgb(20 20 20 / .62) 50%, rgb(20 20 20 / .3) 100%); }
-
-/* Primary button hover in dark mode: fill stays, a 2 px inset ring appears (fill steps are invisible or fail AA on dark) */
-@media (prefers-color-scheme: dark) {
-  .btn-primary:hover { box-shadow: inset 0 0 0 2px rgb(255 255 255 / .38); }
+@media (prefers-reduced-motion: no-preference) {
+  html.js .reveal:not(.is-in) {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
 }
 
-/* Decorative footer watermark ("Rödelheim", not the wordmark) */
-.footer-watermark::after {
-  content: attr(data-text);
-  display: block;
+/* ───────────── Live-Punkt ───────────── */
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, currentColor 45%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 0.6rem transparent;
+  }
+}
+.live-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: currentColor;
+  flex: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .live-dot[data-open="true"] {
+    animation: pulse-ring 2s ease-out 3;
+  }
+}
+
+/* ───────────── Beitragstext (Markdown) ───────────── */
+.prose-article {
+  color: var(--color-ink-2);
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+.prose-article > * + * {
+  margin-top: 1.25em;
+}
+.prose-article h2 {
+  margin-top: 2em;
+  font-size: clamp(1.625rem, 1.3rem + 1.2vw, 2.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--color-ink);
+}
+.prose-article h3 {
+  margin-top: 1.6em;
+  font-size: 1.375rem;
+  letter-spacing: -0.015em;
+  color: var(--color-ink);
+}
+.prose-article ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.6em;
+}
+.prose-article ul li {
+  position: relative;
+  padding-left: 1.5em;
+}
+.prose-article ul li::before {
+  content: "";
+  position: absolute;
+  left: 0.2em;
+  top: 0.68em;
+  width: 0.45em;
+  height: 0.45em;
+  border-radius: 999px;
+  background: var(--color-red);
+}
+.prose-article strong {
+  color: var(--color-ink);
+  font-weight: 650;
+}
+.prose-article a {
+  color: var(--color-red);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+.prose-article a:hover {
+  text-decoration-thickness: 2px;
+}
+.prose-article blockquote footer {
+  margin-top: 0.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.45;
+  color: var(--color-muted);
+}
+.prose-article blockquote {
+  margin-block: 2em;
+  padding: 1.5rem 1.75rem;
+  border-radius: var(--radius-card);
+  background: var(--color-soft);
   font-family: var(--font-display);
-  font-weight: var(--fw-display);
-  font-size: clamp(4rem, 19vw, 19rem);   /* 19vw keeps „Rödelheim" inside the 358 px column at 390 */
-  line-height: 0.8;
-  letter-spacing: -0.05em;
-  color: rgb(255 255 255 / .05);
+  font-weight: 700;
+  font-size: clamp(1.375rem, 1.15rem + 0.9vw, 1.875rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+  text-wrap: balance;
 }
 
-/* Word-mask reveal (hero h1) — CSS only, no blur, LCP-safe */
-@keyframes word-in { from { transform: translateY(110%); } to { transform: none; } }
-.word-mask { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: .06em; margin-bottom: -.06em; }
-.word-in { display: inline-block; animation: word-in .65s var(--ease-out-expo) both; }
-@media (prefers-reduced-motion: reduce) { .word-in { animation: none; } }
-
-/* Live dot: finite pulse (3 cycles) then static */
-@keyframes live-pulse { 0% { transform: scale(1); opacity: .7; } 100% { transform: scale(2.6); opacity: 0; } }
-.live-pulse { transform-origin: center; animation: live-pulse 2s ease-out 3; }
-
-/* Pulse dot for journey map (destination only) */
-@keyframes pulse-dot { 0% { transform: scale(1); opacity: .9; } 100% { transform: scale(3.2); opacity: 0; } }
-.pulse-dot { transform-origin: center; animation: pulse-dot 1.8s ease-out infinite; }
-
-/* Flip pages */
-.flip-scene { perspective: 2000px; }
-.flip-page { transform-style: preserve-3d; backface-visibility: hidden; }
-
-/* Prose for articles / legal */
-.prose-editorial { font-size: clamp(1.0625rem, 0.3vw + 1rem, 1.1875rem); line-height: 1.7; color: var(--ink-2); }
-.prose-editorial h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.625rem, 1.2vw + 1.1rem, 2.125rem); margin: 2.2em 0 .7em; letter-spacing: -0.02em; color: var(--ink); }
-.prose-editorial h3 { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.25rem, .6vw + 1rem, 1.5rem); margin: 1.8em 0 .5em; color: var(--ink); }
-.prose-editorial p { margin: 0 0 1.25em; }
-.prose-editorial ul { margin: 0 0 1.5em 1.25em; list-style: disc; }
-.prose-editorial li { margin: .35em 0; }
-.prose-editorial blockquote { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.375rem, 1vw + 1rem, 1.875rem); line-height: 1.3; letter-spacing: -0.02em; margin: 2em 0; padding-left: 1.25em; border-left: 2px solid var(--red); color: var(--ink); }
-.prose-editorial strong { font-weight: 600; color: var(--ink); }
-.prose-editorial a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--red); text-decoration-thickness: 2px; text-underline-offset: 4px; }
-
-/* Leaflet — greyscale newsprint map; the red store marker is the only colour.
-   leaflet.css loads after this sheet (imported by the client-only map chunk), so overrides need higher specificity. */
-.leaflet-container { font-family: var(--font-sans); background: var(--surface); }
-.frame .leaflet-container, #main .leaflet-container { background: var(--surface); }   /* beats Leaflet's #ddd slab in dark mode */
-.leaflet-tile { filter: grayscale(1) contrast(1.06) brightness(1.03); }
-@media (prefers-color-scheme: dark) { .leaflet-tile { filter: invert(1) grayscale(1) brightness(.78) contrast(1.15); } }
-.leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--card); color: var(--ink); border-radius: 0; box-shadow: var(--shadow-pop); border: 1px solid var(--line-strong); }
-.leaflet-popup-content { font: 500 13px/1.4 var(--font-sans); margin: 12px 14px; }
-.leaflet-popup-content strong { font-weight: 600; }
-.leaflet-control-zoom a { background: var(--card) !important; color: var(--ink) !important; border-color: var(--line) !important; border-radius: 0 !important; }
-/* 44 px zoom targets (Leaflet: 26 / 30 px) — `.leaflet-touch .leaflet-bar a` has the same specificity, hence the container hook */
-.leaflet-container .leaflet-bar a, .leaflet-container.leaflet-touch .leaflet-bar a { width: 44px; height: 44px; line-height: 44px; }
-.leaflet-container .leaflet-control-attribution { background: color-mix(in oklab, var(--paper) 85%, transparent) !important; color: var(--ink-muted) !important; font-size: 12px; }
-.leaflet-control-attribution a { color: var(--ink) !important; }
-
-/* Print: Prospekt and recipes on white, no overlays */
-@media print {
-  :root { --paper: #FFFFFF; --surface: #FFFFFF; --ink: #000000; }
-  .scrim-editorial, .footer-watermark { display: none; }
+/* Scrollbar in horizontalen Reihen ausblenden (Inhalt bleibt per Wischen/Tastatur erreichbar) */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }

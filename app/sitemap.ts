@@ -1,29 +1,20 @@
 import type { MetadataRoute } from "next";
-import { getArticles, getCategories, getJobs, getLegalPages, getProducts, getRecipes, getSettings, getStores } from "@/lib/content";
+import { posts } from "@/content/aktuelles";
+import { absoluteUrl } from "@/lib/site";
 
-type Entry = { path: string; lastModified?: string };
-
-/**
- * Indexable routes only: /konto, /login, /warenkorb and /checkout are noindex (robots.ts disallows them) and legal
- * pages join once published. `lastModified` comes from content dates (articles, jobs, legal) — never the build time.
- */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = getSettings().brand.siteUrl;
-  const statics: Entry[] = ["", "/kategorien", "/kategorien/alle", "/rezepte", "/filialen", "/angebote", "/magazin", "/regional", "/bio", "/ueber-uns", "/nachhaltigkeit", "/karriere", "/bonus", "/kontakt"].map((path) => ({ path }));
-  const dyn: Entry[] = [
-    ...getCategories().map((c) => ({ path: `/kategorien/${c.slug}` })),
-    ...getProducts().map((p) => ({ path: `/produkt/${p.slug}` })),
-    ...getRecipes().map((r) => ({ path: `/rezepte/${r.slug}` })),
-    ...getStores().filter((s) => s.status === "published").map((s) => ({ path: `/filialen/${s.slug}` })),
-    ...getArticles().map((a) => ({ path: `/magazin/${a.slug}`, lastModified: a.publishedAt })),
-    ...getJobs().map((j) => ({ path: `/karriere/${j.slug}`, lastModified: j.datePosted })),
-    ...getLegalPages().filter((l) => l.status === "published").map((l) => ({ path: `/${l.slug}`, lastModified: l.updatedAt ?? undefined })),
+  const pages: { path: string; priority: number; changeFrequency: "weekly" | "monthly" | "yearly" }[] = [
+    { path: "/", priority: 1, changeFrequency: "weekly" },
+    { path: "/angebote", priority: 0.9, changeFrequency: "weekly" },
+    { path: "/markt", priority: 0.8, changeFrequency: "monthly" },
+    { path: "/kontakt", priority: 0.8, changeFrequency: "monthly" },
+    { path: "/aktuelles", priority: 0.6, changeFrequency: "weekly" },
+    { path: "/karriere", priority: 0.6, changeFrequency: "monthly" },
+    { path: "/impressum", priority: 0.2, changeFrequency: "yearly" },
+    { path: "/datenschutz", priority: 0.2, changeFrequency: "yearly" },
   ];
-  return [...statics, ...dyn].map(({ path, lastModified }) => ({
-    url: `${base}${path}`,
-    ...(lastModified ? { lastModified } : {}),
-    changeFrequency: path === "" || path === "/angebote" ? "daily" : "weekly",
-    priority: path === "" ? 1 : path.startsWith("/produkt") ? 0.8 : 0.6,
-    alternates: { languages: { de: `${base}${path}`, en: `${base}/en${path}` } },
-  }));
+  return [
+    ...pages.map((p) => ({ url: absoluteUrl(p.path), changeFrequency: p.changeFrequency, priority: p.priority })),
+    ...posts.map((p) => ({ url: absoluteUrl(`/aktuelles/${p.slug}`), lastModified: p.date, changeFrequency: "yearly" as const, priority: 0.5 })),
+  ];
 }
