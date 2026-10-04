@@ -17,6 +17,8 @@ export interface IngredientVM { name: string; amount: number; unit: string; prod
 /**
  * Signature feature (§4.38): every ingredient line can be added — or all of them in one click (the page's one red).
  * „Habe ich schon" skips lines. Prices are ink, never red; the shell is a hairline card.
+ * Rows are a subgrid (checkbox · amount · name) with the pill on its own line, so the sidebar card never overflows
+ * horizontally — its inner width is only ~230–330 px from md up and 308 px at 390 px.
  */
 export function BulkIngredients({ ingredients, servings }: { ingredients: IngredientVM[]; servings: number }) {
   const t = useTranslations("recipes");
@@ -46,21 +48,21 @@ export function BulkIngredients({ ingredients, servings }: { ingredients: Ingred
       </Cta>
       <p className="num mt-2 text-xs text-ink-muted" aria-live="polite">{addable.length} · {formatPrice(total, locale)}</p>
 
-      <ul className="mt-6 divide-y divide-line">
+      <ul className="mt-6 grid grid-cols-[auto_auto_minmax(0,1fr)] gap-x-3 divide-y divide-line">
         {ingredients.map((ing, i) => {
           const skipped = have.has(i);
           return (
-            <li key={i} className={cn("flex items-center gap-3 py-3 transition-opacity duration-[var(--dur-ui)]", skipped && "opacity-45")}>
+            <li key={i} className={cn("col-span-3 grid grid-cols-subgrid items-center gap-y-2 py-3 transition-opacity duration-[var(--dur-ui)]", skipped && "opacity-45")}>
               <Checkbox id={`have-${i}`} className="rounded-[2px]" checked={skipped} onCheckedChange={(v) => { const s = new Set(have); if (v) s.add(i); else s.delete(i); setHave(s); }} aria-label={t("haveIt")} />
-              <label htmlFor={`have-${i}`} className="num w-24 shrink-0 text-sm text-ink">{ing.amount} {ing.unit}</label>
-              <span className={cn("flex-1 text-sm text-ink", skipped && "line-through")}>
+              <label htmlFor={`have-${i}`} className="num whitespace-nowrap text-sm text-ink">{ing.amount} {ing.unit}</label>
+              <span className={cn("min-w-0 text-sm text-ink [overflow-wrap:anywhere]", skipped && "line-through")}>
                 {ing.product ? <Link href={`/produkt/${ing.product.slug}`} className="underline-offset-4 hover:underline">{ing.name}</Link> : ing.name}
-                {ing.product && <span className="num ml-2 text-[12px] text-ink">{formatPrice(ing.product.price, locale)}</span>}
+                {ing.product && <span className="num ml-2 inline-block text-[12px] text-ink">{formatPrice(ing.product.price, locale)}</span>}
               </span>
               {ing.product ? (
-                <AddToCart item={toCartItem(ing.product)} variant="pill" />
+                <AddToCart item={toCartItem(ing.product)} variant="pill" className="col-span-3 justify-self-end" />
               ) : (
-                <span className="text-[12px] text-ink-muted">{t("notInShop")}</span>
+                <span className="col-span-3 justify-self-end text-[12px] text-ink-muted">{t("notInShop")}</span>
               )}
             </li>
           );

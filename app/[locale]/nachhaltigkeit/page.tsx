@@ -36,7 +36,7 @@ export default async function SustainabilityPage({ params }: { params: Promise<{
                 <p className="font-medium text-ink">{tx(g.label, locale)}</p>
                 <p className="num shrink-0 text-[12px] text-ink-muted">{t("target", { target: g.target })}</p>
               </div>
-              <ProgressBar value={g.progress} className="mt-4" />
+              <ProgressBar value={g.progress} label={tx(g.label, locale)} className="mt-4" />
             </StaggerItem>
           ))}
         </Stagger>

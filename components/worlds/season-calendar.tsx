@@ -11,6 +11,8 @@ const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
 /**
  * Saisonkalender Hessen (/regional): `num` heatmap table — produce rows × 12 months, in-season cells `bg-bio-tint`,
  * the current month column opened by a 3 px red rule. Horizontal scroll on narrow screens, first column sticky.
+ * The scroll wrapper is `relative`: the absolutely positioned `sr-only` cell texts would otherwise escape its clip and
+ * widen the page (document.scrollWidth > viewport at 390 px).
  * The current month is resolved after mount so the static page never bakes a build-time month in.
  */
 export function SeasonCalendar({ rows, className }: { rows: SeasonRow[]; className?: string }) {
@@ -24,8 +26,8 @@ export function SeasonCalendar({ rows, className }: { rows: SeasonRow[]; classNa
   }, [locale]);
 
   return (
-    <div className={className}>
-      <div className="overflow-x-auto" role="region" aria-label={t("seasonAria")} tabIndex={0}>
+    <div className={cn("min-w-0 max-w-full", className)}>
+      <div className="relative max-w-full overflow-x-auto" role="region" aria-label={t("seasonAria")} tabIndex={0}>
         <table className="num w-full min-w-[760px] border-collapse text-[13px]">
           <caption className="sr-only">{t("seasonAria")}</caption>
           <thead>
