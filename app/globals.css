@@ -4,6 +4,7 @@
 @theme {
   --color-red: #cc071e;
   --color-red-hover: #b00619;
+  --color-red-deep: #9c0516;
   --color-red-bright: #ff5a6b; /* Rot auf dunklem Grund */
   --color-red-tint: #fcebed;
   --color-ink: #121212;
@@ -24,6 +25,7 @@
 
   --radius-card: 1.5rem;
   --radius-media: 1.75rem;
+  --radius-stage: 2rem;
 
   --shadow-soft: 0 1px 2px rgb(18 18 18 / 0.05), 0 12px 32px rgb(18 18 18 / 0.08);
   --shadow-lift: 0 30px 80px rgb(18 18 18 / 0.1), 0 0 0 1px rgb(18 18 18 / 0.04);
@@ -56,6 +58,13 @@
 @utility text-lede {
   font-size: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
   line-height: 1.5;
+}
+/* Dachzeile über Abschnittsüberschriften – klein, gesperrt, ruhig. */
+@utility text-eyebrow {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 @utility wrap {
   width: 100%;
