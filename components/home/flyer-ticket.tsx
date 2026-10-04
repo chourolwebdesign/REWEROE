@@ -1,5 +1,6 @@
 import { FlyerWeekText } from "@/components/live/flyer-week";
 import { ButtonLink } from "@/components/ui/button";
+import { ShareButton } from "@/components/ui/share-button";
 import { markt } from "@/content/markt";
 import { flyerWeek } from "@/lib/flyer";
 import { cn } from "@/lib/utils";
@@ -37,6 +38,13 @@ export function FlyerTicket({ headingLevel = "h2", className }: { headingLevel?:
           <ButtonLink href={markt.links.flyer} external variant="ink" size="lg">
             Prospekt öffnen
           </ButtonLink>
+          <ShareButton
+            url={markt.links.flyer}
+            title="Prospekt der Woche – REWE Rödelheim"
+            text={`Die Angebote bei REWE Rödelheim (KW ${week.kw}):`}
+            label="Teilen"
+            size="lg"
+          />
         </div>
       </div>
     </div>

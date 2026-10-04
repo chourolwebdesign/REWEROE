@@ -62,6 +62,51 @@ export default function DatenschutzPage() {
             unsere Website; dort gelten die Datenschutzbestimmungen des jeweiligen Anbieters.
           </p>
 
+          <h2 id="bewerbung">Bewerbung über unser Online-Formular</h2>
+          <p>
+            Wenn du dich über das Formular bewirbst, verarbeiten wir deine Angaben (Name, Telefon und/oder E-Mail, gewünschter Bereich, Beschäftigungsart,
+            Startdatum, Verfügbarkeit, deine Nachricht) und – falls du sie hochlädst – deine Unterlagen. Zweck ist allein die Durchführung des
+            Bewerbungsverfahrens (Art. 6 Abs. 1 lit. b DSGVO, Anbahnung eines Beschäftigungsverhältnisses).
+          </p>
+          <p>
+            Die Daten werden verschlüsselt an unseren Server übertragen und von dort per E-Mail an das Postfach des Markts weitergeleitet; dafür nutzen wir
+            einen E-Mail-Dienstleister als Auftragsverarbeiter: <Missing>Name des E-Mail-Dienstleisters</Missing>. Auf der Website selbst werden
+            Bewerbungen nicht gespeichert.
+          </p>
+          <p>
+            Wir löschen deine Unterlagen spätestens sechs Monate nach Abschluss des Verfahrens, sofern wir dich nicht einstellen. Wenn du dem Talentpool
+            zustimmst, bewahren wir deine Bewerbung bis zu zwölf Monate auf (Art. 6 Abs. 1 lit. a DSGVO); diese Einwilligung kannst du jederzeit
+            widerrufen, zum Beispiel telefonisch. Es findet keine automatisierte Entscheidung statt.
+          </p>
+
+          <h2>Speicherung in deinem Browser</h2>
+          <p>
+            Damit nichts verloren geht, speichert dein Browser einen angefangenen Bewerbungsentwurf sowie Auswahl und Häkchen im Notvorrat-Rechner
+            lokal auf deinem Gerät (localStorage). Diese Daten werden nicht an uns übertragen und nach dem Absenden der Bewerbung gelöscht; du kannst sie
+            auch jederzeit über die Einstellungen deines Browsers entfernen. Das ist für die von dir gewünschte Funktion unbedingt erforderlich (§ 25
+            Abs. 2 Nr. 2 TDDDG).
+          </p>
+
+          <h2>Offline-Funktion und App</h2>
+          <p>
+            Ein sogenannter Service Worker legt Seiten, Bilder und Programmdateien dieser Website im Speicher deines Browsers ab, damit Öffnungszeiten und
+            Adresse auch ohne Internet erreichbar sind und die Seite schneller lädt. Dabei werden keine personenbezogenen Daten gespeichert (§ 25 Abs. 2
+            Nr. 2 TDDDG). Du kannst den Speicher in den Browser-Einstellungen löschen.
+          </p>
+
+          <h2>Markt-Kalender</h2>
+          <p>
+            Wenn du den Markt-Kalender abonnierst, ruft deine Kalender-App die Datei regelmäßig von unserem Server ab. Dabei fallen nur die unter „Aufruf
+            der Website und Hosting“ beschriebenen Server-Protokolle an. Die Links zu Google Kalender und Outlook öffnen den jeweiligen Anbieter erst nach
+            deinem Klick.
+          </p>
+
+          <h2>Teilen</h2>
+          <p>
+            Über „Teilen“ nutzt du das Teilen-Menü deines Geräts oder öffnest WhatsApp (WhatsApp Ireland Ltd.). Daten werden erst übertragen, wenn du
+            selbst teilst.
+          </p>
+
           <h2>Kontakt per Telefon</h2>
           <p>
             Wenn du uns anrufst, verarbeiten wir deine Angaben nur, um dein Anliegen zu bearbeiten (Art. 6 Abs. 1 lit. b bzw. f DSGVO).

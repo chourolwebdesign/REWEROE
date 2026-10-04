@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/brand/logo";
+import { InstallApp } from "@/components/pwa/install-app";
 import { InstagramIcon } from "@/components/ui/icons";
 import { markt } from "@/content/markt";
 import { weekRows } from "@/lib/hours";
@@ -9,7 +10,7 @@ export function SiteFooter() {
   const year = new Date().getFullYear();
   return (
     <footer className="on-dark bg-night pb-28 text-white lg:pb-0">
-      <div className="wrap grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_0.8fr] lg:py-20">
+      <div className="wrap grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.25fr_1fr_1fr_0.75fr_0.95fr] lg:py-20">
         <div className="grid content-start gap-5">
           <Logo tone="light" height={38} />
           <p className="max-w-[34ch] text-white/70">Dein REWE in Frankfurt-Rödelheim – ein selbstständig geführter Markt der {markt.legalName}.</p>
@@ -60,6 +61,24 @@ export function SiteFooter() {
               </li>
             ))}
           </ul>
+        </nav>
+
+        <nav aria-label="Service">
+          <h2 className="font-sans text-[0.9375rem] font-semibold tracking-normal text-white/60">Service</h2>
+          <ul className="mt-2 grid">
+            {[
+              { href: "/karriere/bewerben", label: "Bewerben in 60 Sekunden" },
+              { href: "/angebote#kalender", label: "Markt-Kalender" },
+              { href: "/notvorrat", label: "Notvorrat-Rechner" },
+            ].map((item) => (
+              <li key={item.href}>
+                <Link href={item.href} className="inline-flex min-h-10 items-center text-white/85 hover:text-white hover:underline hover:underline-offset-4">
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <InstallApp variant="glass" size="sm" className="mt-4" />
         </nav>
       </div>
 

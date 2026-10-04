@@ -1,6 +1,8 @@
 import { CareerBand } from "@/components/home/career-band";
 import { FlyerTicket } from "@/components/home/flyer-ticket";
 import { Highlights } from "@/components/home/highlights";
+import { Services } from "@/components/home/services";
+import { hasUpcomingTermine, TermineList } from "@/components/home/termine";
 import { StoryHero } from "@/components/home/story-hero";
 import { OpenStatus } from "@/components/live/open-status";
 import { FlyerWeekText } from "@/components/live/flyer-week";
@@ -15,11 +17,14 @@ import { galerie } from "@/content/galerie";
 import { markt } from "@/content/markt";
 import { story } from "@/content/story";
 import { flyerWeek } from "@/lib/flyer";
+import { berlinNow } from "@/lib/hours";
+import { absoluteUrl } from "@/lib/site";
 import { resolveGallery, resolveStory } from "@/lib/resolve";
 
 export default function HomePage() {
   const week = flyerWeek();
   const latest = posts[0];
+  const today = berlinNow(new Date()).date;
 
   return (
     <>
@@ -95,6 +100,25 @@ export default function HomePage() {
         />
         <Highlights className="mt-10" />
       </section>
+
+      <section aria-labelledby="praktisch-titel" className="wrap pt-24 md:pt-32">
+        <SectionHeading
+          id="praktisch-titel"
+          eyebrow="Praktisch"
+          title="Mehr als einkaufen."
+          lede="Kleine Helfer für den Alltag – ohne Anmeldung, ohne Werbung, ohne Datensammeln."
+        />
+        <Services calendarUrl={absoluteUrl("/kalender.ics")} className="mt-10" />
+      </section>
+
+      {hasUpcomingTermine(today) && (
+        <section aria-labelledby="termine-titel" className="wrap pt-24 md:pt-32">
+          <SectionHeading id="termine-titel" eyebrow="Termine" title="Demnächst im Markt." />
+          <div className="mt-10">
+            <TermineList today={today} />
+          </div>
+        </section>
+      )}
 
       {latest && (
         <section aria-labelledby="aktuelles-titel" className="wrap pt-24 md:pt-32">

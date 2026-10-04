@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { MobileBar } from "@/components/layout/mobile-bar";
 import { RevealObserver } from "@/components/motion/reveal-observer";
+import { ServiceWorker } from "@/components/pwa/service-worker";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ldScript, storeJsonLd } from "@/lib/jsonld";
@@ -51,6 +52,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SiteFooter />
         <MobileBar />
         <RevealObserver />
+        <ServiceWorker />
         <script type="application/ld+json" dangerouslySetInnerHTML={ldScript(storeJsonLd())} />
       </body>
     </html>

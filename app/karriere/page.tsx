@@ -30,7 +30,16 @@ export default function KarrierePage() {
         eyebrow="Karriere"
         title="Arbeiten im Supermarkt um die Ecke."
         lede="Kurze Wege, ein Markt mitten im Viertel und Arbeit, die man am Ende des Tages sieht. So kannst du bei uns einsteigen."
-      />
+      >
+        <div className="mt-8 flex flex-wrap gap-3">
+          <ButtonLink href="/karriere/bewerben" size="lg">
+            In 60 Sekunden bewerben
+          </ButtonLink>
+          <ButtonLink href={markt.links.jobs} external variant="soft" size="lg">
+            REWE-Stellensuche
+          </ButtonLink>
+        </div>
+      </PageHeader>
 
       <section aria-labelledby="stellen-titel" className="wrap">
         <div className="grid gap-3 md:grid-cols-[1.1fr_1fr] md:gap-4">
@@ -54,7 +63,10 @@ export default function KarrierePage() {
               </p>
             )}
             <div className="mt-8 flex flex-wrap gap-3">
-              <ButtonLink href={markt.links.jobs} external variant="white" size="lg">
+              <ButtonLink href="/karriere/bewerben" variant="white" size="lg">
+                Jetzt bewerben
+              </ButtonLink>
+              <ButtonLink href={markt.links.jobs} external variant="glass" size="lg">
                 Zur Stellensuche
               </ButtonLink>
               <ButtonLink href={markt.links.ausbildung} external variant="glass" size="lg">
@@ -100,7 +112,7 @@ export default function KarrierePage() {
               Lieber direkt fragen?
             </h2>
             <p className="mt-3 max-w-[52ch] text-ink-2">
-              Ruf uns an oder sprich uns im Markt an – wir sagen dir gern, ob gerade jemand gesucht wird.
+              Ruf uns an oder sprich uns im Markt an – wir sagen dir gern, ob gerade jemand gesucht wird. Oder schick uns deine Kurzbewerbung online.
             </p>
           </div>
           <ButtonLink href={`tel:${markt.phone.e164}`} variant="red" size="lg" className="mt-6 md:mt-0">
