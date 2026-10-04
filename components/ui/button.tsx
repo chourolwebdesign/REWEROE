@@ -30,7 +30,8 @@ type Props = Omit<ComponentProps<"a">, "href"> & {
 export function buttonClasses(variant: keyof typeof VARIANTS = "red", size: keyof typeof SIZES = "md") {
   return cn(
     "inline-flex shrink-0 items-center justify-center gap-2.5 rounded-full font-semibold whitespace-nowrap",
-    "transition-[background-color,box-shadow,transform] duration-200 ease-out active:scale-[0.98]",
+    // Drücken: sofortige, kurze Rückmeldung (150 ms, kräftiges ease-out)
+    "transition-[background-color,color,box-shadow,transform] duration-150 ease-[var(--ease-out-expo)] active:scale-[0.97]",
     VARIANTS[variant],
     SIZES[size],
   );

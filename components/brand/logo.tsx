@@ -26,7 +26,8 @@ export function Logo({ tone = "dark", className, height = 34, framed = false }: 
       <LogoMark height={height} framed={framed} />
       <span className={cn("leading-tight", tone === "light" ? "text-white" : "text-ink")}>
         <span className="block font-display text-[1.125rem] font-bold tracking-[-0.01em]">Rödelheim</span>
-        <span className={cn("block text-[0.75rem] font-medium", tone === "light" ? "text-white/70" : "text-muted")}>Ali Alamyaar oHG</span>
+        {/* auf Rot volles Weiß: 12 px brauchen 4,5 : 1 (white/70 lag auf dem Hero-Rot bei 3,3 : 1) */}
+        <span className={cn("block text-[0.75rem] font-medium", tone === "light" ? "text-white" : "text-muted")}>Ali Alamyaar oHG</span>
       </span>
     </Link>
   );

@@ -85,7 +85,10 @@ export function SiteHeader() {
           <button
             type="button"
             onClick={() => dialogRef.current?.showModal()}
-            className={cn("grid size-11 place-items-center rounded-full transition lg:hidden", overHero ? "hover:bg-white/12" : "hover:bg-soft")}
+            className={cn(
+              "grid size-11 place-items-center rounded-full transition-[background-color,transform] duration-150 active:scale-95 lg:hidden",
+              overHero ? "hover:bg-white/12" : "hover:bg-soft",
+            )}
             aria-label="Menü öffnen"
             aria-haspopup="dialog"
           >
@@ -97,14 +100,14 @@ export function SiteHeader() {
       <dialog
         ref={dialogRef}
         aria-label="Menü"
-        className="m-0 h-[100dvh] max-h-none w-full max-w-none bg-night p-0 text-white backdrop:bg-black/60 open:flex open:flex-col"
+        className="dialog-menu m-0 h-[100dvh] max-h-none w-full max-w-none bg-night p-0 text-white backdrop:bg-black/60 open:flex open:flex-col"
       >
         <div className="wrap flex h-[4.5rem] shrink-0 items-center justify-between">
           <Logo tone="light" />
           <button
             type="button"
             onClick={() => dialogRef.current?.close()}
-            className="grid size-11 place-items-center rounded-full hover:bg-white/12"
+            className="grid size-11 place-items-center rounded-full transition-[background-color,transform] duration-150 hover:bg-white/12 active:scale-95"
             aria-label="Menü schließen"
           >
             <X className="size-6" aria-hidden />

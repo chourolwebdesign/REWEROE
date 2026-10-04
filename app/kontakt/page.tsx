@@ -24,7 +24,7 @@ export default function KontaktPage() {
     {
       icon: MapPin,
       title: "Vorbeikommen",
-      text: `${markt.address.street}, ${markt.address.zip} ${markt.address.city}-${markt.address.district}`,
+      text: `${markt.address.street}, ${markt.address.zip} ${markt.address.city}`,
       action: (
         <ButtonLink href={markt.links.googleMaps} external variant="ink">
           Route planen

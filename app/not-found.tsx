@@ -16,7 +16,7 @@ export default function NotFound() {
       </p>
       <h1 className="mt-4 max-w-[16ch] text-h1">Diese Seite gibt es nicht (mehr).</h1>
       <p className="mt-5 max-w-[46ch] text-lede text-muted">Vielleicht hilft dir eine dieser Seiten weiter:</p>
-      <div className="mt-8 flex flex-wrap gap-3">
+      <div className="cta-row mt-8">
         <ButtonLink href="/">Zur Startseite</ButtonLink>
         <ButtonLink href={markt.links.flyer} external variant="soft">
           Prospekt der Woche

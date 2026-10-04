@@ -31,7 +31,7 @@ export default function KarrierePage() {
         title="Arbeiten im Supermarkt um die Ecke."
         lede="Kurze Wege, ein Markt mitten im Viertel und Arbeit, die man am Ende des Tages sieht. So kannst du bei uns einsteigen."
       >
-        <div className="mt-8 flex flex-wrap gap-3">
+        <div className="cta-row mt-8">
           <ButtonLink href="/karriere/bewerben" size="lg">
             In 60 Sekunden bewerben
           </ButtonLink>
@@ -62,7 +62,7 @@ export default function KarrierePage() {
                 Aktuelle Stellen und Ausbildungsplätze von REWE in Rödelheim und Umgebung findest du in der REWE-Stellensuche.
               </p>
             )}
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="cta-row mt-8">
               <ButtonLink href="/karriere/bewerben" variant="white" size="lg">
                 Jetzt bewerben
               </ButtonLink>
@@ -75,14 +75,15 @@ export default function KarrierePage() {
             </div>
           </div>
           <div className="reveal relative min-h-[18rem] overflow-hidden rounded-[var(--radius-media)] bg-soft">
+            {/* Arbeit im Markt statt des Resilienzwoche-Banners („Notfälle kommen plötzlich“), das hier falsch klänge */}
             <Image
-              src={media["resilienzwoche-obst"].src}
-              alt={media["resilienzwoche-obst"].alt}
+              src={media["regional-lieferung"].src}
+              alt={media["regional-lieferung"].alt}
               fill
               sizes="(min-width: 48rem) 45vw, 100vw"
               quality={70}
               className="object-cover"
-              style={{ objectPosition: "75% 50%" }}
+              style={{ objectPosition: "60% 40%" }}
             />
           </div>
         </div>

@@ -10,8 +10,9 @@ export function SiteFooter() {
   const year = new Date().getFullYear();
   return (
     <footer className="on-dark bg-night pb-28 text-white lg:pb-0">
-      <div className="wrap grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_0.85fr_1fr] lg:gap-14 lg:py-24">
-        <div className="grid content-start gap-6 md:col-span-2 lg:col-span-1">
+      {/* vier Spalten erst ab 1280 px – darunter wird die Adresse sonst mitten in „18–22“ umbrochen */}
+      <div className="wrap grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-3 lg:py-24 xl:grid-cols-[1.4fr_1fr_0.85fr_1fr] xl:gap-14">
+        <div className="grid content-start gap-6 md:col-span-2 lg:col-span-3 xl:col-span-1">
           <Logo tone="light" height={38} />
           <p className="max-w-[38ch] text-lede text-white/70">
             Dein REWE in Frankfurt-Rödelheim – ein selbstständig geführter Markt der {markt.legalName}.
@@ -20,7 +21,7 @@ export function SiteFooter() {
             href={markt.links.instagram}
             target="_blank"
             rel="noopener"
-            className="inline-flex min-h-11 w-fit items-center gap-2.5 rounded-full bg-white/10 px-5 font-semibold ring-1 ring-inset ring-white/15 transition hover:bg-white/16"
+            className="inline-flex min-h-11 w-fit items-center gap-2.5 rounded-full bg-white/10 px-5 font-semibold ring-1 ring-inset ring-white/15 transition-[background-color,transform] duration-150 hover:bg-white/16 active:scale-[0.97]"
           >
             <InstagramIcon className="size-5" />@{markt.instagramHandle}
             <span className="sr-only"> auf Instagram (öffnet in neuem Tab)</span>
@@ -30,7 +31,7 @@ export function SiteFooter() {
         <div>
           <h2 className="text-eyebrow text-white/60">Besuch</h2>
           <address className="mt-5 not-italic leading-relaxed">
-            {markt.address.street}
+            <span className="whitespace-nowrap">{markt.address.street}</span>
             <br />
             {markt.address.zip} {markt.address.city}
           </address>

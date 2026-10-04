@@ -52,8 +52,9 @@ export function PopoverMenu({
       <div
         id={id}
         hidden={!open}
+        data-align={align}
         className={cn(
-          "absolute top-[calc(100%+0.5rem)] z-30 w-72 max-w-[calc(100vw-2rem)] rounded-2xl bg-white p-2 text-ink shadow-[0_20px_60px_rgb(0_0_0/.18),0_0_0_1px_rgb(0_0_0/.05)]",
+          "popover-panel absolute top-[calc(100%+0.5rem)] z-30 w-72 max-w-[calc(100vw-2rem)] rounded-2xl bg-white p-2 text-ink shadow-[0_20px_60px_rgb(0_0_0/.18),0_0_0_1px_rgb(0_0_0/.05)]",
           align === "end" ? "right-0" : "left-0",
         )}
       >

@@ -7,6 +7,7 @@ import { OpenStatus } from "@/components/live/open-status";
 import { ButtonLink } from "@/components/ui/button";
 import { InstagramIcon } from "@/components/ui/icons";
 import { markt } from "@/content/markt";
+import { weekRows } from "@/lib/hours";
 import { breadcrumbJsonLd, ldScript } from "@/lib/jsonld";
 import { absoluteUrl } from "@/lib/site";
 
@@ -19,8 +20,8 @@ export const metadata: Metadata = {
 const HINTS = [
   {
     icon: CalendarDays,
-    title: "Montag bis Samstag",
-    text: "Der Prospekt startet jede Woche neu. Sonntags siehst du hier schon die Angebote der kommenden Woche.",
+    title: "Jede Woche neu",
+    text: "Der Prospekt gilt von Montag bis Samstag. Sonntags siehst du hier schon die Angebote der kommenden Woche.",
   },
   {
     icon: ShoppingBasket,
@@ -35,13 +36,14 @@ const HINTS = [
 ] as const;
 
 export default function AngebotePage() {
+  const open = weekRows().find((r) => r.hours) ?? weekRows()[0];
   return (
     <>
       <PageHeader
         crumbs={[{ href: "/angebote", label: "Angebote" }]}
         eyebrow="Angebote"
         title="Prospekt der Woche."
-        lede="Alle Angebote deines REWE in der Thudichumstraße – mit einem Tipp im offiziellen REWE-Prospekt."
+        lede="Alle Angebote deines REWE in der Thudichumstraße – immer aktuell im offiziellen REWE-Prospekt."
       />
 
       <section aria-label="Aktueller Prospekt" className="wrap">
@@ -51,7 +53,7 @@ export default function AngebotePage() {
       <section id="kalender" aria-labelledby="kalender-titel" className="wrap pt-20 md:pt-28">
         <div className="reveal on-dark relative z-10 grid gap-8 rounded-[2rem] bg-red p-8 text-white md:grid-cols-[1.4fr_1fr] md:items-center md:p-12">
           <div>
-            <p className="text-[0.9375rem] font-semibold text-white">Markt-Kalender</p>
+            <p className="text-eyebrow text-white">Markt-Kalender</p>
             <h2 id="kalender-titel" className="mt-3 text-h2">
               Nie wieder den Prospekt verpassen.
             </h2>
@@ -91,10 +93,13 @@ export default function AngebotePage() {
         <div className="reveal flex flex-col gap-6 rounded-[var(--radius-stage)] bg-ink p-8 text-white md:flex-row md:items-center md:justify-between md:p-12">
           <div>
             <p className="text-eyebrow text-red-bright">Heute einkaufen?</p>
-            <h2 className="mt-3 text-h3">Wir sind für dich geöffnet.</h2>
+            {/* neutral formuliert – der Live-Status darunter sagt, ob gerade offen ist */}
+            <h2 className="mt-3 text-h3">
+              {open.days}, {open.time.replace(" Uhr", "\u00a0Uhr")}.
+            </h2>
             <OpenStatus tone="dark" className="mt-4" />
           </div>
-          <div className="flex flex-wrap gap-3">
+          <div className="cta-row">
             <ButtonLink href="/kontakt" variant="white">
               Anfahrt & Zeiten
             </ButtonLink>

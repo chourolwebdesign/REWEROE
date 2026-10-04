@@ -44,21 +44,24 @@ export default function HomePage() {
               <span className="rounded-[0.16em] bg-white px-[0.12em] text-red [box-decoration-break:clone]">Markt.</span>
             </h1>
             <p className="mt-7 max-w-[34ch] text-lede text-white">
-              Montag bis Samstag von 7 bis 22 Uhr in der Thudichumstraße – mit Bäckerei und Sushi im Markt.
+              Frisch einkaufen mitten in Rödelheim – mit Bäckerei und Sushi im Markt, Montag bis Samstag von 7 bis 22 Uhr.
             </p>
           </>
         }
         side={
           <div className="grid gap-5">
             <OpenStatus tone="dark" className="justify-self-start" />
-            {/* mobil nebeneinander und kompakter, damit die Story schon im ersten Bildschirm zu sehen ist */}
-            <div className="flex flex-wrap gap-2.5 sm:gap-3">
+            {/* mobil nebeneinander und kompakter, damit die Story schon im ersten Bildschirm zu sehen ist.
+                Solange diese Knöpfe sichtbar sind, bleibt die Schnellzugriff-Leiste unten verborgen (globals.css). */}
+            <div id="hero-aktionen" className="flex flex-wrap gap-2.5 sm:gap-3">
               <ButtonLink href={markt.links.flyer} external variant="white" size="lg" className="h-12 px-5 text-base sm:h-14 sm:px-7 sm:text-[1.0625rem]">
                 Prospekt KW <FlyerWeekText initial={week} field="kw" />
               </ButtonLink>
               <ButtonLink href={markt.links.googleMaps} external variant="glass" size="lg" className="h-12 px-5 text-base sm:h-14 sm:px-7 sm:text-[1.0625rem]">
-                Route
-                <span className="hidden sm:inline">&nbsp;planen</span>
+                {/* ein Element, damit der Abstand des Knopfs nicht zwischen „Route“ und „planen“ fällt */}
+                <span>
+                  Route<span className="hidden sm:inline"> planen</span>
+                </span>
               </ButtonLink>
             </div>
             <p className="hidden text-[0.9375rem] text-white sm:block">
@@ -82,7 +85,7 @@ export default function HomePage() {
         <SectionHeading
           id="markt-titel"
           eyebrow="Aus dem Markt"
-          title="Was gerade bei uns los ist."
+          title="So sieht’s bei uns aus."
           lede="Fotos und Clips aus Rödelheim – mehr davon zeigen wir auf Instagram."
           action={
             <ButtonLink href={markt.links.instagram} external variant="ink" icon={<InstagramIcon className="size-[1.1em]" />}>

@@ -15,15 +15,15 @@ export function PostCard({ post, wide = false, headingLevel = "h3" }: { post: Po
     <article
       className={cn(
         "group reveal card-lift relative overflow-hidden rounded-[var(--radius-media)] bg-soft ring-1 ring-line/60",
-        wide && "md:grid md:grid-cols-[1.15fr_1fr]",
+        wide && "lg:grid lg:grid-cols-[1.15fr_1fr]",
       )}
     >
-      <div className={cn("relative aspect-[3/2] overflow-hidden", wide && "md:aspect-auto md:min-h-[26rem]")}>
+      <div className={cn("relative aspect-[3/2] overflow-hidden", wide && "lg:aspect-auto lg:min-h-[26rem]")}>
         <Image
           src={media[post.cover].src}
           alt=""
           fill
-          sizes={wide ? "(min-width: 48rem) 55vw, 100vw" : "(min-width: 48rem) 50vw, 100vw"}
+          sizes={wide ? "(min-width: 64rem) 55vw, 100vw" : "(min-width: 48rem) 50vw, 100vw"}
           quality={70}
           className="object-cover transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.03]"
         />

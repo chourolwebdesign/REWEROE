@@ -80,7 +80,7 @@ export function InstallApp({
         <dialog
           ref={dialogRef}
           aria-labelledby="ios-install-title"
-          className="m-auto w-[min(26rem,calc(100vw-2rem))] rounded-[1.75rem] bg-white p-0 text-ink shadow-[0_30px_80px_rgb(0_0_0/.3)] backdrop:bg-black/60"
+          className="dialog-pop m-auto w-[min(26rem,calc(100vw-2rem))] rounded-[1.75rem] bg-white p-0 text-ink shadow-[0_30px_80px_rgb(0_0_0/.3)] backdrop:bg-black/60"
           onClick={(e) => e.target === e.currentTarget && dialogRef.current?.close()}
         >
           <div className="p-6">

@@ -67,18 +67,21 @@ export default async function PostPage({ params }: PageProps<"/aktuelles/[slug]"
       </figure>
 
       <div className="wrap pt-12 md:pt-16">
-        <Markdown source={post.body} className="prose-article mx-auto max-w-[68ch]" />
+        {/* eine Spalte für Text und Quelle: 68 Zeichen in Fließtextgröße, damit beide bündig stehen */}
+        <div className="mx-auto max-w-[68ch] text-[1.125rem]">
+          <Markdown source={post.body} className="prose-article" />
 
-        {post.source && (
-          <p className="mx-auto mt-12 max-w-[68ch] rounded-2xl bg-soft p-5 text-[0.9375rem]">
-            Quelle:{" "}
-            <a href={post.source.url} target="_blank" rel="noopener" className="font-semibold underline underline-offset-4 hover:text-red">
-              {post.source.title}
-              <ArrowUpRight className="ml-0.5 inline size-4 align-[-0.15em]" aria-hidden />
-              <span className="sr-only"> (öffnet in neuem Tab)</span>
-            </a>
-          </p>
-        )}
+          {post.source && (
+            <p className="mt-12 rounded-2xl bg-soft p-5 text-[0.9375rem]">
+              Quelle:{" "}
+              <a href={post.source.url} target="_blank" rel="noopener" className="font-semibold underline underline-offset-4 hover:text-red">
+                {post.source.title}
+                <ArrowUpRight className="ml-0.5 inline size-4 align-[-0.15em]" aria-hidden />
+                <span className="sr-only"> (öffnet in neuem Tab)</span>
+              </a>
+            </p>
+          )}
+        </div>
       </div>
 
       {post.gallery.length > 0 && (
