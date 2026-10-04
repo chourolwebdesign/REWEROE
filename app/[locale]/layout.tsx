@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
-import { fraunces, inter, spaceGrotesk } from "@/app/fonts";
+import { schibsted, figtree, geistMono } from "@/app/fonts";
 import { SiteHeader, type NavCategory } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SearchDialog, type SearchEntry } from "@/components/layout/search-dialog";
@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     description: t("defaultDescription"),
     applicationName: t("siteName"),
     alternates: alternatesFor(locale, ""),
-    openGraph: { type: "website", locale: locale === "de" ? "de_DE" : "en_GB", siteName: t("siteName"), title: t("defaultTitle"), description: t("defaultDescription"), images: ["/images/placeholders/hero-tazelik.jpg"] },
+    openGraph: { type: "website", locale: locale === "de" ? "de_DE" : "en_GB", siteName: t("siteName"), title: t("defaultTitle"), description: t("defaultDescription"), images: ["/images/placeholders/hero-home.jpg"] },
     twitter: { card: "summary_large_image" },
     robots: { index: true, follow: true },
   };
@@ -62,7 +62,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   };
 
   return (
-    <html lang={locale} suppressHydrationWarning className={`${fraunces.variable} ${inter.variable} ${spaceGrotesk.variable} h-full`}>
+    <html lang={locale} suppressHydrationWarning className={`${schibsted.variable} ${figtree.variable} ${geistMono.variable} h-full`}>
       <body className="flex min-h-full flex-col">
         <NextIntlClientProvider>
           <Providers>

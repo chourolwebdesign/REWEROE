@@ -5,14 +5,14 @@
     "merchantLegal": "REWE Ali Alamyaar oHG",
     "owner": "Ali Alamyaar",
     "district": "Frankfurt-Rödelheim",
-    "claim": "Wir lieben Lebensmittel.",
+    "claim": "REWE. Dein Markt.",
     "premiumClaim": {
-      "de": "Frische, zelebriert.",
-      "en": "Freshness, celebrated."
+      "de": "Frisch. Regional. Rödelheim.",
+      "en": "Fresh. Regional. Rödelheim."
     },
     "tagline": {
-      "de": "Dein Markt in Frankfurt-Rödelheim",
-      "en": "Your market in Frankfurt-Rödelheim"
+      "de": "Dein Markt in Rödelheim",
+      "en": "Your market in Rödelheim"
     },
     "logo": null,
     "siteUrl": "https://rewe-roedelheim.de",
@@ -83,28 +83,28 @@
   ],
   "marquee": [
     {
-      "de": "FRISCH",
-      "en": "FRESH"
+      "de": "Frisch",
+      "en": "Fresh"
     },
     {
-      "de": "REGIONAL",
-      "en": "REGIONAL"
+      "de": "Regional",
+      "en": "Regional"
     },
     {
-      "de": "BIO",
-      "en": "ORGANIC"
+      "de": "Bio",
+      "en": "Organic"
     },
     {
-      "de": "FAIR",
-      "en": "FAIR"
+      "de": "Fair",
+      "en": "Fair"
     },
     {
-      "de": "PFAND-BEWUSST",
-      "en": "DEPOSIT-AWARE"
+      "de": "Pfand-bewusst",
+      "en": "Deposit-aware"
     },
     {
-      "de": "RÖDELHEIM",
-      "en": "RÖDELHEIM"
+      "de": "Rödelheim",
+      "en": "Rödelheim"
     }
   ],
   "newsletter": {

@@ -10,23 +10,26 @@ interface Props {
   once?: boolean;
 }
 
-/** Section entrance: 24px up + blur(8→0) + fade, 800ms, custom expo ease. Honors reduced m. */
-export function Reveal({ children, className, delay = 0, y = 24, once = true }: Props) {
+const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+const DURATION = 0.6; // --dur-reveal
+
+/** Section entrance: opacity 0→1, y 16→0, 600 ms, expo ease. Transform/opacity only — no blur. Honors reduced motion. */
+export function Reveal({ children, className, delay = 0, y = 16, once = true }: Props) {
   const reduce = useReducedMotion();
   return (
     <m.div
       className={cn(className)}
-      initial={reduce ? false : { opacity: 0, y, filter: "blur(8px)" }}
-      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      initial={reduce ? false : { opacity: 0, y }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once, margin: "10000px 0px -8% 0px" }}
-      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay }}
+      transition={{ duration: DURATION, ease: EASE, delay }}
     >
       {children}
     </m.div>
   );
 }
 
-export function Stagger({ children, className, gap = 0.08 }: { children: React.ReactNode; className?: string; gap?: number }) {
+export function Stagger({ children, className, gap = 0.06 }: { children: React.ReactNode; className?: string; gap?: number }) {
   const reduce = useReducedMotion();
   return (
     <m.div
@@ -46,8 +49,8 @@ export function StaggerItem({ children, className }: { children: React.ReactNode
     <m.div
       className={className}
       variants={{
-        hidden: { opacity: 0, y: 24, filter: "blur(8px)" },
-        show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } },
+        hidden: { opacity: 0, y: 16 },
+        show: { opacity: 1, y: 0, transition: { duration: DURATION, ease: EASE } },
       }}
     >
       {children}
