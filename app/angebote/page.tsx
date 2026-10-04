@@ -52,9 +52,12 @@ export default function AngebotePage() {
         </h2>
         <ul className="mt-8 grid gap-3 md:grid-cols-3 md:gap-4">
           {HINTS.map(({ icon: Icon, title, text }) => (
-            <li key={title} className="reveal rounded-[1.75rem] bg-soft p-6 md:p-8">
-              <span className="grid size-12 place-items-center rounded-2xl bg-white">
-                <Icon className="size-6 text-red" strokeWidth={1.9} aria-hidden />
+            <li
+              key={title}
+              className="reveal card-lift flex flex-col rounded-[var(--radius-media)] bg-soft p-6 ring-1 ring-line/60 md:p-8"
+            >
+              <span className="grid size-14 place-items-center rounded-2xl bg-ink text-white ring-1 ring-inset ring-white/10">
+                <Icon className="size-7" strokeWidth={1.7} aria-hidden />
               </span>
               <h3 className="mt-6 text-h3">{title}</h3>
               <p className="mt-2 text-muted">{text}</p>
@@ -64,9 +67,10 @@ export default function AngebotePage() {
       </section>
 
       <section aria-label="Öffnungszeiten und Instagram" className="wrap py-20 md:py-28">
-        <div className="reveal flex flex-col gap-6 rounded-[2rem] bg-ink p-8 text-white md:flex-row md:items-center md:justify-between md:p-12">
+        <div className="reveal flex flex-col gap-6 rounded-[var(--radius-stage)] bg-ink p-8 text-white md:flex-row md:items-center md:justify-between md:p-12">
           <div>
-            <h2 className="text-h3">Heute einkaufen?</h2>
+            <p className="text-eyebrow text-red-bright">Heute einkaufen?</p>
+            <h2 className="mt-3 text-h3">Wir sind für dich geöffnet.</h2>
             <OpenStatus tone="dark" className="mt-4" />
           </div>
           <div className="flex flex-wrap gap-3">
