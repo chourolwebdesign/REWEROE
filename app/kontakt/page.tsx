@@ -64,12 +64,13 @@ export default function KontaktPage() {
         lede="Am schnellsten per Telefon oder direkt im Markt – Montag bis Samstag von 7 bis 22 Uhr."
       />
 
+      {/* erster Bildschirm: ohne Einblenden */}
       <section aria-label="Kontaktwege" className="wrap">
         <ul className="grid gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-4">
           {cards.map(({ icon: Icon, title, text, action }) => (
             <li
               key={title}
-              className="reveal card-lift flex flex-col rounded-[var(--radius-media)] bg-soft p-6 ring-1 ring-line/60 md:p-7"
+              className="card-lift flex flex-col rounded-[var(--radius-media)] bg-soft p-6 ring-1 ring-line/60 md:p-7"
             >
               <span className="grid size-14 place-items-center rounded-2xl bg-ink text-white ring-1 ring-inset ring-white/10">
                 <Icon className="size-7" strokeWidth={1.7} aria-hidden />

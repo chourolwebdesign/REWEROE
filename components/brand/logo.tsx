@@ -19,13 +19,17 @@ export function LogoMark({ height = 32, className, framed = false }: { height?: 
 /** Logo + Marktzeile. `tone="light"` für dunklen Grund (Story-Hero, Footer). */
 export function Logo({ tone = "dark", className, height = 34, framed = false }: { tone?: "dark" | "light"; className?: string; height?: number; framed?: boolean }) {
   return (
-    <Link href="/" aria-label="REWE Rödelheim – zur Startseite" className={cn("group inline-flex min-h-11 items-center gap-3", className)}>
+    // Name aus dem sichtbaren Text (WCAG 2.5.3 „Label in Name“): „REWE Rödelheim Ali Alamyaar oHG – zur Startseite“
+    <Link href="/" className={cn("group inline-flex min-h-11 items-center gap-3", className)}>
       <LogoMark height={height} framed={framed} />
       <span className={cn("leading-tight", tone === "light" ? "text-white" : "text-ink")}>
-        <span className="block font-display text-[1.125rem] font-bold tracking-[-0.01em]">Rödelheim</span>
+        <span className="block font-display text-[1.125rem] font-bold tracking-[-0.01em]">
+          <span className="sr-only">REWE </span>Rödelheim
+        </span>{" "}
         {/* auf Rot volles Weiß: 12 px brauchen 4,5 : 1 (white/70 lag auf dem Hero-Rot bei 3,3 : 1) */}
         <span className={cn("block text-[0.75rem] font-medium", tone === "light" ? "text-white" : "text-muted")}>Ali Alamyaar oHG</span>
       </span>
+      <span className="sr-only"> – zur Startseite</span>
     </Link>
   );
 }

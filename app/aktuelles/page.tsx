@@ -26,7 +26,7 @@ export default function AktuellesPage() {
         lede="Was bei uns im Markt passiert – Aktionen, Besuche und Neuigkeiten."
       />
       <section aria-label="Beiträge" className="wrap grid gap-4 pb-12">
-        {first && <PostCard post={first} wide headingLevel="h2" />}
+        {first && <PostCard post={first} wide headingLevel="h2" reveal={false} />}
         {rest.length > 0 && (
           <div className="grid gap-4 md:grid-cols-2">
             {rest.map((p) => (

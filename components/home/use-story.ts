@@ -144,7 +144,8 @@ export function useStory(items: StoryMedia[]) {
     e.preventDefault();
   };
 
-  const near = (i: number) => i === index || i === (index + 1) % items.length;
+  // Das nächste Bild erst nach dem Laden der Seite rendern – sonst teilt es sich die Leitung mit dem ersten (LCP).
+  const near = (i: number) => i === index || (ready && i === (index + 1) % items.length);
 
   return { index, item: items[index], go, ready, userPaused, setUserPaused, clipShown, setClipShown, sectionRef, videoRefs, barRefs, onKeyDown, near };
 }

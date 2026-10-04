@@ -8,13 +8,27 @@ import { cn } from "@/lib/utils";
 export const formatDate = (iso: string) =>
   new Intl.DateTimeFormat("de-DE", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(iso + "T12:00:00Z"));
 
-/** Beitragskarte; `wide` = Bild links, Text rechts (Startseite/erster Beitrag). */
-export function PostCard({ post, wide = false, headingLevel = "h3" }: { post: Post; wide?: boolean; headingLevel?: "h2" | "h3" }) {
+/**
+ * Beitragskarte; `wide` = Bild links, Text rechts (Startseite/erster Beitrag).
+ * `reveal={false}` für Karten im ersten Bildschirm – die sollen sofort stehen statt einzublenden.
+ */
+export function PostCard({
+  post,
+  wide = false,
+  headingLevel = "h3",
+  reveal = true,
+}: {
+  post: Post;
+  wide?: boolean;
+  headingLevel?: "h2" | "h3";
+  reveal?: boolean;
+}) {
   const H = headingLevel;
   return (
     <article
       className={cn(
-        "group reveal card-lift relative overflow-hidden rounded-[var(--radius-media)] bg-soft ring-1 ring-line/60",
+        "group card-lift relative overflow-hidden rounded-[var(--radius-media)] bg-soft ring-1 ring-line/60",
+        reveal && "reveal",
         wide && "lg:grid lg:grid-cols-[1.15fr_1fr]",
       )}
     >
