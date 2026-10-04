@@ -50,7 +50,7 @@ export function JobApplicationForm({ jobs, preselect }: { jobs: JobOption[]; pre
     );
   }
 
-  const slide = { initial: { opacity: 0, x: reduce ? 0 : 12 }, animate: { opacity: 1, x: 0 }, exit: { opacity: 0, x: reduce ? 0 : -12 }, transition: { duration: reduce ? 0 : 0.24, ease: [0.2, 0, 0, 1] as const } };
+  const slide = { initial: { opacity: 0, x: 12 }, animate: { opacity: 1, x: 0 }, exit: { opacity: 0, x: -12 }, transition: { duration: reduce ? 0 : 0.24, ease: [0.2, 0, 0, 1] as const } };
 
   return (
     <form onSubmit={(e) => { e.preventDefault(); next(); }} noValidate className={plate}>

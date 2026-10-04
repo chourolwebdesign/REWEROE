@@ -15,7 +15,7 @@ export function ProgressBar({ value, label, className }: { value: number; label:
   return (
     <div ref={ref} className={cn("flex items-center gap-4", className)}>
       <div className="h-1 flex-1 overflow-hidden bg-surface-2" role="progressbar" aria-label={label} aria-valuenow={v} aria-valuemin={0} aria-valuemax={100} aria-valuetext={`${v} %`}>
-        <m.div className="h-full bg-red" initial={{ width: reduce ? `${v}%` : 0 }} animate={{ width: inView ? `${v}%` : 0 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }} />
+        <m.div className="h-full bg-red" initial={{ width: 0 }} animate={{ width: inView || reduce ? `${v}%` : 0 }} transition={{ duration: reduce ? 0 : 0.6, ease: [0.22, 1, 0.36, 1] }} />
       </div>
       <span className="num w-12 text-right text-sm text-ink">{v} %</span>
     </div>

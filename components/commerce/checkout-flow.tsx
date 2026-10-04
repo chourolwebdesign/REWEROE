@@ -102,7 +102,7 @@ export function CheckoutFlow({ slots, freeFrom, minOrder, pickup, legalReady }: 
     );
   }
 
-  const slide = { initial: { opacity: 0, x: reduce ? 0 : 12 }, animate: { opacity: 1, x: 0 }, exit: { opacity: 0, x: reduce ? 0 : -12 }, transition: { duration: reduce ? 0 : 0.24, ease: [0.2, 0, 0, 1] as const } };
+  const slide = { initial: { opacity: 0, x: 12 }, animate: { opacity: 1, x: 0 }, exit: { opacity: 0, x: -12 }, transition: { duration: reduce ? 0 : 0.24, ease: [0.2, 0, 0, 1] as const } };
 
   return (
     <div className="grid gap-10 lg:grid-cols-12">

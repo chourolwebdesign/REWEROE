@@ -36,7 +36,7 @@ export function ProductGallery({ images }: { images: ImgVM[] }) {
         onMouseLeave={() => setZoom(null)}
       >
         <AnimatePresence mode="wait" initial={false}>
-          <m.div key={cur.src} initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.24, ease: [0.2, 0, 0, 1] }} className="absolute inset-0">
+          <m.div key={cur.src} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduce ? 0 : 0.24, ease: [0.2, 0, 0, 1] }} className="absolute inset-0">
             <SmartImage
               src={cur.src} alt={cur.alt} blur={cur.blur} fill priority sizes="(max-width: 1024px) 100vw, 58vw"
               className="object-cover transition-transform duration-[var(--dur-hover)] ease-[var(--ease-out-expo)]"

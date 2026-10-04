@@ -85,14 +85,15 @@ export function JourneyMap({ from, to, fromLabel, toLabel, distanceKm, story, in
             <path d={d} fill="none" className="stroke-line" strokeWidth={6 * k} strokeLinecap="round" strokeDasharray={international ? "2 10" : undefined} />
             <m.path
               d={d} fill="none" className="stroke-red-text" strokeWidth={3 * k} strokeLinecap="round" strokeDasharray={international ? "6 8" : undefined}
-              initial={{ pathLength: reduce ? 1 : 0 }} animate={{ pathLength: inView || reduce ? 1 : 0 }} transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ pathLength: 0 }} animate={{ pathLength: inView || reduce ? 1 : 0 }} transition={{ duration: reduce ? 0 : 1.6, ease: [0.22, 1, 0.36, 1] }}
             />
             <g transform={`translate(${A.x} ${A.y})`}><circle r={8 * k} className="fill-ink" /></g>
           </>
         )}
         <g transform={`translate(${B.x} ${B.y})`}>
           <circle r={11 * k} className="fill-red-text" />
-          {!reduce && <circle r={11 * k} className="pulse-dot fill-red-text/50" />}
+          {/* Always rendered (server and client must match); CSS hides the pulse for reduced motion. */}
+          <circle r={11 * k} className="pulse-dot fill-red-text/50 motion-reduce:hidden" />
           <text x={toPos.x} y={toPos.y} textAnchor={toPos.anchor} fontSize={fs} className="fill-ink font-sans font-semibold">{toLabel}</text>
         </g>
         {!local && <text x={fromPos.x} y={fromPos.y} fontSize={fs} textAnchor={fromPos.anchor} className="fill-ink font-sans font-semibold">{fromLabel}</text>}

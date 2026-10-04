@@ -16,7 +16,7 @@ export function OrderConfirmation() {
   return (
     <div className="mx-auto max-w-2xl text-center">
       <m.span
-        initial={{ opacity: 0, scale: reduce ? 1 : 0.96 }}
+        initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: reduce ? 0 : 0.24, ease: [0.2, 0, 0, 1] }}
         className="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-full bg-bio text-white"
