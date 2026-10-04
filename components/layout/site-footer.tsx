@@ -9,18 +9,13 @@ export function SiteFooter() {
   const year = new Date().getFullYear();
   return (
     <footer className="on-dark bg-night pb-28 text-white lg:pb-0">
-      <div className="wrap grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr] lg:gap=20 lg:py-24">
+      <div className="wrap grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr] lg:gap-16 lg:py-24">
         <div className="grid content-start gap-6 md:col-span-2 lg:col-span-1">
           <Logo tone="light" height={38} />
           <p className="max-w-[38ch] text-lede text-white/70">
             Dein REWE in Frankfurt-Rödelheim – ein selbstständig geführter Markt der {markt.legalName}.
           </p>
-          <a
-            href={markt.links.instagram}
-            target="_blank"
-            rel="noopener"
-            className="inline-flex min-h-11 w-fit items-center gap-2.5 rounded-full bg-white/10 px-5 font-semibold ring-1 ring-inset ring-white/15 transition hover:bg-white/16"
-          >
+          <a href={markt.links.instagram} target="_blank" rel="noopener" className="inline-flex min-h-11 w-fit items-center gap-2.5 rounded-full bg-white/10 px-5 font-semibold ring-1 ring-inset ring-white/15 transition hover:bg-white/16">
             <InstagramIcon className="size-5" />@{markt.instagramHandle}
             <span className="sr-only"> auf Instagram (öffnet in neuem Tab)</span>
           </a>
