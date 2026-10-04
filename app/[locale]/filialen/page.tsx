@@ -3,10 +3,12 @@ import { alternatesFor } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageHero } from "@/components/brand/page-hero";
 import { SectionHeading } from "@/components/brand/section-heading";
+import { Cta } from "@/components/brand/cta";
 import { StoreFinder, type FinderStore } from "@/components/signature/store-finder";
 import { PfandKompass } from "@/components/signature/pfand-kompass";
 import { ProductCard } from "@/components/commerce/product-card";
 import { Reveal } from "@/components/motion/reveal";
+import { tx } from "@/lib/l10n";
 import { getRegionalProducts, getSettings, getStores } from "@/lib/content";
 import { toCardProduct } from "@/lib/view-models";
 
@@ -28,14 +30,20 @@ export default async function StoresPage({ params }: { params: Promise<{ locale:
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("stores");
+  const tc = await getTranslations("common");
   const settings = getSettings();
-  const stores = getStores().map(toFinderStore);
+  const all = getStores();
+  const stores = all.map(toFinderStore);
+  const plate = all[0]?.images[0];
   const regional = getRegionalProducts().slice(0, 4).map((p) => toCardProduct(p, locale));
 
   return (
     <>
-      <PageHero eyebrow={t("eyebrow")} title={t("title")} text={t("text")} image="/images/placeholders/filiale-roedelheim-aussen.jpg" compact />
-      <section className="border-b border-line"><StoreFinder stores={stores} /></section>
+      <PageHero eyebrow={t("eyebrow")} title={t("title")} text={t("text")} image={plate?.src ?? "/images/placeholders/filiale-roedelheim-aussen.jpg"} imageAlt={plate ? tx(plate.alt, locale) : ""} />
+
+      <section className="border-y border-line" aria-label={t("finderEyebrow")}>
+        <StoreFinder stores={stores} />
+      </section>
 
       <section className="container-x py-20 md:py-28">
         <SectionHeading eyebrow={t("pfandEyebrow")} title={t("pfandTitle")} text={t("pfandText")} />
@@ -43,8 +51,8 @@ export default async function StoresPage({ params }: { params: Promise<{ locale:
       </section>
 
       <section className="container-x pb-24">
-        <SectionHeading eyebrow={t("regionalEyebrow")} title={t("regionalTitle")} />
-        <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4">{regional.map((p) => <ProductCard key={p.slug} p={p} />)}</div>
+        <SectionHeading regional eyebrow={t("regionalEyebrow")} title={t("regionalTitle")} aside={<Cta href="/kategorien/alle" variant="secondary" size="sm">{tc("showAll")}</Cta>} />
+        <div className="mt-10 grid grid-cols-2 gap-6 md:grid-cols-4">{regional.map((p) => <ProductCard key={p.slug} p={p} />)}</div>
       </section>
     </>
   );

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { alternatesFor } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { PageHero } from "@/components/brand/page-hero";
 import { CheckoutFlow } from "@/components/commerce/checkout-flow";
-import { getSettings } from "@/lib/content";
+import { getLegalPage, getSettings } from "@/lib/content";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -14,12 +15,16 @@ export default async function CheckoutPage({ params }: { params: Promise<{ local
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("checkout");
+  const tn = await getTranslations("nav");
   const d = getSettings().delivery;
+  // The consent sentence may only reference AGB + Widerrufsbelehrung once both legal texts are published (§0 rule 9).
+  const legalReady = (["agb", "widerruf"] as const).every((slug) => getLegalPage(slug)?.status === "published");
   return (
-    <section className="container-x pt-[calc(72px+3rem)] pb-24">
-      <p className="eyebrow mb-3">{t("eyebrow")}</p>
-      <h1 className="mb-10 text-[clamp(2rem,4vw,3.5rem)] text-forest dark:text-cream">{t("title")}</h1>
-      <CheckoutFlow slots={d.slots} deliveryFee={d.deliveryFee} freeFrom={d.freeFrom} pickup={d.pickup} />
-    </section>
+    <>
+      <PageHero compact eyebrow={t("eyebrow")} title={t("title")} breadcrumbs={[{ label: tn("home"), href: "/" }, { label: tn("cart"), href: "/warenkorb" }, { label: t("eyebrow") }]} />
+      <section className="container-x pb-24">
+        <CheckoutFlow slots={d.slots} deliveryFee={d.deliveryFee} freeFrom={d.freeFrom} minOrder={d.minOrder} pickup={d.pickup} legalReady={legalReady} />
+      </section>
+    </>
   );
 }

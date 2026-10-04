@@ -1,10 +1,16 @@
-import { Fraunces, Inter, Space_Grotesk } from "next/font/google";
+import { Schibsted_Grotesk, Figtree, Geist_Mono, Satisfy, Sacramento } from "next/font/google";
 
-/**
- * German diacritics (Ä Ö Ü ß) are part of the `latin` subset, so `latin-ext` is not needed.
- * Minimal fixed weights keep the critical font payload small (LCP on mobile):
- * headings use Fraunces 500 only; body uses Inter 400/500; mono accents are not preloaded.
- */
-export const fraunces = Fraunces({ subsets: ["latin"], weight: ["500"], variable: "--font-fraunces", display: "swap" });
-export const inter = Inter({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-inter", display: "optional" });
-export const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-space-grotesk", display: "optional", preload: false });
+/** Display. `weight: "variable"` is the only syntax next/font/google accepts for the variable axis;
+ *  it serves the full wght 400–900 file (46 KB) → real 700/800, no faux bold. */
+export const schibsted = Schibsted_Grotesk({ subsets: ["latin"], weight: "variable", variable: "--font-schibsted", display: "swap" });
+
+/** Text, UI, prices (tabular-nums via CSS). 20 KB. */
+export const figtree = Figtree({ subsets: ["latin"], weight: "variable", variable: "--font-figtree", display: "swap" });
+
+/** Instrument data only. Not preloaded. 23 KB. */
+export const geistMono = Geist_Mono({ subsets: ["latin"], weight: "variable", variable: "--font-geist-mono", display: "swap", preload: false });
+
+/** Script faces used ONLY inside the sub-brand lockups (REWE Bio „Bio", REWE Regional „Regional") until the
+ *  official logo files arrive (settings.brand.subLogos). Lazy, single weight. */
+export const satisfy = Satisfy({ subsets: ["latin"], weight: "400", variable: "--font-script-bio", display: "swap", preload: false });
+export const sacramento = Sacramento({ subsets: ["latin"], weight: "400", variable: "--font-script-regional", display: "swap", preload: false });

@@ -3,7 +3,7 @@ import { alternatesFor } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageHero } from "@/components/brand/page-hero";
-import { Breadcrumbs } from "@/components/brand/breadcrumbs";
+import { Eyebrow } from "@/components/brand/eyebrow";
 import { JobApplicationForm } from "@/components/commerce/job-application-form";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Reveal } from "@/components/motion/reveal";
@@ -27,21 +27,31 @@ export default async function JobPage({ params }: { params: Promise<{ locale: st
   if (!j) notFound();
   const t = await getTranslations("career");
   const tn = await getTranslations("nav");
+  const facts = [
+    { label: t("position"), value: t(`type.${j.type}`) },
+    { label: t("location"), value: j.location },
+    { label: t("postedAt"), value: formatDate(j.datePosted, locale) },
+    { label: t("validThrough"), value: formatDate(j.validThrough, locale) },
+  ];
   return (
     <>
       <JsonLd data={jobLd(j, locale)} />
-      <PageHero eyebrow={`${tx(j.department, locale)} · ${t(`type.${j.type}`)} · ${j.location}`} title={tx(j.title, locale)} text={tx(j.teaser, locale)} image="/images/placeholders/hero-karriere.jpg" compact>
-        <Breadcrumbs inverse className="mt-8" items={[{ label: tn("home"), href: "/" }, { label: tn("career"), href: "/karriere" }, { label: tx(j.title, locale) }]} />
-      </PageHero>
+      <PageHero
+        eyebrow={`${tx(j.department, locale)} · ${t(`type.${j.type}`)} · ${j.location}`} title={tx(j.title, locale)} text={tx(j.teaser, locale)}
+        image="/images/placeholders/hero-karriere.jpg" compact
+        breadcrumbs={[{ label: tn("home"), href: "/" }, { label: tn("career"), href: "/karriere" }, { label: tx(j.title, locale) }]}
+      />
       <section className="container-x grid gap-12 py-16 lg:grid-cols-[1fr_1.2fr]">
         <Reveal>
-          <p className="eyebrow mb-4">{t("openJobs")}</p>
-          <p className="text-lg leading-relaxed">{tx(j.description, locale)}</p>
-          <dl className="mono mt-8 grid grid-cols-2 gap-4 text-[11px] uppercase tracking-wider">
-            <div><dt className="text-ink-muted">{t("position")}</dt><dd className="mt-1 text-sm normal-case tracking-normal">{t(`type.${j.type}`)}</dd></div>
-            <div><dt className="text-ink-muted">Standort</dt><dd className="mt-1 text-sm normal-case tracking-normal">{j.location}</dd></div>
-            <div><dt className="text-ink-muted">Online seit</dt><dd className="mt-1 text-sm normal-case tracking-normal">{formatDate(j.datePosted, locale)}</dd></div>
-            <div><dt className="text-ink-muted">Gültig bis</dt><dd className="mt-1 text-sm normal-case tracking-normal">{formatDate(j.validThrough, locale)}</dd></div>
+          <Eyebrow>{t("openJobs")}</Eyebrow>
+          <p className="mt-4 text-lg leading-relaxed text-ink-2">{tx(j.description, locale)}</p>
+          <dl className="rule mt-8 grid grid-cols-2 gap-6 pt-6">
+            {facts.map((f) => (
+              <div key={f.label}>
+                <dt className="text-[12px] font-medium text-ink-muted">{f.label}</dt>
+                <dd className="num mt-1 text-sm text-ink">{f.value}</dd>
+              </div>
+            ))}
           </dl>
         </Reveal>
         <Reveal delay={0.1}><JobApplicationForm jobs={getJobs().map((x) => ({ slug: x.slug, title: tx(x.title, locale) }))} preselect={j.slug} /></Reveal>

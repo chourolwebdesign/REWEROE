@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { alternatesFor } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Breadcrumbs } from "@/components/brand/breadcrumbs";
+import { PageHero } from "@/components/brand/page-hero";
+import { Eyebrow } from "@/components/brand/eyebrow";
 import { Cta } from "@/components/brand/cta";
 import { Reveal } from "@/components/motion/reveal";
 import { Markdown } from "@/lib/markdown";
@@ -12,7 +13,7 @@ import { getLegalPage, getLegalPages } from "@/lib/content";
 
 /**
  * CONTENT-READY legal pages: /impressum, /datenschutz, /agb, /widerruf.
- * Driven entirely by content/legalPages.json — status "pending" shows the elegant placeholder,
+ * Driven entirely by content/legalPages.json — status "pending" shows the anthracite placeholder block,
  * "published" renders the body. No code change needed when the client delivers the texts.
  */
 export function generateStaticParams() { return getLegalPages().map((l) => ({ legal: l.slug })); }
@@ -34,23 +35,19 @@ export default async function LegalPage({ params }: { params: Promise<{ locale: 
   const title = tx(page.title, locale);
 
   return (
-    <article className="pt-[72px]">
-      <div className="container-x py-12 md:py-20">
-        <Breadcrumbs items={[{ label: tn("home"), href: "/" }, { label: title }]} />
-        <p className="eyebrow mt-10">{t("eyebrow")}</p>
-        <h1 className="mt-4 max-w-3xl text-forest dark:text-cream">{title}</h1>
-        {page.updatedAt && <p className="mono mt-4 text-[11px] uppercase tracking-wider text-ink-muted">{t("updated", { date: formatDate(page.updatedAt, locale) })}</p>}
-      </div>
+    <article>
+      <PageHero compact eyebrow={t("eyebrow")} title={title} breadcrumbs={[{ label: tn("home"), href: "/" }, { label: title }]}>
+        {page.updatedAt ? <p className="num text-[12px] text-ink-muted">{t("updated", { date: formatDate(page.updatedAt, locale) })}</p> : null}
+      </PageHero>
 
       {page.status === "published" && page.body ? (
         <div className="container-x pb-24"><Markdown source={tx(page.body, locale)} className="prose-editorial max-w-[72ch]" /></div>
       ) : (
         <div className="container-x pb-24">
-          <Reveal className="relative overflow-hidden rounded-[18px] bg-forest px-8 py-20 text-center text-cream md:py-28">
-            <div className="gold-glow absolute inset-x-0 top-0 h-48" aria-hidden />
-            <p className="select-none font-sans text-[clamp(4rem,14vw,11rem)] font-black leading-none tracking-[-0.06em] text-rewe" aria-hidden>REWE</p>
-            <p className="serif mt-6 text-[clamp(1.5rem,3vw,2.5rem)] leading-tight">{t("pendingTitle")}</p>
-            <p className="mx-auto mt-4 max-w-md text-cream/70">{t("pendingText")}</p>
+          <Reveal className="on-block px-8 py-20 text-center md:py-28">
+            <Eyebrow>{t("pendingEyebrow")}</Eyebrow>
+            <p className="display mx-auto mt-4 max-w-2xl text-2xl leading-tight text-block-ink md:text-3xl">{t("pendingTitle")}</p>
+            <p className="mx-auto mt-4 max-w-md text-block-muted">{t("pendingText")}</p>
             <Cta href="/" variant="inverse" className="mt-10">{tc("toHome")}</Cta>
           </Reveal>
         </div>

@@ -5,7 +5,7 @@ import { m, useReducedMotion } from "framer-motion";
 let hasNavigated = false;
 
 /**
- * Page transition: fade + slight slide on client-side navigations only.
+ * Page transition (§5): opacity + y 8, 400 ms, on client-side navigations only.
  * The very first paint is never hidden, so server-rendered content (and the LCP element) shows immediately.
  */
 export default function Template({ children }: { children: React.ReactNode }) {
@@ -15,7 +15,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
     hasNavigated = true;
   }, []);
   return (
-    <m.div initial={animateIn ? { opacity: 0, y: 12 } : false} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
+    <m.div initial={animateIn ? { opacity: 0, y: 8 } : false} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}>
       {children}
     </m.div>
   );

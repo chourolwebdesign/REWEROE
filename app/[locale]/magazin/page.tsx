@@ -3,7 +3,7 @@ import { alternatesFor } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageHero } from "@/components/brand/page-hero";
 import { ArticleCard } from "@/components/cards/article-card";
-import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
+import { ArticleFilter } from "@/components/commerce/article-filter";
 import { getArticles } from "@/lib/content";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
@@ -17,20 +17,18 @@ export default async function MagazinePage({ params }: { params: Promise<{ local
   setRequestLocale(locale);
   const t = await getTranslations("magazine");
   const articles = getArticles();
-  const feature = articles.find((a) => a.featured) ?? articles[0];
-  const rest = articles.filter((a) => a.slug !== feature.slug);
-  const cats = ["saison", "gesundheit", "region"] as const;
+  const cats = ["saison", "gesundheit", "region"];
+  const cards: Record<string, React.ReactNode> = {};
+  const featureCards: Record<string, React.ReactNode> = {};
+  for (const a of articles) {
+    cards[a.slug] = <ArticleCard a={a} locale={locale} />;
+    featureCards[a.slug] = <ArticleCard a={a} locale={locale} feature />;
+  }
   return (
     <>
-      <PageHero eyebrow={t("eyebrow")} title={t("title")} text={t("text")} image="/images/placeholders/hero-magazin.jpg" compact />
-      <section className="container-x py-14">
-        <div className="mono mb-8 flex flex-wrap gap-2 text-[11px] uppercase tracking-wider">
-          {cats.map((c) => <span key={c} className="rounded-full border border-line px-3 py-1">{t(`category.${c}`)}</span>)}
-        </div>
-        <Reveal><ArticleCard a={feature} locale={locale} feature /></Reveal>
-        <Stagger className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {rest.map((a) => <StaggerItem key={a.slug}><ArticleCard a={a} locale={locale} /></StaggerItem>)}
-        </Stagger>
+      <PageHero eyebrow={t("eyebrow")} title={t("title")} text={t("text")} image="/images/placeholders/hero-magazin.jpg" imageAlt={t("heroImageAlt")} />
+      <section className="container-x pb-20">
+        <ArticleFilter articles={articles.map((a) => ({ slug: a.slug, category: a.category, featured: a.featured }))} categories={cats} cards={cards} featureCards={featureCards} />
       </section>
     </>
   );

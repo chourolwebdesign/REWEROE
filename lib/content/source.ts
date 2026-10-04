@@ -17,11 +17,13 @@ import about from "@/content/about.json";
 import sustainability from "@/content/sustainability.json";
 import bonus from "@/content/bonus.json";
 import faq from "@/content/faq.json";
+import regional from "@/content/regional.json";
+import bio from "@/content/bio.json";
 
 const collections: Record<string, unknown[]> = {
   categories, products, producers, recipes, stores, campaigns, articles, jobs, legalPages, faq,
 };
-const singles: Record<string, unknown> = { settings, about, sustainability, bonus };
+const singles: Record<string, unknown> = { settings, about, sustainability, bonus, regional, bio };
 
 export function readCollection<T>(name: string): T[] {
   const data = collections[name];

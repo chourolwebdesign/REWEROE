@@ -4,107 +4,152 @@
 
 @custom-variant dark (@media (prefers-color-scheme: dark));
 
-/* ───────────────────────── Brand tokens ───────────────────────── */
+/* ─────────────────────────────────────────────────────────────────────────
+   1. Design tokens — light (REWE: white paper · anthracite ink · one red)
+   ───────────────────────────────────────────────────────────────────────── */
 :root {
-  --brand-forest: #0e3b2e;
-  --brand-rewe: #7fbf3f;
-  --brand-rewe-deep: #5fa02a;
-  --brand-emerald: #1b7a4c;
-  --accent-gold: #c9a227;
-  --surface-cream: #faf7f2;
-  --surface-cream-2: #f3eee5;
-  --surface-dark: #0a1210;
-  --surface: #faf7f2;
-  --surface-2: #f3eee5;
-  --ink: #1a1a1a;
-  --ink-muted: #6b6f6a;
-  --price-red: #d0021b;
-  --line: rgba(14, 59, 46, 0.12);
+  color-scheme: light dark;  /* form controls, scrollbars and UA defaults follow the OS scheme like the tokens below */
 
-  --r-card: 12px;
-  --r-btn: 10px;
-  --shadow-card: 0 1px 2px rgba(14, 59, 46, 0.06), 0 12px 32px -12px rgba(14, 59, 46, 0.18);
-  --shadow-lift: 0 2px 4px rgba(14, 59, 46, 0.08), 0 28px 56px -20px rgba(14, 59, 46, 0.32);
-  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
-  --dur-reveal: 800ms;
-  --dur-hover: 700ms;
+  /* surfaces */
+  --paper: #FFFFFF;          /* page, header, cards, sheets */
+  --surface: #F5F5F4;        /* section bands, image frames behind cut-outs, offers band, brochure stage */
+  --surface-2: #ECECEB;      /* pressed/selected neutral, skeletons, table head rows, icon-button hover */
+  --card: #FFFFFF;
+
+  /* ink */
+  --ink: #141414;            /* headlines, body, 2 px rules, ink buttons */
+  --ink-2: #2A2A2A;          /* long-form prose */
+  --ink-muted: #5C5C5C;      /* captions, Grundpreis, Pfand, struck prices, eyebrow words, placeholders */
+
+  /* lines */
+  --line: #CFCFCC;           /* 1 px hairlines, card borders, dividers (decorative) */
+  --line-strong: #141414;    /* 2 px section rules, outline buttons */
+  --line-input: #767676;     /* input / checkbox / radio / switch-track boundary (WCAG 1.4.11 ≥ 3:1) */
+
+  /* red — fills vs text are separate jobs */
+  --red: #CC071E;            /* FILL: primary CTA, discount badge, count dot, progress fill, marker */
+  --red-hover: #A80619;      /* primary CTA hover */
+  --red-deep: #800413;       /* primary CTA pressed */
+  --red-tint: #FBE9EB;       /* selected radio cards, progress track inside blocks — never a text bg larger than a chip */
+  --red-text: #CC071E;       /* TEXT/STROKE red on light surfaces; flips to signal red in dark + .on-block */
+  --red-brand: #CC071E;      /* logo block + footer rule: never changes */
+
+  /* green (fenced: Bio · Regional · Nachhaltigkeit · Mehrweg · open state) */
+  --bio: #0E6B34;            /* fill (white text 6.62:1) */
+  --bio-text: #0E6B34;       /* text/stroke; flips in dark */
+  --bio-tint: #E7F1EA;
+
+  /* fenced sub-brand accents */
+  --regional: #FFCC00;       /* Regional lockup field, 8×8 „Aus deiner Region" square — ink text only */
+  --petrol: #0B5E6B;         /* REWE Bonus module only */
+  --petrol-text: #0B5E6B;
+  --bonus-yellow: #FBE8A6;   /* numerals on petrol only */
+
+  /* semantics */
+  --error: #B3261E;          /* form errors, geo-denied, destructive — always with icon + text */
+  --price: var(--ink);       /* regular price */
+  --price-offer: var(--red-text);
+  --focus: var(--ink);       /* 2 px ring, offset 3 px — sits on the page surface, never on the control */
+  --selection: color-mix(in oklab, var(--red) 18%, transparent);
+
+  /* anthracite block tokens (consumed by .on-block) */
+  --block: #141414;
+  --block-ink: #FFFFFF;
+  --block-muted: #A6A6A6;
+  --block-line: #333333;
+  --block-red: #F4566A;      /* signal red on anthracite (5.60:1) */
+  --block-bio: #5FC68A;
+
+  /* display weight (drops one step on dark surfaces — irradiation) */
+  --fw-display: 800;
+
+  /* elevation — Swiss sheets do not float; only overlays get a shadow */
+  --shadow-card: none;
+  --shadow-lift: none;
+  --shadow-pop: 0 1px 0 rgb(20 20 20 / .06), 0 16px 32px -16px rgb(20 20 20 / .22);
+
+  /* motion */
+  --ease-out-expo: cubic-bezier(.22, 1, .36, 1);
+  --ease-ui: cubic-bezier(.2, 0, 0, 1);
+  --dur-ui: 180ms;           /* colour, border, underline */
+  --dur-move: 240ms;         /* stepper morph, mega menu, sheet */
+  --dur-reveal: 600ms;       /* section entrance */
+  --dur-hover: 500ms;        /* image scale */
+  --dur-page: 400ms;         /* template fade */
 
   /* shadcn semantic mapping */
-  --background: var(--surface);
+  --background: var(--paper);
   --foreground: var(--ink);
-  --card: #ffffff;
   --card-foreground: var(--ink);
-  --popover: #ffffff;
+  --popover: var(--card);
   --popover-foreground: var(--ink);
-  --primary: var(--brand-rewe);
-  --primary-foreground: #0a1a10;
-  --secondary: var(--surface-2);
-  --secondary-foreground: var(--brand-forest);
-  --muted: var(--surface-2);
+  --primary: var(--red);
+  --primary-foreground: #FFFFFF;
+  --secondary: var(--surface);
+  --secondary-foreground: var(--ink);
+  --muted: var(--surface);
   --muted-foreground: var(--ink-muted);
-  --accent: #e9f3dc;
-  --accent-foreground: var(--brand-forest);
-  --destructive: var(--price-red);
+  --accent: var(--surface-2);
+  --accent-foreground: var(--ink);
+  --destructive: var(--error);
   --border: var(--line);
-  --input: var(--line);
-  --ring: var(--accent-gold);
-  --radius: 0.75rem;
-  --chart-1: var(--brand-rewe);
-  --chart-2: var(--brand-emerald);
-  --chart-3: var(--accent-gold);
-  --chart-4: var(--brand-forest);
-  --chart-5: var(--price-red);
-  --sidebar: var(--surface);
+  --input: var(--line-input);
+  --ring: var(--focus);
+  --radius: 0.125rem;        /* 2 px → shadcn sm/md/lg collapse to 1.2–3.2 px */
+  --chart-1: var(--red);
+  --chart-2: var(--ink);
+  --chart-3: var(--ink-muted);
+  --chart-4: var(--bio);
+  --chart-5: var(--line);
+  --sidebar: var(--paper);
   --sidebar-foreground: var(--ink);
-  --sidebar-primary: var(--brand-rewe);
-  --sidebar-primary-foreground: #0a1a10;
-  --sidebar-accent: var(--surface-2);
-  --sidebar-accent-foreground: var(--brand-forest);
+  --sidebar-primary: var(--red);
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: var(--surface);
+  --sidebar-accent-foreground: var(--ink);
   --sidebar-border: var(--line);
-  --sidebar-ring: var(--accent-gold);
+  --sidebar-ring: var(--focus);
 }
 
+/* ─────────────────────────────────────────────────────────────────────────
+   2. Dark mode — designed, not inverted (OS-driven; no toggle)
+   ───────────────────────────────────────────────────────────────────────── */
 @media (prefers-color-scheme: dark) {
   :root {
-    --price-red: #ff7a85; /* AA contrast (text + badge) on dark cards; light mode keeps the classic #d0021b */
-    --surface: #0a1210;
-    --surface-2: #10201a;
-    --ink: #f2efe8;
-    --ink-muted: #a7aca6;
-    --line: rgba(242, 239, 232, 0.12);
-    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 32px -12px rgba(0, 0, 0, 0.6);
-    --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.5), 0 28px 56px -20px rgba(0, 0, 0, 0.8);
-
-    --background: var(--surface);
-    --foreground: var(--ink);
-    --card: #0f1b16;
-    --card-foreground: var(--ink);
-    --popover: #0f1b16;
-    --popover-foreground: var(--ink);
-    --primary: var(--brand-rewe);
-    --primary-foreground: #0a1a10;
-    --secondary: var(--surface-2);
-    --secondary-foreground: var(--ink);
-    --muted: var(--surface-2);
-    --muted-foreground: var(--ink-muted);
-    --accent: #15291f;
-    --accent-foreground: var(--brand-rewe);
-    --destructive: #ff4d5e;
-    --border: var(--line);
-    --input: var(--line);
-    --ring: var(--accent-gold);
-    --sidebar: var(--surface);
-    --sidebar-foreground: var(--ink);
-    --sidebar-primary: var(--brand-rewe);
-    --sidebar-primary-foreground: #0a1a10;
-    --sidebar-accent: var(--surface-2);
-    --sidebar-accent-foreground: var(--ink);
-    --sidebar-border: var(--line);
-    --sidebar-ring: var(--accent-gold);
+    --paper: #111111;
+    --surface: #1A1A1A;
+    --surface-2: #222222;
+    --card: #171717;
+    --ink: #F2F2F2;
+    --ink-2: #E4E4E4;
+    --ink-muted: #A6A6A6;
+    --line: #3A3A3A;
+    --line-strong: #F2F2F2;
+    --line-input: #8A8A8A;
+    --red: #D9102A;          /* lifted fill: ≥ 3.07:1 against every dark surface, white text 5.18:1 */
+    --red-hover: #D9102A;    /* hover is signalled by the inset ring (see .btn-primary) — a fill step would be invisible or fail AA */
+    --red-deep: #CC071E;     /* pressed (momentary) */
+    --red-tint: #2A1216;
+    --red-text: #F4566A;     /* signal red: ≥ 4.84:1 on every dark surface incl. #222222 */
+    --bio-text: #5FC68A;
+    --bio-tint: #12301F;
+    --petrol-text: #3FA3B2;
+    --error: #FF7A85;
+    --focus: #F2F2F2;
+    --block: #1F1F1F;        /* blocks sit ABOVE the page in dark (lighter than #111111) + 1 px seam */
+    --block-line: #3A3A3A;
+    --fw-display: 700;
+    --shadow-pop: 0 1px 0 rgb(0 0 0 / .6), 0 16px 32px -16px rgb(0 0 0 / .8);
+    --primary-foreground: #FFFFFF;
+    --selection: color-mix(in oklab, var(--red) 28%, transparent);
   }
 }
 
+/* ─────────────────────────────────────────────────────────────────────────
+   3. Tailwind theme (utilities)
+   ───────────────────────────────────────────────────────────────────────── */
 @theme inline {
+  /* shadcn */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -137,27 +182,47 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* brand colors as utilities: bg-forest, text-rewe, border-gold … */
-  --color-forest: var(--brand-forest);
-  --color-rewe: var(--brand-rewe);
-  --color-rewe-deep: var(--brand-rewe-deep);
-  --color-emerald: var(--brand-emerald);
-  --color-gold: var(--accent-gold);
-  --color-cream: var(--surface-cream);
-  --color-cream-2: var(--surface-cream-2);
+  /* brand vocabulary → bg-paper, text-ink, border-line, text-red-text, bg-red, … */
+  --color-paper: var(--paper);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
-  --color-surface-dark: var(--surface-dark);
   --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
   --color-ink-muted: var(--ink-muted);
-  --color-price: var(--price-red);
   --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-line-input: var(--line-input);
+  --color-red: var(--red);
+  --color-red-hover: var(--red-hover);
+  --color-red-deep: var(--red-deep);
+  --color-red-tint: var(--red-tint);
+  --color-red-text: var(--red-text);
+  --color-red-brand: var(--red-brand);
+  --color-bio: var(--bio);
+  --color-bio-text: var(--bio-text);
+  --color-bio-tint: var(--bio-tint);
+  --color-regional: var(--regional);
+  --color-petrol: var(--petrol);
+  --color-petrol-text: var(--petrol-text);
+  --color-bonus-yellow: var(--bonus-yellow);
+  --color-error: var(--error);
+  --color-price: var(--price);
+  --color-price-offer: var(--price-offer);
+  --color-focus: var(--focus);
+  --color-block: var(--block);
+  --color-block-ink: var(--block-ink);
+  --color-block-muted: var(--block-muted);
+  --color-block-line: var(--block-line);
+  --color-block-red: var(--block-red);
+  --color-block-bio: var(--block-bio);
 
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-fraunces), Georgia, serif;
-  --font-mono: var(--font-space-grotesk), ui-monospace, monospace;
-  --font-heading: var(--font-fraunces), Georgia, serif;
+  /* fonts (set in app/fonts.ts) */
+  --font-display: var(--font-schibsted), "Helvetica Neue", Arial, sans-serif;
+  --font-sans: var(--font-figtree), "Helvetica Neue", Arial, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace;
+  --font-heading: var(--font-display);
 
+  /* radius scale (shadcn derives from --radius = 2 px) */
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -168,129 +233,228 @@
 
   --shadow-card: var(--shadow-card);
   --shadow-lift: var(--shadow-lift);
+  --shadow-pop: var(--shadow-pop);
   --ease-expo: var(--ease-out-expo);
+  --ease-ui: var(--ease-ui);
 }
 
-/* ───────────────────────── Base ───────────────────────── */
+/* ─────────────────────────────────────────────────────────────────────────
+   4. Base
+   ───────────────────────────────────────────────────────────────────────── */
 @layer base {
   * { @apply border-border outline-ring/60; }
-  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; font-synthesis-weight: none; }
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans);
-    font-size: clamp(1rem, 0.2vw + 0.95rem, 1.125rem);
+    font-size: clamp(1rem, 0.98rem + 0.1vw, 1.0625rem);   /* 16 → 17 px */
     line-height: 1.6;
-    font-feature-settings: "ss01", "cv11";
   }
-  h1, h2, h3, h4 { font-family: var(--font-serif); font-weight: 500; text-wrap: balance; }
-  h1 { font-size: clamp(2.75rem, 6vw + 1rem, 6rem); line-height: 0.95; letter-spacing: -0.02em; }
-  h2 { font-size: clamp(2rem, 3vw + 1rem, 3.5rem); line-height: 1.02; letter-spacing: -0.015em; }
-  h3 { font-size: clamp(1.375rem, 1vw + 1rem, 1.75rem); line-height: 1.15; letter-spacing: -0.01em; }
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: var(--fw-display);
+    text-wrap: balance;
+    hyphens: auto;
+    hyphenate-limit-chars: 10 4 4;
+    overflow-wrap: normal;
+  }
+  h1 { font-size: clamp(2.75rem, 1.17rem + 6.48vw, 7rem); line-height: 0.95; letter-spacing: -0.035em; }   /* 44 → 112 */
+  h2 { font-size: clamp(2rem, 1.35rem + 2.67vw, 3.75rem); line-height: 1.02; letter-spacing: -0.025em; }   /* 32 → 60 */
+  h3 { font-size: clamp(1.375rem, 1.19rem + 0.76vw, 1.875rem); line-height: 1.15; letter-spacing: -0.015em; font-weight: 700; } /* 22 → 30 */
+  h4 { font-family: var(--font-sans); font-weight: 600; font-size: clamp(1.125rem, 1.08rem + 0.19vw, 1.25rem); line-height: 1.3; letter-spacing: -0.005em; }
+  @media (max-width: 640px) { h1 { letter-spacing: -0.025em; line-height: 1; } }
   p { text-wrap: pretty; }
-  ::selection { background: color-mix(in oklab, var(--brand-rewe) 45%, transparent); }
-  :focus-visible { outline: 2px solid var(--accent-gold); outline-offset: 3px; border-radius: 4px; }
+  ::selection { background: var(--selection); }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 2px; }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
   }
 }
 
-/* ───────────────────────── Utilities ───────────────────────── */
+/* ─────────────────────────────────────────────────────────────────────────
+   5. Utilities
+   ───────────────────────────────────────────────────────────────────────── */
 @utility container-x {
   width: 100%;
   margin-inline: auto;
   padding-inline: clamp(1rem, 4vw, 3.5rem);
   max-width: 90rem;
 }
+
+/* Eyebrow: Figtree 600, sentence case, muted word, red numeral. <p class="eyebrow eyebrow-num" data-num="03">Angebote</p> */
 @utility eyebrow {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--accent-gold);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: clamp(0.75rem, 0.73rem + 0.1vw, 0.8125rem);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--ink-muted);
 }
-@utility mono {
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
+@utility eyebrow-num {
+  &::before { content: attr(data-num) " — "; color: var(--red-text); font-weight: 700; }
 }
-@utility serif { font-family: var(--font-serif); }
-@utility gold-line {
-  background: linear-gradient(90deg, transparent, var(--accent-gold) 30%, var(--accent-gold) 70%, transparent);
-  height: 1px;
+/* Auto-numbered sections: <div class="numbered"> … <section data-numbered> <p class="eyebrow eyebrow-auto">Sortiment</p> */
+.numbered { counter-reset: section; }
+.numbered [data-numbered] { counter-increment: section; }
+@utility eyebrow-auto {
+  &::before { content: counter(section, decimal-leading-zero) " — "; color: var(--red-text); font-weight: 700; }
 }
-@utility glass {
-  background: color-mix(in oklab, var(--surface) 78%, transparent);
-  backdrop-filter: saturate(160%) blur(14px);
-  -webkit-backdrop-filter: saturate(160%) blur(14px);
+/* 8×8 px Regional yellow square — the REWE shelf-sign quoted as a mark. Never a text background. */
+@utility eyebrow-regional {
+  &::before { content: ""; display: inline-block; width: .5rem; height: .5rem; margin-right: .5rem; background: var(--regional); vertical-align: .05em; }
 }
-@utility glass-dark {
-  background: color-mix(in oklab, var(--brand-forest) 82%, transparent);
-  backdrop-filter: saturate(160%) blur(14px);
-  -webkit-backdrop-filter: saturate(160%) blur(14px);
+/* 24×3 px REWE-Strich — section openers on inner pages that have no numeral */
+@utility eyebrow-rule {
+  &::before { content: ""; display: inline-block; width: 1.5rem; height: 3px; margin-right: .625rem; vertical-align: .22em; background: var(--red); }
 }
-@utility gold-glow {
-  background: radial-gradient(60% 50% at 50% 0%, color-mix(in oklab, var(--accent-gold) 28%, transparent), transparent 70%);
+
+/* Numeric sans — replaces every former `.mono` call site (prices, meta, counters). NOT monospace. */
+@utility num { font-family: var(--font-sans); font-weight: 500; font-variant-numeric: tabular-nums lining-nums; letter-spacing: 0; }
+/* True mono — instrument data only: Frische-Uhr time, Countdown digits, Pfand-Kompass lines, Bonus readouts, brochure folio, kbd, map labels */
+@utility data { font-family: var(--font-mono); font-weight: 500; font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; font-variant-numeric: tabular-nums; }
+@utility data-lg { font-family: var(--font-mono); font-weight: 500; font-size: .8125rem; letter-spacing: .02em; text-transform: none; font-variant-numeric: tabular-nums; }
+/* Display face for non-heading elements (quotes, numerals, nav items, titles) */
+@utility display { font-family: var(--font-display); font-weight: var(--fw-display); letter-spacing: -0.02em; }
+
+/* Rules and frames */
+@utility rule { border-top: 1px solid var(--line); }
+@utility rule-strong { border-top: 2px solid var(--line-strong); }
+@utility rule-b { border-bottom: 1px solid var(--line); }
+@utility frame { border: 1px solid var(--line); }
+@utility brand-rule { border-top: 2px solid var(--red-brand); }
+
+/* Prices */
+@utility price { font-family: var(--font-sans); font-weight: 700; line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums lining-nums; color: var(--price); font-size: clamp(1.25rem, 1.16rem + 0.38vw, 1.5rem); }
+@utility price-sm { font-size: 1rem; letter-spacing: -0.01em; }
+@utility price-lg { font-size: clamp(1.75rem, 1.47rem + 1.14vw, 2.5rem); }
+@utility price-poster { font-family: var(--font-display); font-weight: var(--fw-display); font-size: clamp(3.5rem, 2.57rem + 3.81vw, 6rem); line-height: .9; letter-spacing: -0.04em; font-variant-numeric: proportional-nums lining-nums; }
+@utility price-offer { color: var(--price-offer); }
+@utility price-old { font-family: var(--font-sans); font-weight: 500; font-size: .875rem; color: var(--ink-muted); text-decoration: line-through; text-decoration-thickness: 1.5px; font-variant-numeric: tabular-nums lining-nums; }
+@utility price-meta { font-family: var(--font-sans); font-weight: 500; font-size: .75rem; letter-spacing: .01em; line-height: 1.3; color: var(--ink-muted); font-variant-numeric: tabular-nums lining-nums; }
+
+/* Context switches */
+@utility on-block {
+  background: var(--block);
+  color: var(--block-ink);
+  --paper: var(--block);
+  --card: var(--block);
+  --surface: #262626;
+  --surface-2: #2E2E2E;
+  --ink: var(--block-ink);
+  --ink-2: var(--block-ink);
+  --ink-muted: var(--block-muted);
+  --line: var(--block-line);
+  --line-strong: var(--block-ink);
+  --line-input: #8A8A8A;
+  --red-text: var(--block-red);
+  --price: var(--block-ink);
+  --price-offer: var(--block-red);
+  --bio-text: var(--block-bio);
+  --focus: var(--block-ink);
+  --fw-display: 700;
 }
-@utility fresh-glow {
-  background: radial-gradient(80% 60% at 50% 100%, color-mix(in oklab, var(--brand-rewe) 22%, transparent), transparent 70%);
+@media (prefers-color-scheme: dark) { .on-block { border-top: 1px solid #3A3A3A; } }   /* seam: block (#1F1F1F) vs page (#111111) */
+/* Light island nested inside a block (brochure sheet, Knaller plate, quick-view) */
+@utility on-paper {
+  background: #FFFFFF;
+  color: #141414;
+  --paper: #FFFFFF; --card: #FFFFFF; --surface: #F5F5F4; --surface-2: #ECECEB;
+  --ink: #141414; --ink-2: #2A2A2A; --ink-muted: #5C5C5C;
+  --line: #CFCFCC; --line-strong: #141414; --line-input: #767676;
+  --red-text: #CC071E; --price: #141414; --price-offer: #CC071E; --bio-text: #0E6B34; --focus: #141414; --fw-display: 800;
 }
+
+/* Header is opaque paper on every page (sticky). Vars kept for LangSwitch. */
+@utility glass { background: var(--paper); }
+.site-header { --hdr-fg: var(--ink); --hdr-bg: var(--paper); color: var(--hdr-fg); background: var(--hdr-bg); }   /* opaque on every page (G2 adds bg-paper + sticky) */
+
+
+/* Hover: cards do not lift — their edge sharpens */
 @utility card-hover {
-  transition: transform var(--dur-hover) var(--ease-out-expo), box-shadow var(--dur-hover) var(--ease-out-expo);
-  box-shadow: var(--shadow-card);
-  &:hover { transform: translateY(-6px); box-shadow: var(--shadow-lift); }
+  transition: border-color var(--dur-ui) var(--ease-ui);
+  &:hover { border-color: var(--line-strong); }
 }
 @utility img-zoom {
   transition: transform var(--dur-hover) var(--ease-out-expo);
-  .group:hover & { transform: scale(1.05); }
+  .group:hover & { transform: scale(1.02); }
 }
+/* One photographic grade for every photograph (not for product cut-outs on white) */
+@utility img-grade { filter: saturate(1) contrast(1.04); }
+@media (prefers-color-scheme: dark) { .img-grade { filter: saturate(1) contrast(1.04) brightness(.92); } }
 @utility hide-scrollbar {
   scrollbar-width: none;
   &::-webkit-scrollbar { display: none; }
 }
+/* The only text-on-photo overlay (Magazin article, Rezept detail, 404): ink-based, bottom-weighted but covering the whole
+   text column — breadcrumbs and eyebrow at the top of the hero need ≥ 4.5:1 on bright photos too (.3 ink floor). */
+@utility scrim-editorial { background: linear-gradient(to top, rgb(20 20 20 / .82) 0%, rgb(20 20 20 / .62) 50%, rgb(20 20 20 / .3) 100%); }
 
-/* Site header colour model: forest on light pages, cream over dark heroes (CSS :has, no JS) */
-.site-header { --hdr-fg: var(--brand-forest); --hdr-bg: var(--surface); color: var(--hdr-fg); }
-@media (prefers-color-scheme: dark) { .site-header { --hdr-fg: var(--surface-cream); --hdr-bg: var(--surface); } }
-body:has([data-header-theme="dark"]) .site-header:not([data-scrolled="true"]):not([data-mega="true"]) { --hdr-fg: var(--surface-cream); --hdr-bg: var(--brand-forest); }
+/* Primary button hover in dark mode: fill stays, a 2 px inset ring appears (fill steps are invisible or fail AA on dark) */
+@media (prefers-color-scheme: dark) {
+  .btn-primary:hover { box-shadow: inset 0 0 0 2px rgb(255 255 255 / .38); }
+}
 
-/* Decorative footer watermark rendered as a pseudo-element (not text for AT or contrast checks) */
-.footer-watermark::after { content: attr(data-text); display: block; font-family: var(--font-sans); font-weight: 900; font-size: clamp(5rem, 20vw, 19rem); line-height: 0.8; letter-spacing: -0.06em; color: color-mix(in oklab, var(--surface-cream) 6%, transparent); }
+/* Decorative footer watermark ("Rödelheim", not the wordmark) */
+.footer-watermark::after {
+  content: attr(data-text);
+  display: block;
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: clamp(4rem, 19vw, 19rem);   /* 19vw keeps „Rödelheim" inside the 358 px column at 390 */
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  color: rgb(255 255 255 / .05);
+}
 
-/* Marquee */
-@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.marquee-track { animation: marquee 40s linear infinite; }
-.marquee:hover .marquee-track { animation-duration: 80s; }
-@media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
+/* Word-mask reveal (hero h1) — CSS only, no blur, LCP-safe */
+@keyframes word-in { from { transform: translateY(110%); } to { transform: none; } }
+.word-mask { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: .06em; margin-bottom: -.06em; }
+.word-in { display: inline-block; animation: word-in .65s var(--ease-out-expo) both; }
+@media (prefers-reduced-motion: reduce) { .word-in { animation: none; } }
 
-/* Hero character reveal (CSS only) */
-@keyframes char-in { from { opacity: 0; transform: translateY(0.6em); filter: blur(6px); } to { opacity: 1; transform: none; filter: blur(0); } }
-.char-in { animation: char-in 0.7s var(--ease-out-expo) both; }
-@media (prefers-reduced-motion: reduce) { .char-in { animation: none; } }
+/* Live dot: finite pulse (3 cycles) then static */
+@keyframes live-pulse { 0% { transform: scale(1); opacity: .7; } 100% { transform: scale(2.6); opacity: 0; } }
+.live-pulse { transform-origin: center; animation: live-pulse 2s ease-out 3; }
 
-/* Ken Burns */
-@keyframes kenburns { from { transform: scale(1.08) translateY(0); } to { transform: scale(1.18) translateY(-2%); } }
-.kenburns { animation: kenburns 24s var(--ease-out-expo) forwards; will-change: transform; }
-@media (prefers-reduced-motion: reduce) { .kenburns { animation: none; transform: scale(1.08); } }
-
-/* Pulse dot for journey map */
+/* Pulse dot for journey map (destination only) */
 @keyframes pulse-dot { 0% { transform: scale(1); opacity: .9; } 100% { transform: scale(3.2); opacity: 0; } }
 .pulse-dot { transform-origin: center; animation: pulse-dot 1.8s ease-out infinite; }
 
 /* Flip pages */
-.flip-scene { perspective: 2200px; }
+.flip-scene { perspective: 2000px; }
 .flip-page { transform-style: preserve-3d; backface-visibility: hidden; }
 
-/* Prose for articles */
-.prose-editorial { font-size: clamp(1.0625rem, 0.3vw + 1rem, 1.1875rem); line-height: 1.75; }
-.prose-editorial h2 { font-family: var(--font-serif); font-weight: 500; font-size: clamp(1.625rem, 1.2vw + 1.1rem, 2.125rem); margin: 2.2em 0 .7em; letter-spacing: -0.01em; }
+/* Prose for articles / legal */
+.prose-editorial { font-size: clamp(1.0625rem, 0.3vw + 1rem, 1.1875rem); line-height: 1.7; color: var(--ink-2); }
+.prose-editorial h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.625rem, 1.2vw + 1.1rem, 2.125rem); margin: 2.2em 0 .7em; letter-spacing: -0.02em; color: var(--ink); }
+.prose-editorial h3 { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.25rem, .6vw + 1rem, 1.5rem); margin: 1.8em 0 .5em; color: var(--ink); }
 .prose-editorial p { margin: 0 0 1.25em; }
 .prose-editorial ul { margin: 0 0 1.5em 1.25em; list-style: disc; }
 .prose-editorial li { margin: .35em 0; }
-.prose-editorial blockquote { font-family: var(--font-serif); font-weight: 500; font-size: clamp(1.375rem, 1vw + 1rem, 1.875rem); line-height: 1.3; margin: 2em 0; padding-left: 1.25em; border-left: 2px solid var(--accent-gold); color: var(--brand-forest); }
-@media (prefers-color-scheme: dark) { .prose-editorial blockquote { color: var(--brand-rewe); } }
-.prose-editorial strong { font-weight: 600; }
+.prose-editorial blockquote { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.375rem, 1vw + 1rem, 1.875rem); line-height: 1.3; letter-spacing: -0.02em; margin: 2em 0; padding-left: 1.25em; border-left: 2px solid var(--red); color: var(--ink); }
+.prose-editorial strong { font-weight: 600; color: var(--ink); }
+.prose-editorial a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--red); text-decoration-thickness: 2px; text-underline-offset: 4px; }
 
-/* Leaflet overrides */
-.leaflet-container { font-family: var(--font-sans); background: var(--surface-2); }
-.leaflet-tile { filter: saturate(0.6) contrast(1.05); }
-@media (prefers-color-scheme: dark) { .leaflet-tile { filter: invert(1) hue-rotate(180deg) saturate(0.5) brightness(0.85); } }
+/* Leaflet — greyscale newsprint map; the red store marker is the only colour.
+   leaflet.css loads after this sheet (imported by the client-only map chunk), so overrides need higher specificity. */
+.leaflet-container { font-family: var(--font-sans); background: var(--surface); }
+.frame .leaflet-container, #main .leaflet-container { background: var(--surface); }   /* beats Leaflet's #ddd slab in dark mode */
+.leaflet-tile { filter: grayscale(1) contrast(1.06) brightness(1.03); }
+@media (prefers-color-scheme: dark) { .leaflet-tile { filter: invert(1) grayscale(1) brightness(.78) contrast(1.15); } }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--card); color: var(--ink); border-radius: 0; box-shadow: var(--shadow-pop); border: 1px solid var(--line-strong); }
+.leaflet-popup-content { font: 500 13px/1.4 var(--font-sans); margin: 12px 14px; }
+.leaflet-popup-content strong { font-weight: 600; }
+.leaflet-control-zoom a { background: var(--card) !important; color: var(--ink) !important; border-color: var(--line) !important; border-radius: 0 !important; }
+/* 44 px zoom targets (Leaflet: 26 / 30 px) — `.leaflet-touch .leaflet-bar a` has the same specificity, hence the container hook */
+.leaflet-container .leaflet-bar a, .leaflet-container.leaflet-touch .leaflet-bar a { width: 44px; height: 44px; line-height: 44px; }
+.leaflet-container .leaflet-control-attribution { background: color-mix(in oklab, var(--paper) 85%, transparent) !important; color: var(--ink-muted) !important; font-size: 12px; }
+.leaflet-control-attribution a { color: var(--ink) !important; }
+
+/* Print: Prospekt and recipes on white, no overlays */
+@media print {
+  :root { --paper: #FFFFFF; --surface: #FFFFFF; --ink: #000000; }
+  .scrim-editorial, .footer-watermark { display: none; }
+}

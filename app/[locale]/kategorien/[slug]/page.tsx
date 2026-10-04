@@ -3,11 +3,11 @@ import { alternatesFor } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageHero } from "@/components/brand/page-hero";
-import { Breadcrumbs } from "@/components/brand/breadcrumbs";
 import { CategoryBrowser } from "@/components/commerce/category-browser";
 import { getCategories, getCategory, getProducts, getProductsByCategory } from "@/lib/content";
 import { toCardProduct } from "@/lib/view-models";
 import { tx } from "@/lib/l10n";
+
 
 export function generateStaticParams() {
   return [{ slug: "alle" }, ...getCategories().map((c) => ({ slug: c.slug }))];
@@ -35,10 +35,18 @@ export default async function CategoryPage({ params }: { params: Promise<{ local
 
   return (
     <>
-      <PageHero eyebrow={t("eyebrow")} title={title} text={cat ? tx(cat.teaser, locale) : t("allText")} image={cat?.image.src ?? "/images/placeholders/filiale-roedelheim-innen.jpg"} compact>
-        <Breadcrumbs inverse className="mt-8" items={[{ label: tn("home"), href: "/" }, { label: tn("categories"), href: "/kategorien" }, { label: cat ? title : tc("all") }]} />
-      </PageHero>
+      {/* Category pages carry no image plate: the 4:5 product photos are the imagery, and they would crop badly at 21:9. „Alle" keeps the store interior. */}
+      <PageHero
+        eyebrow={t("eyebrow")}
+        title={title}
+        text={cat ? tx(cat.teaser, locale) : t("allText")}
+        image={cat ? undefined : "/images/placeholders/filiale-roedelheim-innen.jpg"}
+        imageAlt={cat ? undefined : t("heroImageAlt")}
+        breadcrumbs={[{ label: tn("home"), href: "/" }, { label: tn("categories"), href: "/kategorien" }, { label: cat ? title : tc("all") }]}
+        className="pb-0 md:pb-0"
+      />
       <CategoryBrowser products={products} categories={categories} current={slug} />
     </>
   );
 }
+

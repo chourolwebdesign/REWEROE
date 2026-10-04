@@ -1,8 +1,62 @@
 [
-  { "q": { "de": "Liefert ihr nach Hause?", "en": "Do you deliver to my home?" }, "a": { "de": "Ja — in Rödelheim und angrenzenden Stadtteilen. Wähle beim Checkout dein Zeitfenster, z. B. „Morgen 16–18 Uhr“.", "en": "Yes — in Rödelheim and neighbouring districts. Pick your time slot at checkout, e.g. “Tomorrow 4–6 pm”." } },
-  { "q": { "de": "Wie funktioniert Click & Collect?", "en": "How does Click & Collect work?" }, "a": { "de": "Online bestellen, im Markt abholen. Wir packen deine Bestellung gekühlt und frisch — abholbereit zum gewählten Zeitpunkt.", "en": "Order online, pick up in store. We pack your order chilled and fresh — ready at your chosen time." } },
-  { "q": { "de": "Nehmt ihr jedes Pfand zurück?", "en": "Do you take back every deposit?" }, "a": { "de": "Einweg-Pfand (0,25 €) nehmen wir immer zurück. Mehrweg-Flaschen und Kästen, die wir im Sortiment führen, ebenfalls.", "en": "We always take back single-use deposits (€0.25). Reusable bottles and crates that we carry in our range as well." } },
-  { "q": { "de": "Was bedeutet „Regional“ bei euch?", "en": "What does “Regional” mean here?" }, "a": { "de": "Erzeugt im Umkreis von 100 km um Frankfurt — meist aus Hessen, dem Rheingau oder der Wetterau. Die Herkunft findest du auf jeder Produktseite.", "en": "Produced within 100 km of Frankfurt — mostly Hesse, Rheingau or Wetterau. You'll find the origin on every product page." } },
-  { "q": { "de": "Kann ich PAYBACK-Punkte sammeln?", "en": "Can I collect PAYBACK points?" }, "a": { "de": "Ja, im Markt und online. Pro 2 € Umsatz gibt es 1 Punkt; Punkte lassen sich direkt an der Kasse einlösen.", "en": "Yes, in store and online. 1 point per €2 spent; redeem points directly at checkout." } },
-  { "q": { "de": "Habt ihr glutenfreie oder vegane Alternativen?", "en": "Do you offer gluten-free or vegan alternatives?" }, "a": { "de": "Beides — klar gekennzeichnet mit unseren Rozetten „Vegan“ und „Glutenfrei“, filterbar in jeder Kategorie.", "en": "Both — clearly marked with our “Vegan” and “Gluten-free” badges, filterable in every category." } }
+  {
+    "q": {
+      "de": "Liefert ihr nach Hause?",
+      "en": "Do you deliver to my home?"
+    },
+    "a": {
+      "de": "Ja — in Rödelheim und angrenzenden Stadtteilen. Wähle beim Checkout dein Zeitfenster, z. B. „Morgen 16–18 Uhr“.",
+      "en": "Yes — in Rödelheim and neighbouring districts. Pick your time slot at checkout, e.g. “Tomorrow 4–6 pm”."
+    }
+  },
+  {
+    "q": {
+      "de": "Wie funktioniert Click & Collect?",
+      "en": "How does Click & Collect work?"
+    },
+    "a": {
+      "de": "Online bestellen, im Markt abholen. Wir packen deine Bestellung gekühlt und frisch — abholbereit zum gewählten Zeitpunkt.",
+      "en": "Order online, pick up in store. We pack your order chilled and fresh — ready at your chosen time."
+    }
+  },
+  {
+    "q": {
+      "de": "Nehmt ihr jedes Pfand zurück?",
+      "en": "Do you take back every deposit?"
+    },
+    "a": {
+      "de": "Einweg-Pfand (0,25 €) nehmen wir immer zurück. Mehrweg-Flaschen und Kästen, die wir im Sortiment führen, ebenfalls.",
+      "en": "We always take back single-use deposits (€0.25). Reusable bottles and crates that we carry in our range as well."
+    }
+  },
+  {
+    "q": {
+      "de": "Was bedeutet „Regional“ bei euch?",
+      "en": "What does “Regional” mean here?"
+    },
+    "a": {
+      "de": "Erzeugt im Umkreis von 100 km um Frankfurt — meist aus Hessen, dem Rheingau oder der Wetterau. Die Herkunft findest du auf jeder Produktseite.",
+      "en": "Produced within 100 km of Frankfurt — mostly Hesse, Rheingau or Wetterau. You'll find the origin on every product page."
+    }
+  },
+  {
+    "q": {
+      "de": "Kann ich mit REWE Bonus sparen?",
+      "en": "Can I save with REWE Bonus?"
+    },
+    "a": {
+      "de": "Ja. REWE Bonus ist das Vorteilsprogramm von REWE: kostenlos in der REWE App aktivieren, an der Kasse scannen und bei jedem Einkauf Bonus-Vorteile sammeln. Die aktuellen Konditionen findest du in der App und auf unserer Bonus-Seite.",
+      "en": "Yes. REWE Bonus is REWE's loyalty programme: activate it for free in the REWE app, scan at the checkout and collect bonus benefits with every purchase. Current conditions are in the app and on our Bonus page."
+    }
+  },
+  {
+    "q": {
+      "de": "Habt ihr glutenfreie oder vegane Alternativen?",
+      "en": "Do you offer gluten-free or vegan alternatives?"
+    },
+    "a": {
+      "de": "Beides — klar gekennzeichnet mit unseren Rozetten „Vegan“ und „Glutenfrei“, filterbar in jeder Kategorie.",
+      "en": "Both — clearly marked with our “Vegan” and “Gluten-free” badges, filterable in every category."
+    }
+  }
 ]

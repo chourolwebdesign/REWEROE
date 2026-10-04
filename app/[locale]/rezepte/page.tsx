@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { alternatesFor } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { PageHero } from "@/components/brand/page-hero";
 import { RecipeCard } from "@/components/cards/recipe-card";
 import { RecipeFilter } from "@/components/commerce/recipe-filter";
@@ -29,25 +30,25 @@ export default async function RecipesPage({ params }: { params: Promise<{ locale
 
   return (
     <>
-      <PageHero eyebrow={t("eyebrow")} title={t("title")} text={t("text")} image="/images/placeholders/hero-rezepte.jpg" />
+      <PageHero eyebrow={t("eyebrow")} title={t("title")} text={t("text")} className="pb-0 md:pb-0" />
 
-      {/* Rezept des Monats */}
-      <section className="container-x -mt-10 md:-mt-16">
-        <Reveal className="grid overflow-hidden rounded-[16px] bg-card shadow-lift md:grid-cols-[1.3fr_1fr]">
-          <div className="relative aspect-[16/10] md:aspect-auto md:min-h-[460px]">
-            <SmartImage src={featured.image.src} alt={tx(featured.image.alt, locale)} blur={getBlur(featured.image.src)} fill priority sizes="(max-width:768px) 100vw, 60vw" className="object-cover" />
-          </div>
-          <div className="flex flex-col justify-center p-8 md:p-12">
-            <p className="eyebrow mb-4">{t("monthEyebrow")}</p>
-            <h2 className="text-forest dark:text-cream">{tx(featured.title, locale)}</h2>
+      {/* Rezept des Monats — the page's photographic plate, framed, no text on it */}
+      <section className="container-x py-12 md:py-16">
+        <Reveal className="grid items-center gap-x-6 gap-y-8 md:grid-cols-12">
+          <Link href={`/rezepte/${featured.slug}`} className="group frame relative block aspect-[3/2] overflow-hidden bg-surface md:col-span-7" aria-label={tx(featured.title, locale)}>
+            <SmartImage src={featured.image.src} alt={tx(featured.image.alt, locale)} blur={getBlur(featured.image.src)} fill priority sizes="(max-width:768px) 100vw, 60vw" className="img-zoom img-grade object-cover" />
+          </Link>
+          <div className="md:col-span-5 lg:col-span-4 lg:col-start-9">
+            <p className="eyebrow eyebrow-rule">{t("monthEyebrow")}</p>
+            <h2 className="mt-4 text-ink">{tx(featured.title, locale)}</h2>
             <p className="mt-4 text-ink-muted">{tx(featured.teaser, locale)}</p>
-            <p className="mono mt-6 text-[11px] uppercase tracking-wider text-ink-muted">{tc("minutes", { n: featured.time })} · {tc("servings", { n: featured.servings })} · {tc(`difficulty.${featured.difficulty}`)}</p>
-            <Cta href={`/rezepte/${featured.slug}`} className="mt-8 self-start">{t("monthCta")}</Cta>
+            <p className="num mt-6 text-[13px] text-ink-muted">{tc("minutes", { n: featured.time })} · {tc("servings", { n: featured.servings })} · {tc(`difficulty.${featured.difficulty}`)}</p>
+            <Cta href={`/rezepte/${featured.slug}`} className="mt-8">{t("monthCta")}</Cta>
           </div>
         </Reveal>
       </section>
 
-      <section className="container-x py-20">
+      <section className="container-x pb-20">
         <RecipeFilter recipes={recipes.map((r) => ({ slug: r.slug, time: r.time, difficulty: r.difficulty, season: r.season, diet: r.diet }))} cards={cards} />
       </section>
     </>

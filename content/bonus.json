@@ -1,13 +1,13 @@
 {
-  "hero": { "title": { "de": "Jeder Einkauf zahlt zurück.", "en": "Every purchase pays back." }, "subtitle": { "de": "REWE Bonus & PAYBACK — Punkte sammeln im Markt und online, einlösen an der Kasse.", "en": "REWE Bonus & PAYBACK — collect points in store and online, redeem at checkout." }, "image": { "src": "/images/placeholders/hero-bonus.jpg", "alt": { "de": "REWE Bonuskarte", "en": "REWE bonus card" }, "ratio": "16:9" } },
+  "hero": { "title": { "de": "Jeder Einkauf zahlt zurück.", "en": "Every purchase pays back." }, "subtitle": { "de": "REWE Bonus — kostenlos in der REWE App. Vorteile aktivieren, im Markt oder online einkaufen, Guthaben sammeln und beim nächsten Einkauf einlösen.", "en": "REWE Bonus — free in the REWE app. Activate benefits, shop in store or online, collect credit and redeem it on your next purchase." }, "image": { "src": "/images/placeholders/hero-bonus.jpg", "alt": { "de": "REWE Bonus in der REWE App", "en": "REWE Bonus in the REWE app" }, "ratio": "16:9" } },
   "steps": [
-    { "n": "01", "title": { "de": "Karte aktivieren", "en": "Activate your card" }, "text": { "de": "In der REWE App oder an der Kasse — in zwei Minuten.", "en": "In the REWE app or at the checkout — in two minutes." } },
-    { "n": "02", "title": { "de": "Punkte sammeln", "en": "Collect points" }, "text": { "de": "1 Punkt pro 2 € — plus Extra-Coupons jede Woche.", "en": "1 point per €2 — plus extra coupons every week." } },
-    { "n": "03", "title": { "de": "Einlösen", "en": "Redeem" }, "text": { "de": "100 Punkte = 1 €. Direkt an der Kasse oder als Gutschein.", "en": "100 points = €1. Right at the checkout or as a voucher." } }
+    { "n": "01", "title": { "de": "In der App aktivieren", "en": "Activate in the app" }, "text": { "de": "REWE Bonus ist kostenlos Teil der REWE App. Einmal anmelden, einmal aktivieren — fertig.", "en": "REWE Bonus is a free part of the REWE app. Sign in once, activate once — done." } },
+    { "n": "02", "title": { "de": "Vorteile wählen", "en": "Choose your benefits" }, "text": { "de": "Vor dem Einkauf die passenden Bonus-Vorteile in der App aktivieren — jede Woche neue.", "en": "Before you shop, activate the bonus benefits that suit you in the app — new ones every week." } },
+    { "n": "03", "title": { "de": "An der Kasse scannen", "en": "Scan at the checkout" }, "text": { "de": "App beim Bezahlen vorzeigen. Dein Guthaben landet im Konto und wird beim nächsten Einkauf verrechnet.", "en": "Show the app when you pay. Your credit lands in your account and is applied to your next purchase." } }
   ],
   "benefits": [
-    { "title": { "de": "Wochen-Coupons", "en": "Weekly coupons" }, "text": { "de": "Bis zu 20-fach Punkte auf ausgewählte Produkte.", "en": "Up to 20× points on selected products." } },
-    { "title": { "de": "Geburtstags-Bonus", "en": "Birthday bonus" }, "text": { "de": "Ein kleines Dankeschön aus deinem Markt.", "en": "A small thank-you from your store." } },
+    { "title": { "de": "Wöchentliche Bonus-Vorteile", "en": "Weekly bonus benefits" }, "text": { "de": "Jede Woche neue Vorteile auf ausgewählte Produkte — direkt in der App, vor dem Einkauf aktivieren.", "en": "New benefits on selected products every week — right in the app, activated before you shop." } },
+    { "title": { "de": "Guthaben statt Papier", "en": "Credit instead of paper" }, "text": { "de": "Gesammeltes Guthaben siehst du jederzeit im Konto und löst es an der Kasse ein.", "en": "See your collected credit in your account at any time and redeem it at the checkout." } },
     { "title": { "de": "Digitaler Kassenbon", "en": "Digital receipt" }, "text": { "de": "Papierlos, DSGVO-konform, jederzeit abrufbar.", "en": "Paperless, GDPR-compliant, always available." } }
   ]
 }
