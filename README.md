@@ -24,6 +24,14 @@ npm run build && npm start
 |---|---|
 | `SITE_URL` | Kanonische Adresse (z. B. `https://rewe-roedelheim.de`). Ohne Angabe: Vercel-Produktionsadresse. |
 | `SITE_INDEXABLE=true` | Erst dann dürfen Suchmaschinen indexieren (robots.txt + Meta). Vorschau und vercel.app bleiben `noindex`. |
+| `BEWERBUNG_TO` | Empfänger der Online-Bewerbungen (kommagetrennt). |
+| `MAIL_FROM` | Absender, z. B. `Website REWE Rödelheim <bewerbung@…>` |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` | Versand über das eigene Postfach des Markts (Port 465 = SSL, 587 = STARTTLS) … |
+| `RESEND_API_KEY` | … oder über Resend (Domain dort verifizieren). |
+| `BEWERBUNG_CONFIRM=true` | Bewerber bekommen eine Eingangsbestätigung (nur wenn sie eine E-Mail angeben). |
+| `MAIL_DRY_RUN=true` | Lokal/Test: nichts senden, nur protokollieren. |
+
+Ohne Mail-Konfiguration zeigt das Formular einen Hinweis und die Telefonnummer und nimmt keine Bewerbungen an. Nach dem Setzen der Variablen in Vercel neu deployen.
 
 ## Inhalte pflegen (ohne Design-Änderung)
 
@@ -35,6 +43,9 @@ npm run build && npm start
 | Galerie „Aus dem Markt“ | `content/galerie.ts` |
 | Beiträge unter /aktuelles (Markdown) | `content/aktuelles.ts` |
 | Offene Stellen (erzeugen automatisch JobPosting-Daten) | `content/jobs.ts` |
+| Termine im Markt (Startseite + Markt-Kalender) | `content/termine.ts` |
+| Auswahl im Bewerbungsformular | `content/bewerbung.ts` |
+| Notvorrat-Richtwerte und Checklisten (BBK) | `content/vorrat.ts` |
 | Neue Fotos | Datei nach `assets/media/`, in `lib/media.ts` mit Alt-Text, Kurztitel und Bildnachweis eintragen |
 | Neue Clips | MP4 (H.264, stumm, `faststart`) nach `public/media/`, Posterbild nach `assets/media/`, Eintrag in `lib/media.ts → clips` |
 
@@ -44,6 +55,17 @@ Clips komprimieren (so wurde der Rundgang erstellt):
 ffmpeg -i quelle.mp4 -an -c:v libx264 -profile:v high -preset veryslow -crf 31 -pix_fmt yuv420p -g 60 -movflags +faststart public/media/name.mp4
 ffmpeg -i quelle.mp4 -an -vf "scale=90:160,fps=15" -c:v libx264 -crf 30 -pix_fmt yuv420p -movflags +faststart public/media/name-bg.mp4
 ```
+
+## Service-Funktionen
+
+| Funktion | Wo | Hinweis |
+|---|---|---|
+| Bewerben in 60 Sekunden | `/karriere/bewerben` | 4 Schritte, ohne JS eine lange Seite; Entwurf nur im Browser; Honeypot + Mindestzeit + Rate-Limit; Versand per Mail (siehe Umgebung) |
+| Markt-Kalender | `/kalender.ics` | Prospektwochen, Feiertage, § 3 HLöG, Termine; Abo-Knöpfe für Apple, Google, Outlook |
+| Notvorrat-Rechner | `/notvorrat` | BBK-Richtwerte × Personen × Tage, Checklisten, Drucken, Teilen |
+| Als App / offline | `app/manifest.ts`, `public/sw.js`, `/offline` | Seiten network-first mit Offline-Kopie; bei Änderungen an der Cache-Logik `VERSION` in `sw.js` erhöhen |
+| Teilen | Prospekt-Ticket, Notvorrat | System-Teilen-Menü, sonst WhatsApp / Link kopieren |
+| Aushang mit QR-Codes | `/aushang` (noindex) | A4 drucken; nach dem Domainwechsel neu drucken |
 
 ## Grundsätze
 
