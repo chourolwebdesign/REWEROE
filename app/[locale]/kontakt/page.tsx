@@ -3,6 +3,7 @@ import { alternatesFor } from "@/lib/seo";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Phone, Mail, Clock } from "lucide-react";
 import { PageHero } from "@/components/brand/page-hero";
+import { Eyebrow } from "@/components/brand/eyebrow";
 import { SectionHeading } from "@/components/brand/section-heading";
 import { ContactForm } from "@/components/commerce/contact-form";
 import { Reveal } from "@/components/motion/reveal";
@@ -30,14 +31,24 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
       <PageHero eyebrow={t("eyebrow")} title={t("title")} text={t("text")} image="/images/placeholders/hero-kontakt.jpg" compact />
       <section className="container-x grid gap-12 py-16 lg:grid-cols-[1.2fr_1fr]">
         <Reveal><ContactForm /></Reveal>
-        <Reveal delay={0.1} className="space-y-6">
-          <div className="rounded-[14px] bg-forest p-8 text-cream">
-            <p className="eyebrow">{t("serviceEyebrow")}</p>
-            <h3 className="mt-3 text-cream">{t("serviceTitle")}</h3>
-            <ul className="mt-6 space-y-3 text-sm">
-              <li className="flex items-center gap-3"><Phone className="h-4 w-4 text-rewe" /> {s.contact.phone || t("servicePhonePending")}</li>
-              <li className="flex items-center gap-3"><Mail className="h-4 w-4 text-rewe" /> {s.contact.email || t("serviceEmailPending")}</li>
-              <li className="flex items-center gap-3"><Clock className="h-4 w-4 text-rewe" /> {t("serviceHours")}</li>
+        <Reveal delay={0.1}>
+          {/* Service card — the page's one anthracite block */}
+          <div className="on-block p-8">
+            <Eyebrow>{t("serviceEyebrow")}</Eyebrow>
+            <h3 className="mt-3 text-block-ink">{t("serviceTitle")}</h3>
+            <ul className="mt-6 divide-y divide-block-line text-sm">
+              <li className="flex items-center gap-3 py-3">
+                <Phone className="h-4 w-4 shrink-0 text-block-ink" aria-hidden />
+                {s.contact.phone ? <a href={`tel:${s.contact.phone.replace(/\s/g, "")}`} className="text-block-ink underline-offset-4 hover:underline">{s.contact.phone}</a> : <span className="text-block-muted">{t("servicePhonePending")}</span>}
+              </li>
+              <li className="flex items-center gap-3 py-3">
+                <Mail className="h-4 w-4 shrink-0 text-block-ink" aria-hidden />
+                {s.contact.email ? <a href={`mailto:${s.contact.email}`} className="text-block-ink underline-offset-4 hover:underline">{s.contact.email}</a> : <span className="text-block-muted">{t("serviceEmailPending")}</span>}
+              </li>
+              <li className="flex items-center gap-3 py-3">
+                <Clock className="h-4 w-4 shrink-0 text-block-ink" aria-hidden />
+                <span className="text-block-ink">{t("serviceHours")}</span>
+              </li>
             </ul>
           </div>
         </Reveal>
@@ -48,7 +59,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
           <Accordion type="single" collapsible>
             {faq.map((f, i) => (
               <AccordionItem key={i} value={`q-${i}`}>
-                <AccordionTrigger className="serif text-lg">{tx(f.q, locale)}</AccordionTrigger>
+                <AccordionTrigger className="display min-h-12 text-lg text-ink">{tx(f.q, locale)}</AccordionTrigger>
                 <AccordionContent className="text-ink-muted">{tx(f.a, locale)}</AccordionContent>
               </AccordionItem>
             ))}

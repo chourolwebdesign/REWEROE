@@ -17,16 +17,24 @@ export default async function CategoriesPage({ params }: { params: Promise<{ loc
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("category");
+  const tn = await getTranslations("nav");
   const tc = await getTranslations("common");
   const categories = getCategories();
   return (
     <>
-      <PageHero eyebrow={t("eyebrow")} title={t("allTitle")} text={t("allText")} image="/images/placeholders/filiale-roedelheim-innen.jpg" compact />
-      <section className="container-x py-16">
-        <Stagger className="grid grid-cols-2 gap-4 md:grid-cols-3">
+      <PageHero
+        eyebrow={t("eyebrow")}
+        title={t("allTitle")}
+        text={t("allText")}
+        image="/images/placeholders/filiale-roedelheim-innen.jpg"
+        imageAlt={t("heroImageAlt")}
+        breadcrumbs={[{ label: tn("home"), href: "/" }, { label: tn("categories") }]}
+      />
+      <section className="container-x pb-20">
+        <Stagger className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-3">
           {categories.map((c, i) => <StaggerItem key={c.slug}><CategoryCard c={c} locale={locale} index={i} /></StaggerItem>)}
         </Stagger>
-        <div className="mt-12 flex justify-center"><Cta href="/kategorien/alle" variant="secondary">{tc("showAll")}</Cta></div>
+        <div className="rule mt-12 flex justify-center pt-8"><Cta href="/kategorien/alle" variant="secondary">{tc("showAll")}</Cta></div>
       </section>
     </>
   );

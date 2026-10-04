@@ -5,6 +5,7 @@
     "merchantLegal": "REWE Ali Alamyaar oHG",
     "owner": "Ali Alamyaar",
     "district": "Frankfurt-Rödelheim",
+    "assortmentSize": 8000,
     "claim": "REWE. Dein Markt.",
     "premiumClaim": {
       "de": "Frisch. Regional. Rödelheim.",
@@ -19,6 +20,11 @@
     "voice": {
       "de": "warm, nahbar, meisterhaft zubereitet",
       "en": "warm, approachable, masterfully prepared"
+    },
+    "subLogos": {
+      "bio": null,
+      "regional": null,
+      "regionSign": null
     }
   },
   "contact": {
@@ -212,7 +218,7 @@
       }
     ]
   },
-  "payback": {
+  "bonus": {
     "eurosPerPoint": 2,
     "centPerPoint": 1,
     "welcomePoints": 200

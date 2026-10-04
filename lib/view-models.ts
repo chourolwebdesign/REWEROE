@@ -5,7 +5,9 @@ import { imgVM, type ImgVM } from "@/lib/blur";
 
 export interface CardProduct {
   slug: string; name: string; subtitle: string; category: string;
-  price: number; oldPrice: number | null; discount: number | null; validUntil: string | null;
+  price: number; oldPrice: number | null; discount: number | null;
+  /** Campaign window (ISO). `validFrom` drives the offer progress bar, `validUntil` the countdown + validity line (§4.15). */
+  validFrom: string | null; validUntil: string | null;
   basePrice: { per: string; amount: number }; pfand: number; badges: Badge[]; rating: number; reviews: number;
   weightGrams: number; image: ImgVM; unitLabel: string; regional: boolean; producerName: string | null;
 }
@@ -23,6 +25,7 @@ export function toCardProduct(p: Product, locale: string): CardProduct {
     price: campaign ? discounted(p.price, campaign.percent) : p.price,
     oldPrice: campaign ? p.price : null,
     discount: campaign?.percent ?? null,
+    validFrom: campaign?.validFrom ?? null,
     validUntil: campaign?.validUntil ?? null,
     basePrice: campaign ? { per: p.basePrice.per, amount: Math.round(discounted(p.basePrice.amount, campaign.percent) * 100) / 100 } : p.basePrice,
     pfand: p.pfand?.amount ?? 0,

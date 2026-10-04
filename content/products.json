@@ -204,7 +204,7 @@
     "name": { "de": "Hummus Klassik", "en": "Classic Hummus" },
     "subtitle": { "de": "mit Tahini · hausgemacht", "en": "with tahini · house-made" },
     "price": 1.79, "unit": { "amount": 200, "unit": "g" }, "basePrice": { "per": "1 kg", "amount": 8.95 },
-    "badges": ["vegan", "glutenfrei"], "rating": 4.7, "reviews": 142, "weightGrams": 200,
+    "badges": ["bio", "vegan", "glutenfrei"], "rating": 4.7, "reviews": 142, "weightGrams": 200,
     "images": [{ "src": "/images/placeholders/produkt-hummus.jpg", "alt": { "de": "Hummus", "en": "Hummus" }, "ratio": "4:5" }],
     "origin": { "producer": "metzgerei-roedelheim", "story": { "de": "Täglich frisch an unserer Feinkosttheke zubereitet.", "en": "Freshly prepared daily at our deli counter." } },
     "nutrition": { "kcal": 240, "fat": 17, "carbs": 12, "sugar": 1.0, "protein": 7.5, "salt": 1.0 },
@@ -266,5 +266,85 @@
     "origin": { "producer": "imkerei-taunus", "story": { "de": "Zwölf Völker am Feldberg — jedes Glas schmeckt nach seinem Sommer.", "en": "Twelve colonies on the Feldberg — every jar tastes of its summer." } },
     "nutrition": { "kcal": 304, "fat": 0, "carbs": 75, "sugar": 75, "protein": 0.4, "salt": 0.01 },
     "tags": ["fruehstueck"], "recipes": ["bowl-vegan"]
+  },
+  {
+    "slug": "rewe-bio-vollmilch", "sku": "4004-0006", "category": "molkerei",
+    "name": { "de": "REWE Bio Vollmilch", "en": "REWE Bio Whole Milk" },
+    "subtitle": { "de": "3,8 % Fett · Heumilch aus dem Vogelsberg · Mehrwegglas", "en": "3.8 % fat · hay milk from the Vogelsberg · reusable glass" },
+    "price": 1.49, "unit": { "amount": 1, "unit": "l" }, "basePrice": { "per": "1 l", "amount": 1.49 },
+    "pfand": { "type": "mehrweg-glas", "amount": 0.15 },
+    "badges": ["bio", "regional"], "rating": 4.7, "reviews": 96, "weightGrams": 1030,
+    "images": [{ "src": "/images/placeholders/bio-milch.jpg", "alt": { "de": "REWE Bio Vollmilch in der Glasflasche", "en": "REWE Bio whole milk in a glass bottle" }, "ratio": "4:5" }],
+    "origin": { "producer": "hofkaeserei-vogelsberg", "story": { "de": "Heumilch von Bio-Kühen auf den Vulkanwiesen des Vogelsbergs, schonend pasteurisiert und nicht homogenisiert. Zweimal pro Woche frisch in Rödelheim — 78 km von deinem Markt.", "en": "Hay milk from organic cows on the volcanic meadows of the Vogelsberg, gently pasteurised and not homogenised. Fresh in Rödelheim twice a week — 78 km from your store." } },
+    "nutrition": { "kcal": 66, "fat": 3.8, "carbs": 4.8, "sugar": 4.8, "protein": 3.4, "salt": 0.1 },
+    "tags": ["bio", "milch", "mehrweg"], "recipes": []
+  },
+  {
+    "slug": "rewe-bio-dinkel-sauerteigbrot", "sku": "4002-0004", "category": "baeckerei",
+    "name": { "de": "REWE Bio Dinkel-Sauerteigbrot", "en": "REWE Bio Spelt Sourdough Loaf" },
+    "subtitle": { "de": "750 g · 24 Stunden Teigführung · vegan", "en": "750 g · 24-hour sourdough · vegan" },
+    "price": 3.99, "unit": { "amount": 750, "unit": "g" }, "basePrice": { "per": "1 kg", "amount": 5.32 },
+    "badges": ["bio", "vegan"], "rating": 4.8, "reviews": 61, "weightGrams": 750,
+    "images": [{ "src": "/images/placeholders/bio-brot.jpg", "alt": { "de": "Aufgeschnittenes Bio-Sauerteigbrot auf Holz", "en": "Sliced organic sourdough loaf on wood" }, "ratio": "4:5" }],
+    "origin": { "producer": "baeckerei-roedelheim", "story": { "de": "Bio-Dinkelmehl, Wasser, Salz und ein Sauerteig, der seit Jahren in unserer Backstube gepflegt wird. Gebacken um 5 Uhr — dort, wo du einkaufst.", "en": "Organic spelt flour, water, salt and a sourdough starter that has been nurtured in our bakery for years. Baked at 5 am — right where you shop." } },
+    "nutrition": { "kcal": 232, "fat": 1.6, "carbs": 44, "sugar": 1.5, "protein": 8.5, "salt": 1.2 },
+    "tags": ["bio", "brot", "vegan", "hausgemacht"], "recipes": []
+  },
+  {
+    "slug": "rewe-bio-gemuesekiste", "sku": "4001-0007", "category": "obst-gemuese",
+    "name": { "de": "REWE Bio Gemüsekiste der Woche", "en": "REWE Bio Vegetable Box of the Week" },
+    "subtitle": { "de": "ca. 3 kg · wöchentlich wechselnd · aus dem Hessischen Ried", "en": "approx. 3 kg · changes weekly · from the Hessian Ried" },
+    "price": 14.99, "unit": { "amount": 1, "unit": "Stück" }, "basePrice": { "per": "1 kg", "amount": 5 },
+    "badges": ["bio", "regional", "vegan"], "rating": 4.9, "reviews": 48, "weightGrams": 3000,
+    "images": [{ "src": "/images/placeholders/bio-gemuesekiste.jpg", "alt": { "de": "Holzkiste mit Bio-Gemüse der Saison", "en": "Wooden crate with seasonal organic vegetables" }, "ratio": "4:5" }],
+    "origin": { "producer": "gemuesehof-ried", "story": { "de": "Was auf den Bio-Feldern im Ried gerade reif ist, kommt in die Kiste — sechs bis acht Sorten, am Morgen geerntet. Der Inhalt wechselt jede Woche; du findest ihn am Regalschild.", "en": "Whatever is ripe on the organic fields in the Ried goes into the box — six to eight varieties, harvested in the morning. The contents change weekly; see the shelf label." } },
+    "nutrition": { "kcal": 32, "fat": 0.3, "carbs": 5.2, "sugar": 3.1, "protein": 1.6, "salt": 0.05 },
+    "tags": ["bio", "saison", "vegan", "kiste"], "recipes": ["kuerbissuppe", "bowl-vegan"]
+  },
+  {
+    "slug": "rewe-bio-eier-6er", "sku": "4004-0007", "category": "molkerei",
+    "name": { "de": "REWE Bio Eier", "en": "REWE Bio Eggs" },
+    "subtitle": { "de": "6 Stück · Gr. M–L · Bio-Freilandhaltung, Vogelsberg", "en": "6 eggs · size M–L · organic free-range, Vogelsberg" },
+    "price": 2.99, "unit": { "amount": 6, "unit": "Stück" }, "basePrice": { "per": "1 Stück", "amount": 0.5 },
+    "badges": ["bio", "regional"], "rating": 4.8, "reviews": 133, "weightGrams": 380,
+    "images": [{ "src": "/images/placeholders/produkt-eier.jpg", "alt": { "de": "Sechs Bio-Eier im Karton", "en": "Six organic eggs in a carton" }, "ratio": "4:5" }],
+    "origin": { "producer": "gefluegelhof-vogelsberg", "story": { "de": "Bio-Hennen mit Auslauf auf Streuobstwiesen bei Lauterbach, Bio-Futter vom eigenen Hof. Die Eier sind höchstens drei Tage alt, wenn sie bei uns im Regal stehen — 85 km von deinem Markt.", "en": "Organic hens roaming orchard meadows near Lauterbach, organic feed from the farm itself. The eggs are at most three days old when they reach our shelf — 85 km from your store." } },
+    "nutrition": { "kcal": 154, "fat": 11.3, "carbs": 1, "sugar": 1, "protein": 12.9, "salt": 0.3 },
+    "tags": ["bio", "eier", "fruehstueck"], "recipes": ["gruene-sosse", "apfelkuchen"]
+  },
+  {
+    "slug": "rewe-bio-naturjoghurt", "sku": "4004-0008", "category": "molkerei",
+    "name": { "de": "REWE Bio Naturjoghurt", "en": "REWE Bio Natural Yogurt" },
+    "subtitle": { "de": "3,8 % Fett · mild · 500 g Mehrwegglas", "en": "3.8 % fat · mild · 500 g reusable glass" },
+    "price": 1.29, "unit": { "amount": 500, "unit": "g" }, "basePrice": { "per": "1 kg", "amount": 2.58 },
+    "pfand": { "type": "mehrweg-glas", "amount": 0.15 },
+    "badges": ["bio", "regional"], "rating": 4.6, "reviews": 74, "weightGrams": 500,
+    "images": [{ "src": "/images/placeholders/produkt-joghurt.jpg", "alt": { "de": "Bio-Naturjoghurt im Glas", "en": "Organic natural yogurt in a glass jar" }, "ratio": "4:5" }],
+    "origin": { "producer": "hofkaeserei-vogelsberg", "story": { "de": "Aus der Bio-Heumilch der Hofkäserei, mit milden Kulturen über Nacht gereift. Das Glas nehmen wir zurück — bis zu 50-mal.", "en": "Made from the farm dairy's organic hay milk, matured overnight with mild cultures. We take the jar back — up to 50 times." } },
+    "nutrition": { "kcal": 68, "fat": 3.8, "carbs": 4.5, "sugar": 4.5, "protein": 3.8, "salt": 0.1 },
+    "tags": ["bio", "joghurt", "mehrweg", "fruehstueck"], "recipes": []
+  },
+  {
+    "slug": "rewe-bio-butter", "sku": "4004-0009", "category": "molkerei",
+    "name": { "de": "REWE Bio Süßrahmbutter", "en": "REWE Bio Sweet Cream Butter" },
+    "subtitle": { "de": "250 g · 82 % Fett · aus Bio-Heumilch", "en": "250 g · 82 % fat · from organic hay milk" },
+    "price": 2.79, "unit": { "amount": 250, "unit": "g" }, "basePrice": { "per": "1 kg", "amount": 11.16 },
+    "badges": ["bio", "regional"], "rating": 4.7, "reviews": 58, "weightGrams": 250,
+    "images": [{ "src": "/images/placeholders/produkt-butter.jpg", "alt": { "de": "Ein Stück Bio-Butter auf Papier", "en": "A block of organic butter on paper" }, "ratio": "4:5" }],
+    "origin": { "producer": "hofkaeserei-vogelsberg", "story": { "de": "Der Rahm der Bio-Heumilch wird in der Hofkäserei langsam gebuttert — ohne Säuerung, deshalb mild und leicht nussig. Zweimal pro Woche frisch.", "en": "The cream from the organic hay milk is churned slowly at the farm dairy — unsoured, hence mild and slightly nutty. Fresh twice a week." } },
+    "nutrition": { "kcal": 741, "fat": 82, "carbs": 0.6, "sugar": 0.6, "protein": 0.7, "salt": 0.02 },
+    "tags": ["bio", "butter", "backen"], "recipes": ["apfelkuchen"]
+  },
+  {
+    "slug": "rewe-bio-apfelsaft", "sku": "4006-0004", "category": "wein-getraenke",
+    "name": { "de": "REWE Bio Apfelsaft naturtrüb", "en": "REWE Bio Cloudy Apple Juice" },
+    "subtitle": { "de": "1 l Mehrwegglas · Direktsaft von Streuobstwiesen", "en": "1 l reusable glass · not-from-concentrate juice from orchard meadows" },
+    "price": 2.29, "unit": { "amount": 1, "unit": "l" }, "basePrice": { "per": "1 l", "amount": 2.29 },
+    "pfand": { "type": "mehrweg-glas", "amount": 0.15 },
+    "badges": ["bio", "regional", "vegan"], "rating": 4.8, "reviews": 87, "weightGrams": 1550,
+    "images": [{ "src": "/images/placeholders/produkt-apfelschorle.jpg", "alt": { "de": "Naturtrüber Bio-Apfelsaft in der Mehrwegflasche", "en": "Cloudy organic apple juice in a reusable bottle" }, "ratio": "4:5" }],
+    "origin": { "producer": "kelterei-wetterau", "story": { "de": "Bio-Äpfel von Streuobstwiesen entlang der Nidda, gekeltert und direkt abgefüllt — kein Konzentrat, kein Zucker, keine Zusätze. 45 km von deinem Markt.", "en": "Organic apples from orchard meadows along the Nidda, pressed and bottled directly — no concentrate, no sugar, no additives. 45 km from your store." } },
+    "nutrition": { "kcal": 46, "fat": 0.1, "carbs": 10.5, "sugar": 10, "protein": 0.1, "salt": 0.01 },
+    "tags": ["bio", "saft", "mehrweg", "vegan"], "recipes": []
   }
 ]

@@ -1,0 +1,123 @@
+{
+  "hero": {
+    "title": { "de": "Aus deiner Region. Aus Hessen.", "en": "From your region. From Hesse." },
+    "lead": {
+      "de": "REWE Regional heißt bei uns: Der Hof liegt in Hessen oder höchstens 100 Kilometer von Rödelheim entfernt, der Erzeuger hat einen Namen, und die Herkunft steht auf dem Schild — im Regal und auf jeder Produktseite.",
+      "en": "REWE Regional means: the farm is in Hesse or at most 100 kilometres from Rödelheim, the producer has a name, and the origin is on the label — on the shelf and on every product page."
+    },
+    "image": {
+      "src": "/images/placeholders/hero-regional.jpg",
+      "alt": { "de": "Ein Obstbauer übergibt eine Apfelkiste an eine REWE-Mitarbeiterin im Taunus", "en": "A fruit grower hands a crate of apples to a REWE employee in the Taunus" },
+      "ratio": "16:9"
+    }
+  },
+  "promises": [
+    {
+      "id": "radius",
+      "title": { "de": "Höchstens 100 Kilometer", "en": "At most 100 kilometres" },
+      "text": {
+        "de": "Regional ist für uns keine Stimmung, sondern eine Entfernung: Hessen oder ein Umkreis von 100 km um den Markt. Die Kilometerzahl steht bei jedem Produkt dabei.",
+        "en": "Regional is not a mood for us but a distance: Hesse or a 100 km radius around the store. The kilometre figure is shown with every product."
+      }
+    },
+    {
+      "id": "faces",
+      "title": { "de": "Erzeuger mit Namen und Gesicht", "en": "Producers with a name and a face" },
+      "text": {
+        "de": "Hinter jedem regionalen Produkt steht ein Betrieb, den wir kennen und besucht haben. Du findest ihn auf der Karte, im Regal und in der Herkunftsgeschichte auf der Produktseite.",
+        "en": "Behind every regional product is a farm we know and have visited. You will find it on the map, on the shelf and in the origin story on the product page."
+      }
+    },
+    {
+      "id": "window",
+      "title": { "de": "Regionalfenster-Transparenz", "en": "Regional-window transparency" },
+      "text": {
+        "de": "Verpackte REWE Regional-Produkte tragen das Regionalfenster: Herkunft der Zutaten, Ort der Verarbeitung und die Kontrollstelle — auf einen Blick, unabhängig geprüft.",
+        "en": "Packaged REWE Regional products carry the Regionalfenster label: origin of ingredients, place of processing and the inspection body — at a glance, independently verified."
+      }
+    },
+    {
+      "id": "season",
+      "title": { "de": "Saison vor Import", "en": "Season before import" },
+      "text": {
+        "de": "Was gerade in Hessen wächst, steht vorne im Regal. Importware ergänzt das Sortiment, sie ersetzt es nicht — deshalb hat Spargel bei uns im April Saison und nicht im Januar.",
+        "en": "Whatever is growing in Hesse right now goes to the front of the shelf. Imports complement the range, they do not replace it — which is why asparagus is in season here in April, not January."
+      }
+    }
+  ],
+  "seasonCalendar": [
+    { "id": "spargel", "item": { "de": "Spargel", "en": "Asparagus" }, "months": [4, 5, 6] },
+    { "id": "rhabarber", "item": { "de": "Rhabarber", "en": "Rhubarb" }, "months": [4, 5, 6] },
+    { "id": "erdbeeren", "item": { "de": "Erdbeeren", "en": "Strawberries" }, "months": [5, 6, 7] },
+    { "id": "salat", "item": { "de": "Kopfsalat", "en": "Lettuce" }, "months": [5, 6, 7, 8, 9, 10] },
+    { "id": "kirschen", "item": { "de": "Kirschen", "en": "Cherries" }, "months": [6, 7] },
+    { "id": "gurken", "item": { "de": "Gurken", "en": "Cucumbers" }, "months": [6, 7, 8, 9] },
+    { "id": "kartoffeln", "item": { "de": "Kartoffeln", "en": "Potatoes" }, "months": [6, 7, 8, 9, 10] },
+    { "id": "moehren", "item": { "de": "Möhren", "en": "Carrots" }, "months": [6, 7, 8, 9, 10, 11] },
+    { "id": "tomaten", "item": { "de": "Tomaten", "en": "Tomatoes" }, "months": [7, 8, 9, 10] },
+    { "id": "zucchini", "item": { "de": "Zucchini", "en": "Courgettes" }, "months": [7, 8, 9] },
+    { "id": "zwetschgen", "item": { "de": "Zwetschgen", "en": "Plums" }, "months": [8, 9] },
+    { "id": "aepfel", "item": { "de": "Äpfel", "en": "Apples" }, "months": [8, 9, 10, 11] },
+    { "id": "kuerbis", "item": { "de": "Kürbis", "en": "Pumpkin" }, "months": [9, 10, 11] },
+    { "id": "feldsalat", "item": { "de": "Feldsalat", "en": "Lamb's lettuce" }, "months": [10, 11, 12, 1, 2, 3] },
+    { "id": "gruenkohl", "item": { "de": "Grünkohl", "en": "Kale" }, "months": [11, 12, 1, 2] }
+  ],
+  "seasonNote": {
+    "de": "Freiland-Saison hessischer Erzeuger. Lagerware (Äpfel, Kartoffeln, Möhren) verlängert die Verfügbarkeit bis ins Frühjahr.",
+    "en": "Open-field season of Hessian growers. Stored produce (apples, potatoes, carrots) extends availability into spring."
+  },
+  "regionalfenster": {
+    "title": { "de": "Das Regionalfenster: drei Angaben, kein Kleingedrucktes.", "en": "The Regionalfenster: three facts, no fine print." },
+    "text": {
+      "de": "Das Regionalfenster ist ein freiwilliges, unabhängig kontrolliertes Herkunftszeichen. Es sagt in klaren Worten, woher die Hauptzutaten kommen, wo das Produkt verarbeitet wurde und wer die Angaben prüft. Als Region gilt ein Landkreis, ein Bundesland oder ein benannter Umkreis in Kilometern.",
+      "en": "The Regionalfenster is a voluntary, independently inspected origin label. In plain words it states where the main ingredients come from, where the product was processed and who verifies the claims. A region can be a district, a federal state or a named radius in kilometres."
+    },
+    "points": [
+      { "de": "Die erste Hauptzutat stammt zu 100 % aus der genannten Region; insgesamt kommen mindestens 51 % der Zutaten von dort.", "en": "The first main ingredient comes 100 % from the named region; at least 51 % of all ingredients originate there." },
+      { "de": "Der Ort der Verarbeitung wird genannt — nicht nur die Herkunft des Rohstoffs.", "en": "The place of processing is stated — not just where the raw material was grown." },
+      { "de": "Eine unabhängige, zugelassene Kontrollstelle prüft die Angaben entlang der Lieferkette.", "en": "An independent, licensed inspection body verifies the claims along the supply chain." }
+    ]
+  },
+  "hessen": {
+    "title": { "de": "Gutes aus Hessen", "en": "Good things from Hesse" },
+    "text": {
+      "de": "„Gutes aus Hessen“ steht für Lebensmittel, die in Hessen erzeugt und verarbeitet werden — von der Wetterau bis zum Odenwald, vom Rheingau bis zum Vogelsberg. Wir folgen dieser Idee im Alltag: Was aus Hessen kommt, bekommt im Regal den Vorzug, und auf dem gelben Schild „Aus deiner Region“ steht, von welchem Hof es stammt.",
+      "en": "“Gutes aus Hessen” stands for food grown and processed in Hesse — from the Wetterau to the Odenwald, from the Rheingau to the Vogelsberg. We follow that idea every day: what comes from Hesse gets priority on the shelf, and the yellow “Aus deiner Region” sign tells you which farm it comes from."
+    },
+    "image": {
+      "src": "/images/placeholders/regional-hof.jpg",
+      "alt": { "de": "Hofplatz eines hessischen Bauernhofs am Morgen", "en": "Courtyard of a Hessian farm in the morning" },
+      "ratio": "16:9"
+    }
+  },
+  "faq": [
+    {
+      "q": { "de": "Was heißt „regional“ bei euch genau?", "en": "What exactly does “regional” mean here?" },
+      "a": {
+        "de": "Der Betrieb liegt in Hessen oder höchstens 100 Kilometer von unserem Markt in Rödelheim entfernt. Die Entfernung steht am Regal und online bei jedem Produkt — nachrechnen ausdrücklich erlaubt.",
+        "en": "The farm is in Hesse or at most 100 kilometres from our store in Rödelheim. The distance is shown on the shelf and online with every product — feel free to check."
+      }
+    },
+    {
+      "q": { "de": "Ist regional auch Bio?", "en": "Is regional also organic?" },
+      "a": {
+        "de": "Nicht automatisch. Regional beschreibt die Herkunft, Bio die Anbauweise. Manche Produkte sind beides — zum Beispiel die Bio-Eier vom Geflügelhof Lauterbach. Du erkennst das an beiden Kennzeichen auf dem Schild.",
+        "en": "Not automatically. Regional describes origin, organic describes the farming method. Some products are both — the organic eggs from Geflügelhof Lauterbach, for example. You can tell by both marks on the label."
+      }
+    },
+    {
+      "q": { "de": "Warum gibt es manche regionalen Produkte nur zeitweise?", "en": "Why are some regional products only available at times?" },
+      "a": {
+        "de": "Weil sie Saison haben. Hessischer Spargel wächst von April bis Juni, Erdbeeren bis Juli, Kürbis ab September. Außerhalb der Saison greifen wir auf Lagerware oder Partner in Europa zurück — und sagen es dazu.",
+        "en": "Because they are seasonal. Hessian asparagus grows from April to June, strawberries until July, pumpkin from September. Outside the season we rely on stored produce or partners in Europe — and we say so."
+      }
+    },
+    {
+      "q": { "de": "Wie finde ich die Erzeuger im Markt?", "en": "How do I find the producers in the store?" },
+      "a": {
+        "de": "Am gelben Schild „Aus deiner Region“ am Regal: Dort stehen Hofname und Kilometer. Online zeigt dir die Karte oben alle Betriebe im Umkreis, und jede Produktseite erzählt die Herkunftsgeschichte.",
+        "en": "Look for the yellow “Aus deiner Region” sign on the shelf: it shows the farm name and the kilometres. Online, the map above shows every farm within the radius, and each product page tells the origin story."
+      }
+    }
+  ]
+}

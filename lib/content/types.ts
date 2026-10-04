@@ -5,12 +5,16 @@ export type Img = { src: string; alt: L10n; ratio?: "4:5" | "16:9" | "1:1" | "3:
 export type ContentVideo = { src: string; poster: string; ratio: "9:16" | "16:9"; caption?: L10n };
 export type Status = "pending" | "published";
 
-export type Badge = "bio" | "regional" | "neu" | "vegan" | "glutenfrei" | "angebot";
+export type Badge = "bio" | "regional" | "neu" | "vegan" | "glutenfrei" | "angebot" | "knaller" | "bonus";
 
 export interface Settings {
   brand: {
     name: string; merchant: string; merchantLegal: string; owner: string; district: string;
+    /** Approximate number of articles in the store (home hero data strip). */
+    assortmentSize: number;
     claim: string; premiumClaim: L10n; tagline: L10n; logo: string | null; siteUrl: string; voice: L10n;
+    /** Official sub-brand files (public/brand/…); null → typographic reproduction in components/brand/brand-lockup.tsx. */
+    subLogos?: { bio?: string | null; regional?: string | null; regionSign?: string | null };
   };
   contact: { status: Status; phone: string; email: string; hoursNote: L10n };
   social: { id: string; label: string; url: string }[];
@@ -23,7 +27,8 @@ export interface Settings {
     slots: { id: string; day: "today" | "tomorrow"; from: string; to: string; price: number }[];
   };
   pfand: { types: { id: string; label: L10n; amount: number }[] };
-  payback: { eurosPerPoint: number; centPerPoint: number; welcomePoints: number };
+  /** REWE Bonus (successor of the former points programme since 29 Dec 2024): spend → bonus points → euro credit. */
+  bonus: { eurosPerPoint: number; centPerPoint: number; welcomePoints: number };
   stats: { id: string; value: number; suffix: string; label: L10n }[];
 }
 
@@ -105,3 +110,29 @@ export interface Bonus {
 }
 
 export interface Faq { q: L10n; a: L10n }
+
+/** /regional — REWE Regional world page (content/regional.json). */
+export interface RegionalPage {
+  hero: { title: L10n; lead: L10n; image: Img };
+  promises: { id: string; title: L10n; text: L10n }[];
+  /** Hessian open-field season: `months` are 1–12. */
+  seasonCalendar: { id: string; item: L10n; months: number[] }[];
+  seasonNote: L10n;
+  regionalfenster: { title: L10n; text: L10n; points: L10n[] };
+  hessen: { title: L10n; text: L10n; image: Img };
+  faq: Faq[];
+}
+
+/** /bio — REWE Bio world page (content/bio.json). */
+export interface BioPage {
+  hero: { title: L10n; lead: L10n; image: Img };
+  standards: { id: string; title: L10n; text: L10n }[];
+  seals: {
+    /** `reweBio` marks the seals REWE Bio products carry (EU-Bio always, Naturland on many). */
+    columns: { id: string; label: string; note: L10n; reweBio?: boolean }[];
+    rows: { id: string; criterion: L10n; values: L10n[] }[];
+  };
+  band: { title: L10n; text: L10n };
+  editorial: { title: L10n; text: L10n; image: Img };
+  faq: Faq[];
+}

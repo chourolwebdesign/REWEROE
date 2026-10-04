@@ -1,33 +1,79 @@
 "use client";
 import { useMemo, useState } from "react";
-import { useMounted } from "@/lib/hooks";
 import dynamic from "next/dynamic";
 import { useLocale, useTranslations } from "next-intl";
-import { LocateFixed, MapPin, Clock } from "lucide-react";
+import { AlertCircle, Check, Clock, LocateFixed, MapPin } from "lucide-react";
 import { usePrefs } from "@/lib/store/prefs";
+import { useMounted, useTick } from "@/lib/hooks";
 import { Cta } from "@/components/brand/cta";
 import { cn } from "@/lib/utils";
-import { tx, type L10n } from "@/lib/l10n";
+import { formatNumber } from "@/lib/format";
+import type { L10n } from "@/lib/l10n";
+import { berlinParts, formatOpenState, openState, type Hours, type HoursStatus } from "@/lib/hours";
 import type { Weekday } from "@/lib/content/types";
 import type { MapStore } from "./store-map-inner";
 
-const StoreMap = dynamic(() => import("./store-map-inner"), { ssr: false, loading: () => <div className="h-full w-full animate-pulse bg-surface-2" /> });
+const StoreMap = dynamic(() => import("./store-map-inner"), { ssr: false, loading: () => <div className="h-full w-full bg-surface-2" aria-hidden /> });
 
 export interface FinderStore extends MapStore {
   district: string; zip: string; city: string; addressPending: boolean; hoursPending: boolean;
-  hours: Record<Weekday, [string, string] | null>; services: string[]; intro: L10n;
+  hours: Hours; services: string[]; intro: L10n;
 }
 
-const dayKeys: Weekday[] = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
-export function openState(hours: FinderStore["hours"]) {
-  const now = new Date();
-  const berlin = new Date(now.toLocaleString("en-US", { timeZone: "Europe/Berlin" }));
-  const day = dayKeys[berlin.getDay()];
-  const h = hours[day];
-  if (!h) return { open: false, until: null as string | null };
-  const mins = berlin.getHours() * 60 + berlin.getMinutes();
-  const [o, c] = h.map((x) => { const [hh, mm] = x.split(":").map(Number); return hh * 60 + mm; });
-  return mins >= o && mins < c ? { open: true, until: h[1] } : { open: false, until: h[0] };
+/** Client-only Leaflet map for the finder and the Filiale page. The caller gives it a `frame` and a height. */
+export function StoreMapLazy({ stores, user = null, active }: { stores: MapStore[]; user?: [number, number] | null; active?: string | null }) {
+  return <StoreMap stores={stores} user={user} active={active} />;
+}
+
+/** „Meine Filiale" — persisted via usePrefs (zustand). Primary until chosen, then secondary with a check. */
+export function MyStoreButton({ slug, className }: { slug: string; className?: string }) {
+  const t = useTranslations("stores");
+  const mounted = useMounted();
+  const storeSlug = usePrefs((s) => s.storeSlug);
+  const setStore = usePrefs((s) => s.setStore);
+  const mine = mounted && storeSlug === slug;
+  return (
+    <Cta variant={mine ? "secondary" : "primary"} size="sm" arrow={false} onClick={() => setStore(mine ? null : slug)} aria-pressed={mine} className={className}>
+      <span className="inline-flex items-center gap-2">{mine && <Check className="h-4 w-4" aria-hidden />}{mine ? t("isMyStore") : t("myStore")}</span>
+    </Cta>
+  );
+}
+
+const DAY_ORDER: Weekday[] = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+
+/**
+ * Öffnungszeiten `dl` (§4.40): Mo…So, today highlighted with the open/closed dot, live line from `formatOpenState`.
+ * Hydration-safe: today and the live state render after mount; the pending state is static.
+ */
+export function StoreHours({ hours, hoursStatus, className }: { hours: Hours; hoursStatus: HoursStatus; className?: string }) {
+  const tc = useTranslations("common");
+  const mounted = useMounted();
+  useTick(30_000);
+  const today = mounted ? berlinParts(new Date()).weekday : null;
+  const state = hoursStatus === "pending" ? openState(hours, "pending") : mounted ? openState(hours, hoursStatus) : null;
+  const live = state ? formatOpenState(state, tc) : null;
+  return (
+    <div className={className}>
+      <dl className="num divide-y divide-line text-sm">
+        {DAY_ORDER.map((d) => {
+          const h = hours[d];
+          const isToday = d === today;
+          return (
+            <div key={d} className={cn("flex items-center justify-between gap-4 py-2.5", isToday ? "-mx-2 bg-surface px-2 font-semibold text-ink" : "text-ink-muted")}>
+              <dt className="flex items-center gap-2">
+                {isToday && state && state.kind !== "pending" && <span className={cn("h-1.5 w-1.5 shrink-0 rounded-full", state.kind === "open" ? "bg-bio-text" : "bg-ink-muted")} aria-hidden />}
+                {tc(`weekdays.${d}`)}
+              </dt>
+              <dd>{h ? `${h[0]} – ${h[1]}` : tc("closed")}</dd>
+            </div>
+          );
+        })}
+      </dl>
+      <p className={cn("mt-4 min-h-5 text-[13px] font-medium", live?.tone === "open" ? "text-bio-text" : live?.tone === "closed" ? "text-ink" : "text-ink-muted")} aria-live="polite">
+        {live?.text ?? " "}
+      </p>
+    </div>
+  );
 }
 
 function km(a: [number, number], b: [number, number]) {
@@ -36,6 +82,7 @@ function km(a: [number, number], b: [number, number]) {
   return 2 * R * Math.asin(Math.sqrt(x));
 }
 
+/** Store finder: list of hairline cards beside the greyscale map; „Meine Filiale" card carries a 3 px red left edge. */
 export function StoreFinder({ stores }: { stores: FinderStore[] }) {
   const t = useTranslations("stores");
   const tc = useTranslations("common");
@@ -43,8 +90,8 @@ export function StoreFinder({ stores }: { stores: FinderStore[] }) {
   const [user, setUser] = useState<[number, number] | null>(null);
   const [geo, setGeo] = useState<"idle" | "loading" | "denied">("idle");
   const mounted = useMounted();
+  useTick(30_000);
   const storeSlug = usePrefs((s) => s.storeSlug);
-  const setStore = usePrefs((s) => s.setStore);
 
   const locate = () => {
     if (!navigator.geolocation) return setGeo("denied");
@@ -55,43 +102,50 @@ export function StoreFinder({ stores }: { stores: FinderStore[] }) {
 
   return (
     <div className="grid min-h-[70vh] lg:grid-cols-[420px_1fr]">
-      <aside className="order-2 space-y-4 p-5 lg:order-1 lg:max-h-[80vh] lg:overflow-y-auto">
+      <aside className="order-2 space-y-4 p-5 lg:order-1 lg:max-h-[80vh] lg:overflow-y-auto lg:border-r lg:border-line">
         <h2 className="sr-only">{t("mapTitle")}</h2>
-        <button type="button" onClick={locate} className="inline-flex w-full items-center justify-center gap-2 rounded-[10px] border border-line px-4 py-3 text-sm font-medium transition-colors hover:bg-forest hover:text-cream">
-          <LocateFixed className={cn("h-4 w-4", geo === "loading" && "animate-spin")} /> {geo === "loading" ? t("locating") : t("near")}
-        </button>
-        {geo === "denied" && <p className="mono text-[11px] text-price">{t("geoDenied")}</p>}
+        <Cta variant="secondary" size="sm" arrow={false} onClick={locate} className="w-full" aria-busy={geo === "loading"}>
+          <span className="inline-flex items-center gap-2"><LocateFixed className={cn("h-4 w-4", geo === "loading" && "animate-spin")} aria-hidden />{geo === "loading" ? t("locating") : t("near")}</span>
+        </Cta>
+        {geo === "denied" && <p className="flex items-center gap-1.5 text-[12px] font-medium text-error" role="status"><AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden />{t("geoDenied")}</p>}
         {sorted.map((s) => {
-          const st = mounted ? openState(s.hours) : null;
-          const mine = storeSlug === s.slug;
+          const st = s.hoursPending ? openState(s.hours, "pending") : mounted ? openState(s.hours, "published") : null;
+          const live = st ? formatOpenState(st, tc) : null;
+          const mine = mounted && storeSlug === s.slug;
           return (
-            <article key={s.slug} className={cn("rounded-[14px] border bg-card p-5 shadow-card transition-colors", mine ? "border-rewe" : "border-line")}>
+            <article key={s.slug} className={cn("border border-line bg-card p-5 transition-colors duration-[var(--dur-ui)]", mine && "border-l-[3px] border-l-red")}>
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="eyebrow">{s.city}</p>
-                  <h3 className="mt-1 text-forest dark:text-cream">{s.name}</h3>
+                  <h3 className="mt-1 text-ink">{s.name}</h3>
                 </div>
-                {st && <span className={cn("mono rounded-full px-2 py-1 text-[10px] uppercase tracking-wider", st.open ? "bg-rewe/20 text-emerald" : "bg-price/10 text-price")}>{st.open ? t("openNow") : t("closedNow")}</span>}
+                {st && st.kind !== "pending" && (
+                  <span className={cn("inline-flex min-h-7 shrink-0 items-center rounded-[2px] px-2 text-[12px] font-medium", st.kind === "open" ? "bg-bio-tint text-bio-text" : "bg-surface-2 text-ink-muted")}>
+                    {st.kind === "open" ? t("openNow") : t("closedNow")}
+                  </span>
+                )}
               </div>
-              <p className="mt-3 flex items-start gap-2 text-sm text-ink-muted"><MapPin className="mt-0.5 h-4 w-4 shrink-0" /> {s.addressPending ? `${t("addressPending")} · ${s.zip} ${s.city}-${s.district}` : s.address}</p>
-              <p className="mt-1 flex items-center gap-2 text-sm text-ink-muted"><Clock className="h-4 w-4 shrink-0" /> {s.hoursPending ? t("hoursPending") : st ? (st.open ? tc("openUntil", { time: st.until ?? "" }) : st.until ? tc("opensAt", { time: st.until ?? "" }) : tc("closed")) : "—"}{user && ` · ${km(user, s.coords).toFixed(1)} km`}</p>
-              <ul className="mt-3 flex flex-wrap gap-1.5">
-                {s.services.map((sv) => <li key={sv} className="mono rounded-[3px] border border-line px-1.5 py-0.5 text-[10px] uppercase tracking-wider text-ink-muted">{tc(`services.${sv}`)}</li>)}
+              <p className="mt-3 flex items-start gap-2 text-sm text-ink-muted"><MapPin className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />{s.addressPending ? `${t("addressPending")} · ${s.zip} ${s.city}-${s.district}` : s.address}</p>
+              <p className="mt-1 flex items-center gap-2 text-sm text-ink-muted">
+                <Clock className="h-4 w-4 shrink-0" aria-hidden />
+                <span className={cn(live?.tone === "open" && "text-bio-text")}>{live?.text ?? "—"}</span>
+                {user && <span className="num">· {t("distanceAway", { km: formatNumber(km(user, s.coords), locale, { maximumFractionDigits: 1 }) })}</span>}
+              </p>
+              <ul className="mt-3 flex flex-wrap gap-1.5" aria-label={t("services")}>
+                {s.services.map((sv) => <li key={sv} className="data rounded-[2px] border border-line px-2 py-1 text-ink-muted">{tc(`services.${sv}`)}</li>)}
               </ul>
               <div className="mt-4 flex flex-wrap gap-2">
                 <Cta href={`/filialen/${s.slug}`} size="sm" variant="secondary">{t("details")}</Cta>
-                <button type="button" onClick={() => setStore(mine ? null : s.slug)} className={cn("mono rounded-[10px] px-3 py-2 text-[11px] uppercase tracking-wider transition-colors", mine ? "bg-rewe text-forest" : "border border-line hover:bg-forest/5")}>{mine ? `✓ ${t("isMyStore")}` : t("myStore")}</button>
+                <MyStoreButton slug={s.slug} />
               </div>
             </article>
           );
         })}
       </aside>
       <div className="order-1 h-[46vh] lg:order-2 lg:h-auto lg:min-h-[80vh]">
-        <StoreMap stores={stores} user={user} active={storeSlug} />
-        <span className="sr-only">{t("mapTitle")}</span>
+        <StoreMapLazy stores={stores} user={user} active={storeSlug} />
         {user && <p className="sr-only">{t("yourPosition")}</p>}
       </div>
-      <span className="hidden">{tx("", locale)}</span>
     </div>
   );
 }

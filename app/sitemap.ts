@@ -3,7 +3,7 @@ import { getArticles, getCategories, getJobs, getLegalPages, getProducts, getRec
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = getSettings().brand.siteUrl;
-  const statics = ["", "/kategorien", "/rezepte", "/filialen", "/angebote", "/magazin", "/ueber-uns", "/nachhaltigkeit", "/karriere", "/bonus", "/kontakt", "/konto", "/login", "/warenkorb", "/checkout"];
+  const statics = ["", "/kategorien", "/rezepte", "/filialen", "/angebote", "/magazin", "/regional", "/bio", "/ueber-uns", "/nachhaltigkeit", "/karriere", "/bonus", "/kontakt", "/konto", "/login", "/warenkorb", "/checkout"];
   const dyn = [
     ...getCategories().map((c) => `/kategorien/${c.slug}`),
     ...getProducts().map((p) => `/produkt/${p.slug}`),

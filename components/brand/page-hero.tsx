@@ -5,7 +5,8 @@ import { Breadcrumbs } from "./breadcrumbs";
 import { Eyebrow } from "./eyebrow";
 
 interface Props {
-  eyebrow?: string;
+  /** A string renders as `Eyebrow`; a node (e.g. a sub-brand `BrandLockup` row on /regional, /bio) renders as given. */
+  eyebrow?: React.ReactNode;
   title: string;
   text?: string;
   /** Optional photograph — a framed plate under the head row, never a backdrop, never carrying text. */
@@ -28,7 +29,7 @@ export function PageHero({ eyebrow, title, text, image, imageAlt = "", children,
       {breadcrumbs && breadcrumbs.length > 0 && <Breadcrumbs items={breadcrumbs} className="rule-b pb-4" />}
       <div className={cn("grid grid-cols-4 items-end gap-x-4 gap-y-6 md:grid-cols-12 md:gap-x-6", breadcrumbs && "pt-8")}>
         <div className="col-span-4 md:col-span-8">
-          {eyebrow && <Eyebrow num={num} rule={!num}>{eyebrow}</Eyebrow>}
+          {eyebrow && (typeof eyebrow === "string" ? <Eyebrow num={num} rule={!num}>{eyebrow}</Eyebrow> : eyebrow)}
           <h1 className={cn("mt-4 text-ink", compact && "text-[clamp(2.25rem,1.6rem+2.7vw,4rem)] leading-none tracking-[-0.025em]")}>{title}</h1>
         </div>
         {text && <p className="col-span-4 max-w-[40ch] text-[17px] leading-relaxed text-ink-muted md:col-span-4 md:col-start-9">{text}</p>}

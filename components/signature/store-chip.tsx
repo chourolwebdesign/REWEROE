@@ -16,7 +16,7 @@ interface Props {
 }
 
 /**
- * Live store chip (§4.2 / §4.34): dot (bio = open · ink-muted = closed · none while pending) + state word + mono time.
+ * Live store chip (§4.2 / §4.34): dot (bio = open · ink-muted = closed · none while pending) + state word + data-chip time.
  * Hydration-safe: the time-dependent text renders after mount; the pending state is static. Re-evaluates every 30 s.
  */
 export function StoreChip({ hours, hoursStatus, size = "md", className, storeSlug = "roedelheim" }: Props) {

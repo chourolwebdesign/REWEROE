@@ -30,16 +30,19 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
     <>
       <PageHero eyebrow={t("eyebrow")} title={tx(a.hero.title, locale)} text={tx(a.hero.subtitle, locale)} image={a.hero.image.src} imageAlt={tx(a.hero.image.alt, locale)} />
 
-      {/* Timeline */}
+      {/* Timeline: one hairline, ink markers, red display years */}
       <section className="container-x py-24 md:py-32">
         <SectionHeading eyebrow={t("timelineEyebrow")} title={t("timelineTitle")} />
-        <ol className="relative mt-16 border-l border-gold/50 pl-8 md:ml-6 md:pl-12">
+        <ol className="relative mt-14 border-l border-line pl-8 md:ml-6 md:pl-12">
           {a.timeline.map((e, i) => (
             <li key={i} className="relative pb-14 last:pb-0">
               <Reveal>
-                <span className="absolute -left-[41px] top-1.5 h-4 w-4 rounded-full border-2 border-gold bg-surface md:-left-[57px]" aria-hidden />
-                <p className="mono text-sm uppercase tracking-[0.2em] text-gold">{e.year}{e.status === "pending" ? ` · ${t("yearPending")}` : ""}</p>
-                <h3 className="mt-2 text-forest dark:text-cream">{tx(e.title, locale)}</h3>
+                <span className="absolute -left-[37px] top-3 h-2 w-2 bg-ink md:-left-[53px]" aria-hidden />
+                <p className="flex flex-wrap items-baseline gap-x-3">
+                  <span className="display num text-[2rem] leading-none text-red-text">{e.year}</span>
+                  {e.status === "pending" && <span className="text-[12px] font-medium text-ink-muted">{t("yearPending")}</span>}
+                </p>
+                <h3 className="mt-3 text-ink">{tx(e.title, locale)}</h3>
                 <p className="mt-2 max-w-2xl text-ink-muted">{tx(e.text, locale)}</p>
               </Reveal>
             </li>
@@ -47,27 +50,30 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         </ol>
       </section>
 
-      {/* Values */}
-      <section className="bg-forest py-24 text-cream md:py-32">
+      {/* Values + stats: the page's anthracite block */}
+      <section className="on-block py-24 md:py-32">
         <div className="container-x">
-          <SectionHeading eyebrow={t("valuesEyebrow")} title={t("valuesTitle")} dark />
+          <SectionHeading eyebrow={t("valuesEyebrow")} title={t("valuesTitle")} tone="block" />
           <Stagger className="mt-12 grid gap-6 md:grid-cols-3">
             {a.values.map((v) => {
               const Icon = icons[v.id as keyof typeof icons] ?? Leaf;
               return (
-                <StaggerItem key={v.id} className="rounded-[14px] border border-cream/15 bg-cream/5 p-8 backdrop-blur">
-                  <Icon className="h-6 w-6 text-rewe" aria-hidden />
-                  <h3 className="mt-6 text-cream">{tx(v.title, locale)}</h3>
-                  <p className="mt-2 text-cream/70">{tx(v.text, locale)}</p>
+                <StaggerItem key={v.id} className="border border-block-line p-8">
+                  <Icon className="h-6 w-6 text-block-ink" aria-hidden />
+                  <h3 className="mt-6 text-block-ink">{tx(v.title, locale)}</h3>
+                  <p className="mt-2 text-block-muted">{tx(v.text, locale)}</p>
                 </StaggerItem>
               );
             })}
           </Stagger>
-          <Stagger className="mt-20 grid grid-cols-2 gap-8 border-t border-cream/15 pt-12 md:grid-cols-4">
+          <Stagger className="mt-20 grid grid-cols-2 gap-8 border-t border-block-line pt-12 md:grid-cols-4">
             {s.stats.map((st) => (
               <StaggerItem key={st.id}>
-                <p className="mono text-[clamp(2.25rem,4vw,3.5rem)] leading-none text-rewe"><Counter value={st.value} suffix={st.suffix} locale={locale} /></p>
-                <p className="mt-2 text-sm text-cream/70">{tx(st.label, locale)}</p>
+                <p className="display num text-[clamp(2.25rem,4vw,3.5rem)] leading-none text-block-ink">
+                  <Counter value={st.value} locale={locale} />
+                  {st.suffix && <span className="text-block-red">{st.suffix}</span>}
+                </p>
+                <p className="mt-2 text-sm text-block-muted">{tx(st.label, locale)}</p>
               </StaggerItem>
             ))}
           </Stagger>
@@ -77,15 +83,15 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       {/* Team */}
       <section className="container-x py-24 md:py-32">
         <SectionHeading eyebrow={t("teamEyebrow")} title={t("teamTitle")} text={t("teamPending")} />
-        <Stagger className="mt-12 grid grid-cols-2 gap-5 md:grid-cols-4">
+        <Stagger className="mt-12 grid grid-cols-2 gap-6 md:grid-cols-4">
           {a.team.map((m, i) => (
-            <StaggerItem key={i} className="group">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-[12px] bg-surface-2">
-                <SmartImage src={m.image.src} alt={tx(m.image.alt, locale)} blur={getBlur(m.image.src)} fill sizes="(max-width:768px) 50vw, 25vw" className="img-zoom object-cover" />
-                {m.status === "pending" && <span className="mono absolute left-3 top-3 rounded-[3px] bg-cream/90 px-1.5 py-0.5 text-[10px] uppercase tracking-wider text-forest">{tc("contentSoon")}</span>}
+            <StaggerItem key={i}>
+              <div className="frame relative aspect-[4/5] overflow-hidden bg-surface">
+                <SmartImage src={m.image.src} alt={tx(m.image.alt, locale)} blur={getBlur(m.image.src)} fill sizes="(max-width:768px) 50vw, 25vw" className="img-grade object-cover" />
+                {m.status === "pending" && <span className="on-paper absolute left-3 top-3 rounded-[2px] bg-paper/92 px-2 py-1 text-[12px] font-medium text-ink backdrop-blur-[2px]">{tc("contentSoon")}</span>}
               </div>
-              <p className="mt-4 font-medium text-forest dark:text-cream">{m.name ?? "—"}</p>
-              <p className="mono text-[11px] uppercase tracking-wider text-ink-muted">{tx(m.role, locale)}</p>
+              <p className="mt-4 font-medium text-ink">{m.name ?? "—"}</p>
+              <p className="text-[13px] text-ink-muted">{tx(m.role, locale)}</p>
             </StaggerItem>
           ))}
         </Stagger>

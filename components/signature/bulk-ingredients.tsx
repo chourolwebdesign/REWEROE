@@ -6,6 +6,7 @@ import { ShoppingBag, Check } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { useCart } from "@/lib/store/cart";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Cta } from "@/components/brand/cta";
 import { AddToCart } from "@/components/commerce/add-to-cart";
 import { formatPrice } from "@/lib/format";
 import { toCartItem, type CardProduct } from "@/lib/view-models";
@@ -13,7 +14,10 @@ import { cn } from "@/lib/utils";
 
 export interface IngredientVM { name: string; amount: number; unit: string; product: CardProduct | null }
 
-/** Signature feature: every ingredient line can be added — or all of them in one click. "Habe ich schon" skips lines. */
+/**
+ * Signature feature (§4.38): every ingredient line can be added — or all of them in one click (the page's one red).
+ * „Habe ich schon" skips lines. Prices are ink, never red; the shell is a hairline card.
+ */
 export function BulkIngredients({ ingredients, servings }: { ingredients: IngredientVM[]; servings: number }) {
   const t = useTranslations("recipes");
   const locale = useLocale();
@@ -31,38 +35,38 @@ export function BulkIngredients({ ingredients, servings }: { ingredients: Ingred
   };
 
   return (
-    <div className="rounded-[16px] border border-line bg-card p-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <p className="eyebrow">{t("ingredients")}</p>
-          <p className="mono mt-1 text-xs text-ink-muted">{t("forServings", { n: servings })}</p>
-        </div>
-        <button type="button" onClick={addAll} disabled={addable.length === 0} className="group inline-flex items-center gap-2 rounded-[10px] bg-rewe px-5 py-3 text-[15px] font-medium text-forest transition-all duration-300 ease-[cubic-bezier(.22,1,.36,1)] hover:bg-rewe-deep active:scale-[0.98] disabled:opacity-40">
-          {done ? <Check className="h-4 w-4" /> : <ShoppingBag className="h-4 w-4 transition-transform group-hover:-rotate-6" />}
-          {t("addAll")} <span className="mono text-xs">({addable.length} · {formatPrice(total, locale)})</span>
-        </button>
+    <div className="border border-line bg-card p-6">
+      <div>
+        <p className="eyebrow">{t("ingredients")}</p>
+        <p className="num mt-1.5 text-[12px] text-ink-muted">{t("forServings", { n: servings })}</p>
       </div>
+      <Cta variant="primary" arrow={false} type="button" onClick={addAll} disabled={addable.length === 0} className="mt-5 w-full">
+        {done ? <Check className="h-4 w-4" aria-hidden /> : <ShoppingBag className="h-4 w-4" aria-hidden />}
+        {t("addAll")}
+      </Cta>
+      <p className="num mt-2 text-xs text-ink-muted" aria-live="polite">{addable.length} · {formatPrice(total, locale)}</p>
+
       <ul className="mt-6 divide-y divide-line">
         {ingredients.map((ing, i) => {
           const skipped = have.has(i);
           return (
-            <li key={i} className={cn("flex items-center gap-3 py-3 transition-opacity", skipped && "opacity-45")}>
-              <Checkbox id={`have-${i}`} checked={skipped} onCheckedChange={(v) => { const s = new Set(have); if (v) s.add(i); else s.delete(i); setHave(s); }} aria-label={t("haveIt")} />
-              <label htmlFor={`have-${i}`} className="mono w-24 shrink-0 text-sm tabular-nums">{ing.amount} {ing.unit}</label>
-              <span className={cn("flex-1 text-sm", skipped && "line-through")}>
-                {ing.product ? <Link href={`/produkt/${ing.product.slug}`} className="hover:underline underline-offset-4">{ing.name}</Link> : ing.name}
-                {ing.product && <span className="mono ml-2 text-[11px] text-price">{formatPrice(ing.product.price, locale)}</span>}
+            <li key={i} className={cn("flex items-center gap-3 py-3 transition-opacity duration-[var(--dur-ui)]", skipped && "opacity-45")}>
+              <Checkbox id={`have-${i}`} className="rounded-[2px]" checked={skipped} onCheckedChange={(v) => { const s = new Set(have); if (v) s.add(i); else s.delete(i); setHave(s); }} aria-label={t("haveIt")} />
+              <label htmlFor={`have-${i}`} className="num w-24 shrink-0 text-sm text-ink">{ing.amount} {ing.unit}</label>
+              <span className={cn("flex-1 text-sm text-ink", skipped && "line-through")}>
+                {ing.product ? <Link href={`/produkt/${ing.product.slug}`} className="underline-offset-4 hover:underline">{ing.name}</Link> : ing.name}
+                {ing.product && <span className="num ml-2 text-[12px] text-ink">{formatPrice(ing.product.price, locale)}</span>}
               </span>
               {ing.product ? (
                 <AddToCart item={toCartItem(ing.product)} variant="pill" />
               ) : (
-                <span className="mono text-[10px] uppercase tracking-wider text-ink-muted">{t("notInShop")}</span>
+                <span className="text-[12px] text-ink-muted">{t("notInShop")}</span>
               )}
             </li>
           );
         })}
       </ul>
-      <p className="mono mt-4 text-[11px] uppercase tracking-wider text-ink-muted">☐ {t("haveIt")}</p>
+      <p className="mt-4 text-[12px] text-ink-muted">☐ {t("haveIt")}</p>
     </div>
   );
 }

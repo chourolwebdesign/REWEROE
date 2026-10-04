@@ -5,7 +5,7 @@
  */
 import { readCollection, readSingle } from "./source";
 import type {
-  About, Article, Bonus, Campaign, Category, Faq, Job, LegalPage, Producer, Product, Recipe,
+  About, Article, BioPage, Bonus, Campaign, Category, Faq, Job, LegalPage, Producer, Product, Recipe, RegionalPage,
   Settings, Store, Sustainability,
 } from "./types";
 
@@ -63,3 +63,15 @@ export const getRegionalProducts = () => {
   const producers = new Map(getProducers().map((p) => [p.slug, p]));
   return getProducts().filter((p) => (producers.get(p.origin.producer)?.distanceKm ?? 999) <= 100);
 };
+
+/* ── REWE Regional / REWE Bio world pages ───────────────────────────────── */
+export const REGIONAL_RADIUS_KM = 100;
+export const getRegionalPage = () => readSingle<RegionalPage>("regional");
+export const getBioPage = () => readSingle<BioPage>("bio");
+/** Products carrying the `bio` badge (REWE Bio range). */
+export const getBioProducts = () => getProducts().filter((p) => p.badges.includes("bio"));
+/** Producers within the regional radius (≤ 100 km), nearest first; in-store crafts (0 km) last. */
+export const getRegionalProducers = () =>
+  getProducers()
+    .filter((p) => p.distanceKm <= REGIONAL_RADIUS_KM)
+    .sort((a, b) => (a.distanceKm === 0 ? 1 : 0) - (b.distanceKm === 0 ? 1 : 0) || a.distanceKm - b.distanceKm);

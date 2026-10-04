@@ -11,14 +11,17 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { alternates: alternatesFor(locale, "/login"), title: t("login"), robots: { index: false } };
 }
 
+/** Login: a framed photograph beside the paper form — no wash, no overlay. `LoginForm` owns the h1. */
 export default async function LoginPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
   const src = "/images/placeholders/konto-hero.jpg";
   return (
-    <section className="grid min-h-[100svh] pt-[72px] lg:grid-cols-2">
-      <div className="relative hidden lg:block"><SmartImage src={src} alt="" blur={getBlur(src)} fill priority sizes="50vw" className="object-cover" /><div className="absolute inset-0 bg-forest/40" /></div>
-      <div className="flex items-center justify-center p-6 md:p-12"><div className="w-full max-w-md"><LoginForm /></div></div>
+    <section className="container-x grid min-h-[calc(100svh-4rem)] items-center gap-10 py-12 lg:grid-cols-2 lg:gap-16">
+      <div className="frame relative hidden aspect-[4/5] overflow-hidden bg-surface lg:block">
+        <SmartImage src={src} alt="" blur={getBlur(src)} fill priority sizes="50vw" className="img-grade object-cover" />
+      </div>
+      <div className="mx-auto w-full max-w-md"><LoginForm /></div>
     </section>
   );
 }

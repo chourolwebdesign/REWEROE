@@ -35,7 +35,9 @@
     "results": "Treffer",
     "claim": "REWE. Dein Markt.",
     "regional": "Regional",
-    "bio": "Bio"
+    "bio": "Bio",
+    "more": "Mehr",
+    "brandWorlds": "Markenwelten"
   },
   "common": {
     "addToCart": "In den Warenkorb",
@@ -98,7 +100,9 @@
       "neu": "Neu",
       "vegan": "Vegan",
       "glutenfrei": "Glutenfrei",
-      "angebot": "Angebot"
+      "angebot": "Angebot",
+      "knaller": "Knaller",
+      "bonus": "Mit REWE Bonus"
     },
     "weekdays": {
       "mon": "Montag",
@@ -137,7 +141,14 @@
       "fri": "Fr",
       "sat": "Sa",
       "sun": "So"
-    }
+    },
+    "diet": {
+      "vegetarisch": "Vegetarisch",
+      "vegan": "Vegan",
+      "glutenfrei": "Glutenfrei"
+    },
+    "inCart": "Im Warenkorb",
+    "progress": "Fortschritt"
   },
   "home": {
     "eyebrow": "Frische",
@@ -184,7 +195,45 @@
       "producers": "Regionale Erzeuger",
       "pfand": "Pfand-Rückgabe"
     },
-    "regionalEyebrow": "Aus deiner Region · Rödelheim"
+    "regionalEyebrow": "Aus deiner Region · Rödelheim",
+    "heroAlt": "Obst- und Gemüseabteilung im REWE Rödelheim",
+    "heroCaption": "Obst & Gemüse · Rödelheim",
+    "addressPending": "Adresse folgt",
+    "pendingShort": "folgt",
+    "offersPrev": "Zurück",
+    "offersNext": "Weiter",
+    "storeLink": "Zum Markt",
+    "regionalTitle": "Aus der Nähe, in deinem Markt.",
+    "worlds": {
+      "eyebrow": "Markenwelten",
+      "title": "Regional und Bio. Die zwei Regale, die uns ausmachen.",
+      "text": "Zwei Sortimente mit eigener Herkunft: von Höfen im Umkreis von 100 km und aus kontrolliert ökologischem Anbau.",
+      "regional": {
+        "eyebrow": "Aus deiner Region",
+        "title": "Aus deiner Region.",
+        "text": "Äpfel vom Obsthof, Käse aus dem Vogelsberg, Brot vom Bäcker nebenan – mit Herkunft am Regal.",
+        "alt": "Regionale Erzeugnisse auf dem Hof – REWE Regional",
+        "producers": "Erzeuger",
+        "radius": "Umkreis",
+        "radiusValue": "≤ 100 km",
+        "window": "Kennzeichnung",
+        "windowValue": "Regionalfenster",
+        "cta": "Mehr Regional"
+      },
+      "bio": {
+        "title": "Bio, das weiter geht.",
+        "text": "EU-Bio als Grundlage, Naturland als Anspruch – und ohne Gentechnik, immer.",
+        "alt": "Bio-Regal im REWE Rödelheim – REWE Bio",
+        "seal": "Siegel",
+        "sealValue": "EU-Bio + Naturland",
+        "gmo": "Garantiert",
+        "gmoValue": "ohne Gentechnik",
+        "items": "Bio-Artikel",
+        "cta": "Mehr Bio"
+      }
+    },
+    "newsletterLabel": "E-Mail-Adresse",
+    "valuesLabel": "Unsere Werte"
   },
   "category": {
     "eyebrow": "Sortiment",
@@ -211,7 +260,9 @@
     "upTo": "bis {price}",
     "regionalOnly": "Nur Regional",
     "bioOnly": "Nur Bio",
-    "page": "Seite {n}"
+    "page": "Seite {n}",
+    "pagination": "Seitennavigation",
+    "heroImageAlt": "Blick in unseren Markt in Rödelheim"
   },
   "product": {
     "eyebrow": "Produkt",
@@ -244,7 +295,11 @@
     "share": "Teilen",
     "producerDistance": "{km} km von Rödelheim",
     "availableIn": "Heute in Rödelheim verfügbar",
-    "toList": "Zur Liste"
+    "toList": "Zur Liste",
+    "approx": "ca.",
+    "galleryLabel": "Produktbilder",
+    "imageN": "Bild {n}",
+    "addedToList": "Auf deiner Einkaufsliste ✓"
   },
   "recipes": {
     "eyebrow": "Rezepte",
@@ -271,7 +326,13 @@
     "step": "Schritt {n}",
     "forServings": "für {n} Portionen",
     "allRecipes": "Alle Rezepte",
-    "noMatch": "Kein Rezept für diese Filter."
+    "noMatch": "Kein Rezept für diese Filter.",
+    "servingsLabel": "Portionen",
+    "ratingLabel": "Bewertung",
+    "nutritionKcal": "Energie",
+    "nutritionFat": "Fett",
+    "nutritionCarbs": "Kohlenhydrate",
+    "nutritionProtein": "Eiweiß"
   },
   "stores": {
     "eyebrow": "Unser Markt",
@@ -296,13 +357,28 @@
     "pfandHint": "Alle Beträge in Euro, gesetzlich festgelegt.",
     "myStore": "Als meine Filiale wählen",
     "isMyStore": "Deine Filiale",
-    "regionalEyebrow": "Regional in diesem Markt",
+    "regionalEyebrow": "Aus deiner Region · in diesem Markt",
     "regionalTitle": "Was hier aus der Nähe kommt",
     "mapTitle": "Karte",
     "gallery": "Einblicke",
     "contact": "Kontakt",
     "phonePending": "Telefonnummer folgt",
-    "yourPosition": "Dein Standort"
+    "yourPosition": "Dein Standort",
+    "contactRoute": "Kontakt & Anfahrt",
+    "address": "Adresse",
+    "phone": "Telefon",
+    "email": "E-Mail",
+    "emailPending": "E-Mail folgt",
+    "routeApp": "In Karten-App öffnen",
+    "pickupService": "Abholservice (Click & Collect)",
+    "deliveryService": "Lieferservice",
+    "available": "Verfügbar",
+    "unavailable": "Nicht verfügbar",
+    "mapEyebrow": "Karte & Anfahrt",
+    "videoEyebrow": "Markt-Rundgang",
+    "distanceAway": "{km} km entfernt",
+    "finderEyebrow": "Filialfinder",
+    "liveHours": "Live-Status"
   },
   "about": {
     "eyebrow": "Über uns",
@@ -365,25 +441,33 @@
       "Teilzeit": "Teilzeit",
       "Minijob": "Minijob",
       "Ausbildung": "Ausbildung"
-    }
+    },
+    "location": "Standort",
+    "postedAt": "Online seit",
+    "validThrough": "Gültig bis",
+    "details": "Zur Stelle",
+    "videoSoon": "Video · folgt"
   },
   "bonus": {
     "eyebrow": "REWE Bonus",
     "howEyebrow": "So funktioniert's",
     "howTitle": "Drei Schritte, ein Konto.",
-    "calcEyebrow": "Punkte-Rechner",
+    "calcEyebrow": "Bonus-Rechner",
     "calcTitle": "Was bringt dir ein Jahr bei uns?",
     "calcLabel": "Ich gebe monatlich aus",
-    "calcPoints": "Jährliche Punkte",
+    "calcPoints": "Bonus-Punkte pro Jahr",
     "calcValue": "Das entspricht",
-    "calcVouchers": "in Gutscheinen",
-    "calcNote": "1 Punkt pro {euros} € · 1 Punkt = {cent} Cent. Zusatzpunkte durch Coupons nicht eingerechnet.",
+    "calcVouchers": "als Guthaben",
+    "calcNote": "Rechenbeispiel: 1 Bonus-Punkt je {euros} € Einkauf · 1 Punkt = {cent} Cent Guthaben. Extra-Vorteile aus Coupons nicht eingerechnet.",
     "benefitsEyebrow": "Vorteile",
     "benefitsTitle": "Mehr als Punkte.",
-    "cta": "Karte aktivieren",
-    "cardLabel": "Deine Karte",
+    "cta": "In der REWE App aktivieren",
+    "cardLabel": "Dein REWE Bonus",
     "cardOwner": "Mustermann",
-    "cardPoints": "Punkte"
+    "cardPoints": "Bonus-Punkte zum Start",
+    "cardHint": "Kostenlos in der REWE App · vor dem Einkauf aktivieren",
+    "cardNumber": "Bonus-Nummer",
+    "spendRange": "{min} € bis {max} €"
   },
   "offers": {
     "eyebrow": "Angebote",
@@ -400,7 +484,21 @@
     "instead": "statt {price}",
     "filterAll": "Alle Abteilungen",
     "listView": "Als Liste anzeigen",
-    "pageView": "Als Prospekt anzeigen"
+    "pageView": "Als Prospekt anzeigen",
+    "eyebrowValid": "Angebote · gültig bis {date}",
+    "heroEyebrow": "Knaller der Woche",
+    "filterLabel": "Abteilung",
+    "empty": "Zurzeit keine Angebote in dieser Abteilung.",
+    "heroImageAlt": "Angebotsregal mit Preisschildern in unserem Markt",
+    "table": {
+      "name": "Produkt",
+      "content": "Inhalt",
+      "basePrice": "Grundpreis",
+      "price": "Preis",
+      "instead": "statt",
+      "pfand": "Pfand",
+      "valid": "gültig bis"
+    }
   },
   "magazine": {
     "eyebrow": "Magazin",
@@ -415,7 +513,13 @@
     },
     "related": "Passende Rezepte",
     "more": "Weitere Artikel",
-    "authorPending": "Autor:in folgt"
+    "authorPending": "Autor:in folgt",
+    "allTopics": "Alle Themen",
+    "filterLabel": "Thema",
+    "galleryEyebrow": "Bilder vom Tag",
+    "videoEyebrow": "Rundgang",
+    "heroImageAlt": "Aufgeschlagenes Magazin mit saisonalem Gemüse",
+    "noMatch": "Keine Artikel zu diesem Thema."
   },
   "contact": {
     "eyebrow": "Kontakt",
@@ -449,7 +553,8 @@
     "pendingTitle": "Wir arbeiten an diesen Inhalten.",
     "pendingText": "Dieser Text wird gerade rechtlich geprüft und folgt in Kürze. Danke für deine Geduld.",
     "updated": "Stand: {date}",
-    "eyebrow": "Rechtliches"
+    "eyebrow": "Rechtliches",
+    "pendingEyebrow": "In Prüfung"
   },
   "account": {
     "eyebrow": "Mein REWE",
@@ -483,7 +588,10 @@
     "registerTitle": "Konto erstellen.",
     "noAccount": "Noch kein Konto?",
     "hasAccount": "Schon ein Konto?",
-    "demoNote": "Demo-Modus: Anmeldung ohne Server — Daten bleiben in deinem Browser."
+    "demoNote": "Demo-Modus: Anmeldung ohne Server — Daten bleiben in deinem Browser.",
+    "name": "Name",
+    "email": "E-Mail",
+    "bonusLink": "Zu REWE Bonus"
   },
   "cart": {
     "eyebrow": "Warenkorb",
@@ -543,7 +651,8 @@
     "confirmBack": "Zurück zur Startseite",
     "errorRequired": "Bitte ausfüllen.",
     "errorZip": "Bitte 5-stellige PLZ eingeben.",
-    "demoNote": "Demo-Checkout: Es wird keine Zahlung ausgelöst."
+    "demoNote": "Demo-Checkout: Es wird keine Zahlung ausgelöst.",
+    "orderId": "Bestellnummer"
   },
   "notFound": {
     "eyebrow": "404",
@@ -560,12 +669,19 @@
     "claim": "REWE. Dein Markt.",
     "merchantNote": "Ein Markt von Ali Alamyaar, selbstständiger REWE-Kaufmann.",
     "payments": "Sicher bezahlen",
-    "copyright": "© {year} REWE Ali Alamyaar oHG · Frankfurt-Rödelheim",
+    "copyright": "© {year} REWE Ali Alamyaar oHG · selbstständiger REWE-Kaufmann · Partner der REWE Group",
     "impressum": "Impressum",
     "datenschutz": "Datenschutz",
     "agb": "AGB",
     "widerruf": "Widerruf",
-    "cookieSettings": "Cookie-Einstellungen"
+    "cookieSettings": "Cookie-Einstellungen",
+    "address": "Adresse",
+    "hours": "Öffnungszeiten",
+    "phone": "Telefon",
+    "services": "Services",
+    "addressPending": "Adresse folgt",
+    "phonePending": "folgt",
+    "closedDay": "geschlossen"
   },
   "cookies": {
     "title": "Cookies — du entscheidest.",
@@ -584,7 +700,7 @@
     "eyebrow": "Datenschutz · Cookies"
   },
   "freshness": {
-    "label": "Jetzt im Markt"
+    "label": "Frische-Uhr"
   },
   "countdown": {
     "days": "T",
@@ -600,5 +716,99 @@
     "recipes": "Rezepte",
     "articles": "Magazin",
     "empty": "Gib einen Begriff ein — wir durchsuchen Sortiment, Rezepte und Magazin."
+  },
+  "regional": {
+    "metaTitle": "REWE Regional – Aus deiner Region",
+    "metaDescription": "REWE Regional in Rödelheim: Erzeuger aus Hessen und aus höchstens 100 km Umkreis, Regionalfenster-Transparenz, Saisonkalender und regionale Produkte – mit Namen, Karte und Kilometerangabe.",
+    "breadcrumb": "REWE Regional",
+    "proofProducers": "Erzeuger im Umkreis",
+    "proofRadius": "Umkreis",
+    "proofRadiusValue": "≤ {km} km",
+    "proofLabel": "Kennzeichnung",
+    "proofLabelValue": "Regionalfenster",
+    "proofRegion": "Region",
+    "proofRegionValue": "Hessen",
+    "promisesEyebrow": "Unser Regional-Versprechen",
+    "promisesTitle": "Vier Zusagen. Auf jedem Schild nachlesbar.",
+    "promisesText": "Regional ist bei uns ein Maßstab, kein Marketingwort. Das hier gilt für jedes Produkt mit dem gelben Schild.",
+    "promiseLabel": "Versprechen",
+    "producersEyebrow": "Erzeuger",
+    "producersTitle": "Namen und Gesichter hinter dem Regal.",
+    "producersText": "{n} Betriebe innerhalb von {km} km – plus Bäckerei und Metzgerei im Markt.",
+    "mapAria": "Karte der regionalen Erzeuger rund um Frankfurt-Rödelheim",
+    "mapList": "Betriebe im Umkreis",
+    "mapStore": "Dein Markt",
+    "mapStoreNote": "Bäckerei und Metzgerei im Haus",
+    "inStore": "im Markt",
+    "km": "{km} km",
+    "mapLegend": "Roter Punkt: dein Markt · Ring: Erzeuger · gestrichelt: {km}-km-Umkreis",
+    "showOnMap": "{name} auf der Karte zeigen",
+    "productsEyebrow": "Regionale Produkte",
+    "productsTitle": "Aus Hessen ins Regal.",
+    "productsText": "{n} Artikel von Erzeugern im Umkreis – mit Kilometerangabe und Herkunftsgeschichte auf jeder Produktseite.",
+    "productsCount": "{n} regionale Artikel im Markt",
+    "productsAll": "Alle regionalen Produkte",
+    "seasonEyebrow": "Saisonkalender Hessen",
+    "seasonTitle": "Was wann bei uns wächst.",
+    "seasonText": "Freiland-Saison hessischer Erzeuger, Monat für Monat. Der aktuelle Monat ist markiert.",
+    "seasonAria": "Saisonkalender: Monate, in denen hessisches Obst und Gemüse Saison hat",
+    "seasonProduce": "Produkt",
+    "seasonInSeason": "Saison",
+    "seasonOff": "keine Saison",
+    "seasonCurrent": "aktueller Monat",
+    "windowEyebrow": "Regionalfenster",
+    "hessenEyebrow": "Herkunft",
+    "faqEyebrow": "Fragen",
+    "faqTitle": "Häufige Fragen zu Regional.",
+    "ctaEyebrow": "Dein Markt",
+    "ctaTitle": "Komm vorbei. Das Regal ist voll.",
+    "ctaText": "Die Erzeuger von dieser Seite findest du im Markt am gelben Schild – und jede Woche ein paar davon im Angebot.",
+    "ctaStore": "Unser Markt",
+    "ctaOffers": "Zu den Angeboten"
+  },
+  "bio": {
+    "metaTitle": "REWE Bio – Bio-Sortiment",
+    "metaDescription": "REWE Bio in Rödelheim: Bio nach EU-Öko-Verordnung, bei vielen Produkten zusätzlich Naturland, ohne Gentechnik. Standards, Siegel im Vergleich und das Bio-Sortiment im Markt.",
+    "breadcrumb": "REWE Bio",
+    "proofBasis": "Basis",
+    "proofBasisValue": "EU-Öko-VO",
+    "proofSeal": "Zusätzlich",
+    "proofSealValue": "Naturland",
+    "proofGmo": "Garantiert",
+    "proofGmoValue": "Ohne Gentechnik",
+    "proofItems": "Im Markt",
+    "proofItemsValue": "{n} Bio-Artikel",
+    "standardsEyebrow": "Was REWE Bio verspricht",
+    "standardsTitle": "Bio nach Gesetz – und ein Stück darüber hinaus.",
+    "standardsText": "Vier Standards, die für jedes REWE Bio-Produkt gelten oder bei vielen hinzukommen. Ohne Ausnahme kontrolliert.",
+    "sealsEyebrow": "Siegel verstehen",
+    "sealsTitle": "EU-Bio, Naturland, Bioland, Demeter – der Unterschied.",
+    "sealsText": "Das EU-Bio-Blatt ist das gesetzliche Minimum. Die Verbände legen in einzelnen Punkten strengere Regeln fest.",
+    "sealsCriterion": "Kriterium",
+    "sealsReweBio": "bei REWE Bio",
+    "sealsLegend": "Vereinfachte Übersicht. Verbindlich sind die jeweils gültigen Richtlinien der Verbände und die EU-Öko-Verordnung.",
+    "productsEyebrow": "Bio-Sortiment",
+    "productsTitle": "Bio, das du jeden Tag brauchst.",
+    "productsText": "{n} Artikel mit Bio-Siegel – von der Milch bis zur Gemüsekiste. Viele davon zusätzlich aus der Region.",
+    "productsCount": "{n} Bio-Artikel im Markt",
+    "productsAll": "Alle Bio-Produkte",
+    "bandEyebrow": "Haltung",
+    "bandBasis": "Basis für jedes Produkt",
+    "bandBasisValue": "EU-Öko-VO",
+    "bandSeal": "Bei vielen Produkten",
+    "bandSealValue": "Naturland",
+    "bandGmo": "Gentechnisch veränderte Zutaten",
+    "bandGmoValue": "0",
+    "shelfEyebrow": "Im Markt",
+    "shelfPoint1": "Grünes REWE Bio-Feld auf der Packung",
+    "shelfPoint2": "EU-Bio-Blatt mit dem Code der Kontrollstelle",
+    "shelfPoint3": "Naturland-Zeichen bei vielen Produkten",
+    "faqEyebrow": "Fragen",
+    "faqTitle": "Häufige Fragen zu Bio.",
+    "ctaEyebrow": "Weiterlesen",
+    "ctaTitle": "Bio ist ein Teil. Nachhaltigkeit das Ganze.",
+    "ctaText": "Mehrweg, weniger Plastik, regionaler Einkauf: Wie wir im Markt arbeiten – und was du mit Bio-Zutaten kochen kannst.",
+    "ctaSustainability": "Unsere Nachhaltigkeit",
+    "ctaRecipes": "Rezepte entdecken"
   }
 }

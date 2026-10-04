@@ -67,7 +67,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
         <NextIntlClientProvider>
           <Providers>
             <JsonLd data={org} />
-            <SiteHeader categories={navCategories} merchant={`${settings.brand.district}`} logoSrc={settings.brand.logo} />
+            <SiteHeader categories={navCategories} merchant={settings.brand.district} logoSrc={settings.brand.logo} store={{ slug: store.slug, hours: store.hours, hoursStatus: store.hoursStatus, address: store.address }} />
             <SearchDialog index={searchIndex} />
             <main id="main" className="flex-1">{children}</main>
             <SiteFooter />

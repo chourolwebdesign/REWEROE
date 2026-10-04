@@ -1,7 +1,8 @@
 "use client";
 import { useRef } from "react";
 import { m, useInView, useReducedMotion } from "framer-motion";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { formatNumber } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 /* Stylised outline of Germany (lat, lng), clockwise from Flensburg. */
@@ -21,9 +22,13 @@ export interface JourneyProps {
   from: [number, number]; to: [number, number]; fromLabel: string; toLabel: string; distanceKm: number; story: string; international?: boolean; local?: boolean; className?: string;
 }
 
-/** Signature feature: farm-to-shelf journey on a minimal SVG map of Germany with a drawn route. */
+/**
+ * Signature feature (§4.32): farm-to-shelf journey on a minimal SVG map of Germany with a drawn route.
+ * Ink outline, hairline under-route, signal-red drawn route (1.6 s — documented data-visualisation exception), static origin dot, pulsing destination.
+ */
 export function JourneyMap({ from, to, fromLabel, toLabel, distanceKm, story, international, local, className }: JourneyProps) {
   const t = useTranslations("product");
+  const locale = useLocale();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "10000px 0px -15% 0px" });
   const reduce = useReducedMotion();
@@ -39,37 +44,39 @@ export function JourneyMap({ from, to, fromLabel, toLabel, distanceKm, story, in
   const cx = Math.min(Math.max((A.x + B.x) / 2, vw / 2), W - vw / 2), cy = Math.min(Math.max((A.y + B.y) / 2, vh / 2), H - vh / 2);
   const viewBox = span >= W ? `0 0 ${W} ${H}` : `${(cx - vw / 2).toFixed(0)} ${(cy - vh / 2).toFixed(0)} ${vw.toFixed(0)} ${vh.toFixed(0)}`;
   const k = span / W; // scale factor for stroke/marker sizes so they stay visually constant
+  const km = local ? "0" : formatNumber(distanceKm, locale);
 
   return (
-    <div ref={ref} className={cn("grid gap-8 rounded-[16px] border border-line bg-card p-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:p-8", className)}>
-      <svg viewBox={viewBox} role="img" aria-label={`${fromLabel} → ${toLabel}, ${distanceKm} km`} className="mx-auto h-auto w-full max-w-[360px]">
-        <polygon points={outline} className="fill-forest/[0.06] stroke-forest/30 dark:fill-cream/[0.04] dark:stroke-cream/30" strokeWidth={1.5 * k} strokeLinejoin="round" />
+    <div ref={ref} className={cn("grid gap-8 border border-line bg-card p-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:p-8", className)}>
+      <svg viewBox={viewBox} role="img" aria-label={`${fromLabel} → ${toLabel}, ${km} km`} className="mx-auto h-auto w-full max-w-[360px]">
+        <polygon points={outline} className="fill-ink/[.04] stroke-ink/30" strokeWidth={1.5 * k} strokeLinejoin="round" />
         {!local && (
           <>
-            <path d={d} fill="none" className="stroke-gold/30" strokeWidth={6 * k} strokeLinecap="round" strokeDasharray={international ? "2 10" : undefined} />
-            <m.path d={d} fill="none" className="stroke-rewe" strokeWidth={3 * k} strokeLinecap="round" strokeDasharray={international ? "6 8" : undefined}
-              initial={{ pathLength: reduce ? 1 : 0 }} animate={{ pathLength: inView || reduce ? 1 : 0 }} transition={{ duration: 2, ease: [0.22, 1, 0.36, 1] }} />
-            <g transform={`translate(${A.x} ${A.y})`}>
-              <circle r={9 * k} className="fill-gold" /><circle r={9 * k} className="pulse-dot fill-gold/60" />
-            </g>
+            <path d={d} fill="none" className="stroke-line" strokeWidth={6 * k} strokeLinecap="round" strokeDasharray={international ? "2 10" : undefined} />
+            <m.path
+              d={d} fill="none" className="stroke-red-text" strokeWidth={3 * k} strokeLinecap="round" strokeDasharray={international ? "6 8" : undefined}
+              initial={{ pathLength: reduce ? 1 : 0 }} animate={{ pathLength: inView || reduce ? 1 : 0 }} transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
+            />
+            <g transform={`translate(${A.x} ${A.y})`}><circle r={8 * k} className="fill-ink" /></g>
           </>
         )}
         <g transform={`translate(${B.x} ${B.y})`}>
-          <circle r={11 * k} className="fill-rewe" /><circle r={11 * k} className="pulse-dot fill-rewe/60" />
-          <text y={-18 * k} textAnchor="middle" fontSize={13 * k} className="mono fill-forest font-medium tracking-wider uppercase dark:fill-cream">{toLabel}</text>
+          <circle r={11 * k} className="fill-red-text" />
+          {!reduce && <circle r={11 * k} className="pulse-dot fill-red-text/50" />}
+          <text y={-18 * k} textAnchor="middle" fontSize={11 * k} className="fill-ink font-sans font-semibold">{toLabel}</text>
         </g>
-        {!local && <text x={A.x} y={A.y + 26 * k} fontSize={12 * k} textAnchor={A.x < B.x ? "end" : "start"} className="mono fill-forest uppercase tracking-wider dark:fill-cream">{fromLabel}</text>}
+        {!local && <text x={A.x} y={A.y + 26 * k} fontSize={11 * k} textAnchor={A.x < B.x ? "end" : "start"} className="fill-ink font-sans font-semibold">{fromLabel}</text>}
       </svg>
       <div className="flex flex-col justify-center">
         <p className="eyebrow">{t("journeyEyebrow")}</p>
-        <h2 className="mt-3 text-[clamp(1.5rem,2vw,2rem)] text-forest dark:text-cream">{t("journeyTitle")}</h2>
-        <dl className="mono mt-6 grid grid-cols-3 gap-4 border-y border-line py-4 text-[11px] uppercase tracking-wider">
-          <div><dt className="text-ink-muted">{t("journeyFrom")}</dt><dd className="mt-1 text-sm normal-case tracking-normal">{fromLabel}</dd></div>
-          <div><dt className="text-ink-muted">{t("journeyTo")}</dt><dd className="mt-1 text-sm normal-case tracking-normal">{toLabel}</dd></div>
-          <div><dt className="text-ink-muted">km</dt><dd className="mt-1 text-sm text-rewe">{local ? "0" : distanceKm.toLocaleString("de-DE")}</dd></div>
+        <h2 className="display mt-3 text-[clamp(1.5rem,2vw,2rem)] text-ink">{t("journeyTitle")}</h2>
+        <dl className="mt-6 grid grid-cols-3 divide-x divide-line border-y border-line py-4">
+          <div className="px-4 first:pl-0"><dt className="eyebrow">{t("journeyFrom")}</dt><dd className="num mt-1.5 text-sm text-ink">{fromLabel}</dd></div>
+          <div className="px-4"><dt className="eyebrow">{t("journeyTo")}</dt><dd className="num mt-1.5 text-sm text-ink">{toLabel}</dd></div>
+          <div className="px-4"><dt className="eyebrow">km</dt><dd className="num mt-1.5 text-sm text-red-text">{km}</dd></div>
         </dl>
         <p className="mt-5 text-ink-muted">{story}</p>
-        <p className="mono mt-4 text-[11px] uppercase tracking-wider text-ink-muted">{local ? t("journeyLocal") : international ? t("journeyInternational") : t("journeyText")}</p>
+        <p className="mt-4 text-[12px] text-ink-muted">{local ? t("journeyLocal") : international ? t("journeyInternational") : t("journeyText")}</p>
       </div>
     </div>
   );
