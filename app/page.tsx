@@ -1,6 +1,7 @@
 import { CareerBand } from "@/components/home/career-band";
 import { FlyerTicket } from "@/components/home/flyer-ticket";
 import { Highlights } from "@/components/home/highlights";
+import { RegionalBand } from "@/components/home/regional-band";
 import { StoryHero } from "@/components/home/story-hero";
 import { OpenStatus } from "@/components/live/open-status";
 import { FlyerWeekText } from "@/components/live/flyer-week";
@@ -27,30 +28,23 @@ export default function HomePage() {
         items={resolveStory(story)}
         intro={
           <>
-            <p className="mb-4 text-[0.9375rem] font-semibold text-white/80">REWE in Frankfurt-Rödelheim</p>
+            <p className="text-eyebrow mb-5 text-white/75">REWE in Frankfurt-Rödelheim</p>
             <h1 className="text-hero">
               Willkommen in deinem <span className="text-red-bright">Markt.</span>
             </h1>
-            <p className="mt-5 hidden max-w-[30ch] text-lede text-white/80 lg:block">
+            <p className="mt-6 hidden max-w-[30ch] text-lede text-white/80 lg:block">
               Montag bis Samstag von 7 bis 22 Uhr in der Thudichumstraße – mit Bäckerei und Sushi im Markt.
             </p>
           </>
         }
         side={
-          <div className="grid gap-3 lg:max-w-[24rem] lg:justify-self-start">
+          <div className="grid gap-3 lg:max-w-[23rem] lg:justify-self-start">
             <OpenStatus tone="dark" className="justify-self-start" />
-            <dl className="hidden gap-3 lg:grid">
-              <div className="border-t border-white/20 pt-3">
-                <dt className="text-[0.8125rem] text-white/60">Adresse</dt>
-                <dd className="font-semibold">
-                  {markt.address.street}, {markt.address.zip} Frankfurt
-                </dd>
-              </div>
-              <div className="border-t border-white/20 pt-3">
-                <dt className="text-[0.8125rem] text-white/60">Öffnungszeiten</dt>
-                <dd className="font-semibold">Mo – Sa 7 – 22 Uhr</dd>
-              </div>
-            </dl>
+            <p className="hidden text-lede text-white/75 lg:block">
+              {markt.address.street}
+              <br />
+              {markt.address.zip} Frankfurt-Rödelheim
+            </p>
             <div className="mt-1 flex flex-wrap gap-2.5 lg:grid">
               <ButtonLink href={markt.links.flyer} external size="lg" className="lg:w-full">
                 Prospekt KW <FlyerWeekText initial={week} field="kw" />
@@ -66,6 +60,8 @@ export default function HomePage() {
       <section aria-label="Prospekt der Woche" className="wrap pt-16 md:pt-24">
         <FlyerTicket />
       </section>
+
+      <RegionalBand className="wrap pt-24 md:pt-32" />
 
       <section aria-labelledby="markt-titel" className="wrap pt-24 md:pt-32">
         <SectionHeading
