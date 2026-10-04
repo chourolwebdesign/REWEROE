@@ -34,7 +34,6 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { alternates: alternatesFor(locale, `/produkt/${slug}`), title: tx(p.name, locale), description: `${tx(p.subtitle, locale)} — ${tx(p.origin.story, locale)}`, openGraph: { images: [p.images[0].src] } };
 }
 
-export const revalidate = 3600;
 
 const TRIGGER = "display rounded-none py-4 text-lg font-[number:var(--fw-display)] text-ink hover:no-underline";
 

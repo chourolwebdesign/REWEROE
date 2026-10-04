@@ -60,7 +60,6 @@ function WorldTile({ sub, alt, eyebrow, title, text, proof, cta, href }: { sub: 
 }
 
 /** Offer prices and campaign windows are baked into the static page — regenerate hourly so expired campaigns drop out (§4.15). */
-export const revalidate = 3600;
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;

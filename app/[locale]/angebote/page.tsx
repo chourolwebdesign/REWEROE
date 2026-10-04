@@ -9,7 +9,6 @@ import { formatDateShort } from "@/lib/format";
 import { tx } from "@/lib/l10n";
 
 /** The leaflet is prerendered with campaign prices baked in — regenerate hourly so expired deals leave the sheet (§4.15). */
-export const revalidate = 3600;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;

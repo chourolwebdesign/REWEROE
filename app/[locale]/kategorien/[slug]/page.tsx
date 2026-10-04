@@ -8,7 +8,6 @@ import { getCategories, getCategory, getProducts, getProductsByCategory } from "
 import { toCardProduct } from "@/lib/view-models";
 import { tx } from "@/lib/l10n";
 
-export const revalidate = 3600;
 
 export function generateStaticParams() {
   return [{ slug: "alle" }, ...getCategories().map((c) => ({ slug: c.slug }))];
