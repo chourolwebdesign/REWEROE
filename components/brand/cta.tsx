@@ -2,8 +2,7 @@ import { ArrowRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
-/** `gold` is a legacy key (alias of `secondary`) for one cycle. */
-export type CtaVariant = "primary" | "secondary" | "ghost" | "inverse" | "link" | "danger" | "gold";
+export type CtaVariant = "primary" | "secondary" | "ghost" | "inverse" | "link" | "danger";
 export type CtaSize = "sm" | "md" | "lg";
 
 const base =
@@ -32,7 +31,6 @@ const variants: Record<CtaVariant, string> = {
   link: "px-0 text-ink underline decoration-red decoration-2 underline-offset-[6px] hover:decoration-[3px]",
   /** Destructive confirmations. */
   danger: "border border-error/40 text-error hover:bg-error/8",
-  gold: secondary,
 };
 
 interface CommonProps { variant?: CtaVariant; className?: string; arrow?: boolean; children: React.ReactNode; size?: CtaSize }

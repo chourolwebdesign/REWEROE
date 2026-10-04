@@ -314,7 +314,7 @@
 /* True mono — instrument data only: Frische-Uhr time, Countdown digits, Pfand-Kompass lines, Bonus readouts, brochure folio, kbd, map labels */
 @utility data { font-family: var(--font-mono); font-weight: 500; font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; font-variant-numeric: tabular-nums; }
 @utility data-lg { font-family: var(--font-mono); font-weight: 500; font-size: .8125rem; letter-spacing: .02em; text-transform: none; font-variant-numeric: tabular-nums; }
-/* Display face for non-heading elements (quotes, numerals, nav items, titles) — replaces `.serif` */
+/* Display face for non-heading elements (quotes, numerals, nav items, titles) */
 @utility display { font-family: var(--font-display); font-weight: var(--fw-display); letter-spacing: -0.02em; }
 
 /* Rules and frames */
