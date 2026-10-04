@@ -1,6 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { SlidersHorizontal, X } from "lucide-react";
 import { Link } from "@/i18n/navigation";
@@ -23,19 +22,21 @@ const PAGE = 12;
 /** Chip geometry (§4.42): 44 px, radius 2, selected = ink on paper. */
 const CHIP = "inline-flex h-11 items-center rounded-[2px] border px-3 text-[13px] font-medium transition-colors duration-[var(--dur-ui)] ease-[var(--ease-ui)]";
 const CHIP_ON = "border-ink bg-ink text-paper";
+const subscribeNoop = () => () => {};
 const CHIP_OFF = "border-line text-ink hover:bg-surface-2";
 
 /**
- * Reads `useSearchParams` (`?herkunft=regional|bio` from the Regional/Bio world CTAs preselects the origin filter), so the
- * page wraps it in `<Suspense>`; a user toggle overrides the URL seed until the filters are cleared.
+ * `?herkunft=regional|bio` (deep links from the Regional/Bio world CTAs) preselects the origin filter. It is read from
+ * `window.location` through useSyncExternalStore (server snapshot: none) — so the statically rendered HTML keeps the full product grid
+ * (SEO, LCP) and the filter applies on hydration; a user toggle overrides the URL seed until the filters are cleared.
  */
 export function CategoryBrowser({ products, categories, current }: { products: CardProduct[]; categories: Cat[]; current: string }) {
   const t = useTranslations("category");
   const tc = useTranslations("common");
   const tn = useTranslations("nav");
   const locale = useLocale();
-  const params = useSearchParams();
-  const herkunft = params.getAll("herkunft").flatMap((v) => v.split(","));
+  const search = useSyncExternalStore(subscribeNoop, () => window.location.search, () => "");
+  const herkunft = useMemo(() => new URLSearchParams(search).getAll("herkunft").flatMap((v) => v.split(",")), [search]);
   const maxPrice = Math.ceil(Math.max(...products.map((p) => p.price), 1));
   const [price, setPrice] = useState(maxPrice);
   const [diet, setDiet] = useState<string[]>([]);
