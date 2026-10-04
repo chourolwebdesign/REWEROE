@@ -214,22 +214,10 @@
   --color-block-red: var(--block-red);
   --color-block-bio: var(--block-bio);
 
-  /* LEGACY ALIASES — one implementation cycle only. STATIC values so unmigrated
-     `bg-forest text-cream` blocks stay anthracite+white in BOTH schemes. Delete when §8 grep is empty. */
-  --color-forest: #141414;
-  --color-cream: #FFFFFF;
-  --color-cream-2: #F5F5F4;
-  --color-surface-dark: #141414;
-  --color-rewe: var(--red);
-  --color-rewe-deep: var(--red-hover);
-  --color-emerald: var(--bio-text);
-  --color-gold: var(--ink-muted);   /* deliberately "wrong": stray gold eyebrows degrade to grey, not to red creep */
-
   /* fonts (set in app/fonts.ts) */
   --font-display: var(--font-schibsted), "Helvetica Neue", Arial, sans-serif;
   --font-sans: var(--font-figtree), "Helvetica Neue", Arial, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace;
-  --font-serif: var(--font-display);   /* alias for `.serif` call sites until the §3 sed has run */
   --font-heading: var(--font-display);
 
   /* radius scale (shadcn derives from --radius = 2 px) */
@@ -381,13 +369,6 @@
 @utility glass { background: var(--paper); }
 .site-header { --hdr-fg: var(--ink); --hdr-bg: var(--paper); color: var(--hdr-fg); background: var(--hdr-bg); }   /* opaque on every page (G2 adds bg-paper + sticky) */
 
-/* LEGACY UTILITIES — one implementation cycle only, so unmigrated call sites render acceptably until
-   their group runs the §3.2 sed (serif → display, mono → num, glass-dark → on-block shadow-pop, gold-line → rule).
-   Delete together with the LEGACY ALIASES block when the §3.4 gate is empty. */
-@utility serif { font-family: var(--font-display); font-weight: var(--fw-display); letter-spacing: -0.02em; }
-@utility mono { font-family: var(--font-sans); font-weight: 500; font-variant-numeric: tabular-nums lining-nums; letter-spacing: 0; }
-@utility glass-dark { background: var(--block); color: var(--block-ink); box-shadow: var(--shadow-pop); }
-@utility gold-line { height: 1px; background: var(--line); }
 
 /* Hover: cards do not lift — their edge sharpens */
 @utility card-hover {

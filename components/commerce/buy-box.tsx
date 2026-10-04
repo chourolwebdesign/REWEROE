@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
  */
 export function BuyBox({ p }: { p: CardProduct }) {
   const t = useTranslations("product");
+  const tc = useTranslations("common");
   const locale = useLocale();
   const reduce = useReducedMotion();
   const [qty, setQty] = useState(1);
@@ -50,7 +51,7 @@ export function BuyBox({ p }: { p: CardProduct }) {
     <>
       <div ref={ref} className="flex flex-col gap-4">
         <div className="flex items-center gap-3">
-          <QuantityStepper value={qty} onChange={setQty} min={1} input label={t("qty")} />
+          <QuantityStepper value={qty} onChange={setQty} min={1} input label={tc("qty")} />
           <AddToCart item={item} qty={qty} variant="primary" className="flex-1" />
           <button
             type="button"
