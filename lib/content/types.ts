@@ -1,6 +1,8 @@
 import type { L10n } from "@/lib/l10n";
 
-export type Img = { src: string; alt: L10n; ratio?: "4:5" | "16:9" | "1:1" };
+export type Img = { src: string; alt: L10n; ratio?: "4:5" | "16:9" | "1:1" | "3:2" };
+/** Self-hosted clip (no autoplay, poster required). */
+export type ContentVideo = { src: string; poster: string; ratio: "9:16" | "16:9"; caption?: L10n };
 export type Status = "pending" | "published";
 
 export type Badge = "bio" | "regional" | "neu" | "vegan" | "glutenfrei" | "angebot";
@@ -59,7 +61,7 @@ export interface Store {
   address: { status: Status; street: string; zip: string; city: string; district: string };
   coords: [number, number]; coordsNote?: string; phone: string; email: string;
   hours: Record<Weekday, [string, string] | null>; hoursStatus: Status;
-  services: string[]; images: Img[]; intro: L10n; status: Status;
+  services: string[]; images: Img[]; video?: ContentVideo; intro: L10n; status: Status;
 }
 
 export interface Campaign {
@@ -71,6 +73,8 @@ export interface Article {
   slug: string; category: "saison" | "gesundheit" | "region"; featured?: boolean;
   title: L10n; excerpt: L10n; author: { name: string; status: Status }; readMinutes: number;
   publishedAt: string; cover: Img; relatedRecipes: string[]; body: L10n;
+  /** Optional editorial media rendered after the body (real event photos, store clips). */
+  gallery?: Img[]; video?: ContentVideo;
 }
 
 export interface Job {
