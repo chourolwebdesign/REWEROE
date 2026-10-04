@@ -79,12 +79,12 @@ export function RegionSign({ height = 48, className, lines = ["Aus deiner", "Reg
   }
   const h = height;
   return (
-    <span role="img" aria-label={label} className={cn("relative inline-flex items-center bg-regional text-[#141414]", className)} style={{ height: h, paddingLeft: h * 0.26, paddingRight: h * 0.95, borderRadius: h * 0.14 }}>
-      <span aria-hidden className="font-sans font-semibold" style={{ fontSize: h * 0.3, lineHeight: 1.05, letterSpacing: "-0.01em" }}>
+    <span role="img" aria-label={label} className={cn("relative inline-flex items-center bg-regional text-[#141414]", className)} style={{ height: h, paddingLeft: h * 0.26, paddingRight: h * 1.12, borderRadius: h * 0.14 }}>
+      <span aria-hidden className="whitespace-nowrap font-sans font-semibold" style={{ fontSize: h * 0.3, lineHeight: 1.05, letterSpacing: "-0.01em" }}>
         {lines[0]}<br />{lines[1]}
       </span>
       {/* Hand-drawn tractor silhouette with speed strokes, bottom-right like the original sign */}
-      <svg aria-hidden viewBox="0 0 100 60" width={h * 0.78} height={h * 0.47} className="absolute" style={{ right: h * 0.14, bottom: h * 0.1 }}>
+      <svg aria-hidden viewBox="0 0 100 60" width={h * 0.95} height={h * 0.57} className="absolute" style={{ right: h * 0.1, bottom: h * 0.08 }}>
         <g fill="#141414" stroke="#141414" strokeLinecap="round" strokeLinejoin="round">
           <path d="M3 52l4-10M11 54l3-8M19 55l2-5M27 55l1-3" fill="none" strokeWidth="3.2" />
           <path d="M44 38V24h20l5 12h8v6H44z" strokeWidth="2" />
