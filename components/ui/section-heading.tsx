@@ -22,7 +22,12 @@ export function SectionHeading({
   return (
     <div className={cn("flex flex-col gap-6 md:flex-row md:items-end md:justify-between", className)}>
       <div className="max-w-3xl">
-        {eyebrow && <p className="text-eyebrow mb-4 text-red">{eyebrow}</p>}
+        {eyebrow && (
+          <p className="text-eyebrow mb-4 flex items-center gap-2.5 text-red">
+            <span aria-hidden className="h-px w-6 shrink-0 bg-red/45" />
+            {eyebrow}
+          </p>
+        )}
         <Tag id={id} className={Tag === "h1" ? "text-h1" : "text-h2"}>
           {title}
         </Tag>
