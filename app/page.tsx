@@ -1,6 +1,7 @@
 import { CareerBand } from "@/components/home/career-band";
 import { FlyerTicket } from "@/components/home/flyer-ticket";
 import { Highlights } from "@/components/home/highlights";
+import { MarqueeBand } from "@/components/home/marquee-band";
 import { RegionalBand } from "@/components/home/regional-band";
 import { StoryHero } from "@/components/home/story-hero";
 import { OpenStatus } from "@/components/live/open-status";
@@ -56,6 +57,8 @@ export default function HomePage() {
           </div>
         }
       />
+
+      <MarqueeBand />
 
       <section aria-label="Prospekt der Woche" className="wrap pt-16 md:pt-24">
         <FlyerTicket />
