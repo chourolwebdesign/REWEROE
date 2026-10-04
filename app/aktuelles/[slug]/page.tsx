@@ -11,6 +11,7 @@ import { articleJsonLd, breadcrumbJsonLd, ldScript } from "@/lib/jsonld";
 import { Markdown } from "@/lib/markdown";
 import { media } from "@/lib/media";
 import { resolveImages } from "@/lib/resolve";
+import { pageMetadata } from "@/lib/site";
 
 export const dynamicParams = false;
 
@@ -22,19 +23,14 @@ export async function generateMetadata({ params }: PageProps<"/aktuelles/[slug]"
   const { slug } = await params;
   const post = getPost(slug);
   if (!post) return {};
-  const cover = media[post.cover].src;
-  return {
+  return pageMetadata({
     title: post.title,
     description: post.excerpt,
-    alternates: { canonical: `/aktuelles/${post.slug}` },
-    openGraph: {
-      type: "article",
-      title: post.title,
-      description: post.excerpt,
-      publishedTime: post.date,
-      images: [{ url: cover.src, width: cover.width, height: cover.height, alt: media[post.cover].alt }],
-    },
-  };
+    path: `/aktuelles/${post.slug}`,
+    card: `beitrag-${post.slug}`,
+    socialTitle: post.title,
+    publishedTime: post.date,
+  });
 }
 
 export default async function PostPage({ params }: PageProps<"/aktuelles/[slug]">) {

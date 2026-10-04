@@ -7,12 +7,14 @@ import { jobs } from "@/content/jobs";
 import { markt } from "@/content/markt";
 import { breadcrumbJsonLd, jobJsonLd, ldScript } from "@/lib/jsonld";
 import { media } from "@/lib/media";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Karriere",
   description: "Arbeiten bei REWE in Frankfurt-Rödelheim: Bereiche im Markt, Ausbildung und aktuelle Stellen in der REWE-Stellensuche.",
-  alternates: { canonical: "/karriere" },
-};
+  path: "/karriere",
+  card: "karriere",
+});
 
 /** Typische Bereiche in einem Supermarkt – Beschreibung der Arbeit, keine Stellenzusage. */
 const AREAS = [

@@ -6,12 +6,14 @@ import { InstagramIcon } from "@/components/ui/icons";
 import { VisitSection } from "@/components/visit/visit-section";
 import { markt } from "@/content/markt";
 import { breadcrumbJsonLd, ldScript } from "@/lib/jsonld";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Kontakt & Anfahrt",
   description: "REWE Rödelheim, Thudichumstraße 18–22, 60489 Frankfurt am Main. Telefon 069 945158650. Montag bis Samstag 7 bis 22 Uhr.",
-  alternates: { canonical: "/kontakt" },
-};
+  path: "/kontakt",
+  card: "kontakt",
+});
 
 export default function KontaktPage() {
   const cards = [

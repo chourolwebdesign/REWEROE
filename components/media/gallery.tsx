@@ -4,22 +4,24 @@ import Image, { type StaticImageData } from "next/image";
 import { ChevronLeft, ChevronRight, Play, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { autoplaySource } from "@/lib/video";
 
 export type GalleryMedia =
   | { type: "image"; image: StaticImageData; alt: string; caption: string; credit: string }
-  | { type: "clip"; src: string; poster: StaticImageData; alt: string; caption: string; credit: string };
+  | { type: "clip"; src: string; srcSmall: string; poster: StaticImageData; alt: string; caption: string; credit: string };
 
-/** Clip in der Kachel: läuft stumm, solange er sichtbar ist (und Bewegung erwünscht ist). */
-function TileClip({ src }: { src: string }) {
+/** Clip in der Kachel: läuft stumm, solange er sichtbar ist – nicht bei reduzierter Bewegung oder im Datensparmodus. */
+function TileClip({ src, srcSmall }: { src: string; srcSmall: string }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [shown, setShown] = useState(false);
   useEffect(() => {
     const v = ref.current;
-    if (!v || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const source = autoplaySource({ src, srcSmall });
+    if (!v || !source || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const io = new IntersectionObserver(
       ([e]) => {
         if (e.isIntersecting) {
-          if (!v.getAttribute("src")) v.src = src;
+          if (!v.getAttribute("src")) v.src = source;
           v.play().catch(() => {});
         } else v.pause();
       },
@@ -27,7 +29,7 @@ function TileClip({ src }: { src: string }) {
     );
     io.observe(v);
     return () => io.disconnect();
-  }, [src]);
+  }, [src, srcSmall]);
   return (
     <video
       ref={ref}
@@ -101,7 +103,7 @@ export function Gallery({ items, className }: { items: GalleryMedia[]; className
                   quality={70}
                   className="object-cover transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.04]"
                 />
-                {it.type === "clip" && <TileClip src={it.src} />}
+                {it.type === "clip" && <TileClip src={it.src} srcSmall={it.srcSmall} />}
                 <span className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end gap-2 bg-gradient-to-t from-black/70 via-black/25 to-transparent px-3 pt-12 pb-3 text-[0.875rem] font-semibold text-white md:px-4 md:pb-4 md:text-[0.9375rem]">
                   {it.type === "clip" && <Play className="mb-0.5 size-4 shrink-0 fill-current" aria-hidden />}
                   {it.caption}

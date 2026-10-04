@@ -6,12 +6,14 @@ import { InstagramIcon } from "@/components/ui/icons";
 import { posts } from "@/content/aktuelles";
 import { markt } from "@/content/markt";
 import { breadcrumbJsonLd, ldScript } from "@/lib/jsonld";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Aktuelles",
   description: "Neuigkeiten aus dem REWE-Markt in Frankfurt-Rödelheim.",
-  alternates: { canonical: "/aktuelles" },
-};
+  path: "/aktuelles",
+  card: "aktuelles",
+});
 
 export default function AktuellesPage() {
   const [first, ...rest] = posts;

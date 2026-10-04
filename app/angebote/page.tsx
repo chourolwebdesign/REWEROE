@@ -9,13 +9,14 @@ import { InstagramIcon } from "@/components/ui/icons";
 import { markt } from "@/content/markt";
 import { weekRows } from "@/lib/hours";
 import { breadcrumbJsonLd, ldScript } from "@/lib/jsonld";
-import { absoluteUrl } from "@/lib/site";
+import { absoluteUrl, pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Angebote & Prospekt der Woche",
   description: "Der aktuelle REWE-Prospekt für den Markt in der Thudichumstraße in Frankfurt-Rödelheim – gültig Montag bis Samstag.",
-  alternates: { canonical: "/angebote" },
-};
+  path: "/angebote",
+  card: "angebote",
+});
 
 const HINTS = [
   {

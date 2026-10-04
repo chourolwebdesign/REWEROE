@@ -5,12 +5,14 @@ import { PageHeader } from "@/components/layout/page-header";
 import { markt } from "@/content/markt";
 import { breadcrumbJsonLd, ldScript } from "@/lib/jsonld";
 import { applicationsReady } from "@/lib/mailer";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Bewerben in 60 Sekunden",
   description: "Ohne Anschreiben, Lebenslauf optional: Bewirb dich in wenigen Schritten bei REWE in Frankfurt-Rödelheim.",
-  alternates: { canonical: "/karriere/bewerben" },
-};
+  path: "/karriere/bewerben",
+  card: "bewerben",
+});
 
 const FACTS = [
   { icon: Clock3, text: "Dauert etwa eine Minute" },
