@@ -253,7 +253,7 @@ html.js .application-form .step + .step {
   margin-top: 0;
 }
 
-/* ───────────── Drucken (Notvorrat-Liste, Aushang) ───────────── */
+/* ───────────── Drucken (Aushang) ───────────── */
 @media print {
   @page {
     margin: 14mm;
@@ -266,17 +266,6 @@ html.js .application-form .step + .step {
   }
   body {
     background: #fff;
-  }
-  .vorrat *,
-  .vorrat {
-    color: #000 !important;
-    background: none !important;
-    box-shadow: none !important;
-  }
-  .vorrat li,
-  .vorrat fieldset {
-    break-inside: avoid;
-    border: 1px solid #999;
   }
 }
 @media print {

@@ -45,7 +45,6 @@ Ohne Mail-Konfiguration zeigt das Formular einen Hinweis und die Telefonnummer u
 | Offene Stellen (erzeugen automatisch JobPosting-Daten) | `content/jobs.ts` |
 | Termine im Markt (Startseite + Markt-Kalender) | `content/termine.ts` |
 | Auswahl im Bewerbungsformular | `content/bewerbung.ts` |
-| Notvorrat-Richtwerte und Checklisten (BBK) | `content/vorrat.ts` |
 | Neue Fotos | Datei nach `assets/media/`, in `lib/media.ts` mit Alt-Text, Kurztitel und Bildnachweis eintragen |
 | Neue Clips | MP4 (H.264, stumm, `faststart`) nach `public/media/`, Posterbild nach `assets/media/`, Eintrag in `lib/media.ts → clips` |
 
@@ -62,9 +61,8 @@ ffmpeg -i quelle.mp4 -an -vf "scale=90:160,fps=15" -c:v libx264 -crf 30 -pix_fmt
 |---|---|---|
 | Bewerben in 60 Sekunden | `/karriere/bewerben` | 4 Schritte, ohne JS eine lange Seite; Entwurf nur im Browser; Honeypot + Mindestzeit + Rate-Limit; Versand per Mail (siehe Umgebung) |
 | Markt-Kalender | `/kalender.ics` | Prospektwochen, Feiertage, § 3 HLöG, Termine; Abo-Knöpfe für Apple, Google, Outlook |
-| Notvorrat-Rechner | `/notvorrat` | BBK-Richtwerte × Personen × Tage, Checklisten, Drucken, Teilen |
 | Als App / offline | `app/manifest.ts`, `public/sw.js`, `/offline` | Seiten network-first mit Offline-Kopie; bei Änderungen an der Cache-Logik `VERSION` in `sw.js` erhöhen |
-| Teilen | Prospekt-Ticket, Notvorrat | System-Teilen-Menü, sonst WhatsApp / Link kopieren |
+| Teilen | Prospekt-Ticket | System-Teilen-Menü, sonst WhatsApp / Link kopieren |
 | Aushang mit QR-Codes | `/aushang` (noindex) | A4 drucken; nach dem Domainwechsel neu drucken |
 
 ## Grundsätze

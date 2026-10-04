@@ -69,7 +69,6 @@ export function SiteFooter() {
             {[
               { href: "/karriere/bewerben", label: "Bewerben in 60 Sekunden" },
               { href: "/angebote#kalender", label: "Markt-Kalender" },
-              { href: "/notvorrat", label: "Notvorrat-Rechner" },
             ].map((item) => (
               <li key={item.href}>
                 <Link href={item.href} className="inline-flex min-h-10 items-center text-white/85 hover:text-white hover:underline hover:underline-offset-4">

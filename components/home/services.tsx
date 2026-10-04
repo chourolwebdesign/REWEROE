@@ -1,4 +1,4 @@
-import { BriefcaseBusiness, CalendarHeart, ShieldPlus, Smartphone } from "lucide-react";
+import { BriefcaseBusiness, CalendarHeart, Smartphone } from "lucide-react";
 import { CalendarSubscribe } from "@/components/live/calendar-subscribe";
 import { InstallApp } from "@/components/pwa/install-app";
 import { ButtonLink } from "@/components/ui/button";
@@ -9,7 +9,7 @@ export function Services({ calendarUrl, className }: { calendarUrl: string; clas
   const card = "reveal flex flex-col gap-5 rounded-[1.75rem] p-6 md:p-7";
   const icon = "grid size-12 place-items-center rounded-2xl";
   return (
-    <ul className={cn("grid gap-3 md:grid-cols-2 md:gap-4 xl:grid-cols-4", className)}>
+    <ul className={cn("grid gap-3 md:grid-cols-3 md:gap-4", className)}>
       <li className={cn(card, "on-dark relative z-10 bg-red text-white")}>
         <span className={cn(icon, "bg-white/15")}>
           <CalendarHeart className="size-6" aria-hidden />
@@ -19,18 +19,6 @@ export function Services({ calendarUrl, className }: { calendarUrl: string; clas
           <p className="mt-2 text-white">Jeden Montag eine Erinnerung an den neuen Prospekt – und alle Feiertage. Ohne App, ohne Anmeldung.</p>
         </div>
         <CalendarSubscribe url={calendarUrl} variant="white" className="mt-auto" />
-      </li>
-      <li className={cn(card, "bg-soft")}>
-        <span className={cn(icon, "bg-white")}>
-          <ShieldPlus className="size-6 text-red" aria-hidden />
-        </span>
-        <div>
-          <h3 className="text-h3">Notvorrat-Rechner</h3>
-          <p className="mt-2 text-muted">Wie viel Wasser und Vorrat braucht dein Haushalt? Richtwerte vom BBK, zum Abhaken und Drucken.</p>
-        </div>
-        <ButtonLink href="/notvorrat" variant="ink" className="mt-auto self-start">
-          Ausrechnen
-        </ButtonLink>
       </li>
       <li className={cn(card, "on-dark bg-ink text-white")}>
         <span className={cn(icon, "bg-white/10")}>

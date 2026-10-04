@@ -81,8 +81,7 @@ export default function DatenschutzPage() {
 
           <h2>Speicherung in deinem Browser</h2>
           <p>
-            Damit nichts verloren geht, speichert dein Browser einen angefangenen Bewerbungsentwurf sowie Auswahl und Häkchen im Notvorrat-Rechner
-            lokal auf deinem Gerät (localStorage). Diese Daten werden nicht an uns übertragen und nach dem Absenden der Bewerbung gelöscht; du kannst sie
+            Damit nichts verloren geht, speichert dein Browser einen angefangenen Bewerbungsentwurf lokal auf deinem Gerät (localStorage). Diese Daten werden nicht an uns übertragen und nach dem Absenden der Bewerbung gelöscht; du kannst sie
             auch jederzeit über die Einstellungen deines Browsers entfernen. Das ist für die von dir gewünschte Funktion unbedingt erforderlich (§ 25
             Abs. 2 Nr. 2 TDDDG).
           </p>

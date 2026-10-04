@@ -22,7 +22,9 @@ Abonnierbarer Kalender (Apple, Google, Outlook): jede Prospektwoche ein Ganztags
 Feiertage („geschlossen“), gesetzliche Schlusszeiten (24.12./31.12., Gründonnerstag; „voraussichtlich“) und bestätigte Sonderzeiten.
 Erzeugt aus `lib/flyer.ts` + `lib/hours.ts`, alle 6 h neu. Keine Anmeldung, keine Daten.
 
-## 3. Notvorrat-Rechner — `/notvorrat`
+## 3. Notvorrat-Rechner — entfernt (2026-10-04)
+
+Auf Wunsch der Agentur von der Website genommen und als eigenständige Datei `../notvorrat-rechner.html` (neben dem Repo) gesichert. Ursprüngliche Beschreibung:
 
 Personen × Tage → Mengen nach BBK-Checkliste (10 Tage, 1 Person, ca. 2.200 kcal/Tag): Getränke 20 l, Getreide/Brot/Kartoffeln/Nudeln/Reis 3,5 kg,
 Gemüse/Hülsenfrüchte 4 kg, Obst/Nüsse 2,5 kg, Milch(produkte) 2,6 kg, Fisch/Fleisch/Eier 1,5 kg, Fette/Öle 0,357 kg.
