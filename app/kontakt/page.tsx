@@ -65,9 +65,12 @@ export default function KontaktPage() {
       <section aria-label="Kontaktwege" className="wrap">
         <ul className="grid gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-4">
           {cards.map(({ icon: Icon, title, text, action }) => (
-            <li key={title} className="reveal flex flex-col rounded-[1.75rem] bg-soft p-6 md:p-7">
-              <span className="grid size-12 place-items-center rounded-2xl bg-white">
-                <Icon className="size-6 text-red" strokeWidth={1.9} aria-hidden />
+            <li
+              key={title}
+              className="reveal card-lift flex flex-col rounded-[var(--radius-media)] bg-soft p-6 ring-1 ring-line/60 md:p-7"
+            >
+              <span className="grid size-14 place-items-center rounded-2xl bg-ink text-white ring-1 ring-inset ring-white/10">
+                <Icon className="size-7" strokeWidth={1.7} aria-hidden />
               </span>
               <h2 className="mt-6 text-h3">{title}</h2>
               <p className="mt-2 flex-1 text-muted">{text}</p>
