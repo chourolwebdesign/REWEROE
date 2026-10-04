@@ -28,7 +28,7 @@ export function SiteFooter() {
         </div>
 
         <div>
-          <h2 className="text-eyebrow text-white/45">Besuch</h2>
+          <h2 className="text-eyebrow text-white/60">Besuch</h2>
           <address className="mt-5 not-italic leading-relaxed">
             {markt.address.street}
             <br />
@@ -49,7 +49,7 @@ export function SiteFooter() {
         </div>
 
         <div>
-          <h2 className="text-eyebrow text-white/45">Seiten</h2>
+          <h2 className="text-eyebrow text-white/60">Seiten</h2>
           <ul className="mt-4 grid">
             {NAV.map((item) => (
               <li key={item.href}>
@@ -74,7 +74,7 @@ export function SiteFooter() {
         </div>
 
         <nav aria-label="Service">
-          <h2 className="text-eyebrow text-white/45">Service</h2>
+          <h2 className="text-eyebrow text-white/60">Service</h2>
           <ul className="mt-4 grid">
             {[
               { href: "/karriere/bewerben", label: "Bewerben in 60 Sekunden" },

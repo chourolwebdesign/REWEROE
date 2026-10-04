@@ -35,7 +35,7 @@ export default function HomePage() {
         items={resolveStory(story)}
         intro={
           <>
-            <p className="text-eyebrow mb-6 flex items-center gap-2.5 text-white/85">
+            <p className="text-eyebrow mb-6 flex items-center gap-2.5 text-white">
               <span aria-hidden className="h-px w-6 shrink-0 bg-white/60" />
               REWE in Frankfurt-Rödelheim
             </p>
@@ -43,7 +43,7 @@ export default function HomePage() {
               Willkommen in deinem{" "}
               <span className="rounded-[0.16em] bg-white px-[0.12em] text-red [box-decoration-break:clone]">Markt.</span>
             </h1>
-            <p className="mt-7 max-w-[34ch] text-lede text-white/85">
+            <p className="mt-7 max-w-[34ch] text-lede text-white">
               Montag bis Samstag von 7 bis 22 Uhr in der Thudichumstraße – mit Bäckerei und Sushi im Markt.
             </p>
           </>
@@ -61,7 +61,7 @@ export default function HomePage() {
                 <span className="hidden sm:inline">&nbsp;planen</span>
               </ButtonLink>
             </div>
-            <p className="hidden text-[0.9375rem] text-white/75 sm:block">
+            <p className="hidden text-[0.9375rem] text-white sm:block">
               {markt.address.street} · {markt.address.zip} Frankfurt-Rödelheim
             </p>
           </div>
