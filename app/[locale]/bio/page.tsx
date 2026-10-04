@@ -37,7 +37,6 @@ export default async function BioPage({ params }: { params: Promise<{ locale: st
   setRequestLocale(locale);
   const t = await getTranslations("bio");
   const tn = await getTranslations("nav");
-  const tc = await getTranslations("common");
   const b = getBioPage();
   const settings = getSettings();
   const products = getBioProducts();
@@ -82,7 +81,7 @@ export default async function BioPage({ params }: { params: Promise<{ locale: st
       >
         <dl className="grid grid-cols-2 gap-px border-b border-line bg-line md:grid-cols-4">
           {proof.map((cell) => (
-            <div key={cell.label} className="bg-paper px-4 py-4 first:pl-0">
+            <div key={cell.label} className="bg-paper px-4 py-4 odd:pl-0 md:odd:pl-4 md:first:pl-0">
               <dt className="eyebrow">{cell.label}</dt>
               <dd className="num mt-1 text-[20px] font-bold leading-none text-ink">{cell.value}</dd>
             </div>
@@ -114,7 +113,7 @@ export default async function BioPage({ params }: { params: Promise<{ locale: st
           <SealsTable
             columns={b.seals.columns.map((c) => ({ id: c.id, label: c.label, note: tx(c.note, locale), reweBio: c.reweBio }))}
             rows={b.seals.rows.map((r) => ({ id: r.id, criterion: tx(r.criterion, locale), values: r.values.map((v) => tx(v, locale)) }))}
-            labels={{ criterion: t("sealsCriterion"), reweBio: t("sealsReweBio"), legend: t("sealsLegend") }}
+            labels={{ criterion: t("sealsCriterion"), reweBio: t("sealsReweBio"), legend: t("sealsLegend"), table: t("sealsTitle"), scrollHint: t("sealsScrollHint") }}
           />
         </Reveal>
       </section>
@@ -122,13 +121,13 @@ export default async function BioPage({ params }: { params: Promise<{ locale: st
       {/* Bio-Sortiment — surface band, the page's one primary CTA */}
       <section className="bg-surface py-20 md:py-28">
         <div className="container-x">
-          <SectionHeading eyebrow={t("productsEyebrow")} title={t("productsTitle")} text={t("productsText", { n: products.length })} aside={<Cta href="/kategorien/alle" variant="secondary" size="sm">{tc("showAll")}</Cta>} />
+          <SectionHeading eyebrow={t("productsEyebrow")} title={t("productsTitle")} text={t("productsText", { n: products.length })} />
           <Stagger className="mt-12 grid grid-cols-2 gap-6 md:grid-cols-4">
             {cards.map((p) => <StaggerItem key={p.slug}><ProductCard p={p} /></StaggerItem>)}
           </Stagger>
           <div className="rule mt-12 flex flex-wrap items-center justify-between gap-4 pt-8">
             <p className="num text-[15px] text-ink-muted">{t("productsCount", { n: products.length })}</p>
-            <Cta href="/kategorien/alle">{t("productsAll")}</Cta>
+            <Cta href="/kategorien/alle?herkunft=bio">{t("productsAll")}</Cta>
           </div>
         </div>
       </section>
@@ -146,7 +145,7 @@ export default async function BioPage({ params }: { params: Promise<{ locale: st
               {band.map((cell) => (
                 <div key={cell.label} className="flex items-baseline justify-between gap-6 py-4">
                   <dt className="text-[13px] font-medium text-white">{cell.label}</dt>
-                  <dd className="num shrink-0 text-right text-[20px] font-bold leading-none text-white">{cell.value}</dd>
+                  <dd className="num min-w-0 break-words text-right text-[20px] font-bold leading-none text-white">{cell.value}</dd>
                 </div>
               ))}
             </dl>
@@ -190,8 +189,8 @@ export default async function BioPage({ params }: { params: Promise<{ locale: st
         </Reveal>
       </section>
 
-      {/* CTA block — anthracite, inverse + secondary */}
-      <section className="on-block py-20 md:py-28">
+      {/* CTA block — anthracite, inverse + secondary. `-mb-32` cancels the footer's mt-32 so block meets footer. */}
+      <section className="on-block -mb-32 py-20 md:py-28">
         <div className="container-x grid grid-cols-4 items-end gap-x-6 gap-y-10 md:grid-cols-12">
           <div className="col-span-4 md:col-span-7">
             <Eyebrow>{t("ctaEyebrow")}</Eyebrow>

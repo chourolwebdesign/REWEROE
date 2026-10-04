@@ -1,4 +1,3 @@
-import settings from "@/content/settings.json";
 import { satisfy, sacramento } from "@/app/fonts";
 import { cn } from "@/lib/utils";
 import { LogoMark, REWE_PATH } from "./logo";
@@ -7,15 +6,14 @@ const HEIGHTS = { sm: 24, md: 36, lg: 48, xl: 64 } as const;
 type Size = keyof typeof HEIGHTS;
 const LABELS = { bio: "REWE Bio", regional: "REWE Regional" } as const;
 
-type SubLogos = { bio?: string | null; regional?: string | null; regionSign?: string | null };
-const subLogos: SubLogos = ((settings as { brand: { subLogos?: SubLogos } }).brand.subLogos) ?? {};
-
 interface Props {
   sub: "bio" | "regional";
   /** sm 24 · md 36 · lg 48 · xl 64 px box height. */
   size?: Size;
   /** `inline` (default): one row. `stacked` (Regional only): REWE block above the script word, as on the packaging label. */
   variant?: "inline" | "stacked";
+  /** Official sub-brand file (settings.brand.subLogos.bio | .regional), passed by the page; null/omitted → typographic reproduction. */
+  src?: string | null;
   className?: string;
 }
 
@@ -24,15 +22,15 @@ interface Props {
  * – REWE Bio: ONE deep-green rounded field carrying white „REWE" (bold) + „Bio" (script). Never a red block.
  * – REWE Regional: the red REWE block + handwritten „Regional" in ink with a small dashed heart, on a white label.
  * Both are brand marks: colours are static in dark mode. When the client supplies the official files, set
- * settings.brand.subLogos.{bio,regional} and the <img> replaces the reproduction at the same height.
+ * settings.brand.subLogos.{bio,regional} and pass it as `src`: the <img> replaces the reproduction at the same height.
+ * (No settings.json import here — the header renders this on the client.)
  */
-export function BrandLockup({ sub, size = "md", variant = "inline", className }: Props) {
+export function BrandLockup({ sub, size = "md", variant = "inline", src, className }: Props) {
   const h = HEIGHTS[size];
   const label = LABELS[sub];
-  const official = subLogos[sub];
-  if (official) {
+  if (src) {
     // eslint-disable-next-line @next/next/no-img-element
-    return <img src={official} alt={label} style={{ height: h }} className={cn("inline-block w-auto", className)} />;
+    return <img src={src} alt={label} style={{ height: h }} className={cn("inline-block w-auto", className)} />;
   }
   if (sub === "bio") {
     // Green field 2.9 : 1; wordmark ≈ 40 % of height; „Bio" script ≈ 72 % of height.
@@ -69,13 +67,13 @@ export function BrandLockup({ sub, size = "md", variant = "inline", className }:
 
 /**
  * „Aus deiner Region" — REWE's yellow shelf sign with the black tractor (the mark shoppers know from the store).
- * Height-driven (default 48 px → ≈ 2.1 : 1). Static colours (ink on #FFCC00 = 12.18:1). Replaceable via settings.brand.subLogos.regionSign.
+ * Height-driven (default 48 px → ≈ 2.1 : 1). Static colours (ink on #FFCC00 = 12.18:1). Replaceable via `src` (settings.brand.subLogos.regionSign).
  */
-export function RegionSign({ height = 48, className, lines = ["Aus deiner", "Region"] }: { height?: number; className?: string; lines?: [string, string] }) {
+export function RegionSign({ height = 48, className, src, lines = ["Aus deiner", "Region"] }: { height?: number; className?: string; /** Official file (settings.brand.subLogos.regionSign), passed by the page. */ src?: string | null; lines?: [string, string] }) {
   const label = lines.join(" ");
-  if (subLogos.regionSign) {
+  if (src) {
     // eslint-disable-next-line @next/next/no-img-element
-    return <img src={subLogos.regionSign} alt={label} style={{ height }} className={cn("inline-block w-auto", className)} />;
+    return <img src={src} alt={label} style={{ height }} className={cn("inline-block w-auto", className)} />;
   }
   const h = height;
   return (

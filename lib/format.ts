@@ -41,7 +41,14 @@ export function formatDiscount(percent: number, locale = "de"): string {
   return locale === "en" ? `−${n}%` : `−${n} %`;
 }
 
-/** Grundpreis line: "1,99 € / kg" — always shown next to a price (§0 rule 9). */
+/**
+ * Unit words inside `basePrice.per` that differ per locale. Content stores the German unit ("1 Stück"); this map mirrors
+ * `common.piece` ("Stück" / "pc") because this module has no access to next-intl. Keep the two in sync.
+ */
+const UNIT_WORDS: Record<string, Record<string, string>> = { Stück: { en: "pc" } };
+
+/** Grundpreis line: "1,99 € / kg" (de) · "€1.29 / 1 pc" (en) — always shown next to a price (§0 rule 9). */
 export function formatBasePrice(amount: number, per: string, locale = "de"): string {
-  return `${formatPrice(amount, locale)} / ${per}`;
+  const unit = per.split(" ").map((w) => UNIT_WORDS[w]?.[locale] ?? w).join(" ");
+  return `${formatPrice(amount, locale)} / ${unit}`;
 }

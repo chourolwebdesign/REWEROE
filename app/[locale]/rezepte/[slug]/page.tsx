@@ -44,7 +44,8 @@ export default async function RecipePage({ params }: { params: Promise<{ locale:
     "@context": "https://schema.org", "@type": "Recipe", name: tx(r.title, locale), description: tx(r.teaser, locale), image: `${settings.brand.siteUrl}${r.image.src}`,
     author: { "@type": "Organization", name: settings.brand.merchant }, totalTime: `PT${r.time}M`, recipeYield: `${r.servings}`, recipeCategory: tc(`season.${r.season}`),
     recipeIngredient: r.ingredients.map((i) => `${i.amount} ${i.unit} ${tx(i.name, locale)}`), recipeInstructions: r.steps.map((s) => ({ "@type": "HowToStep", text: tx(s, locale) })),
-    nutrition: { "@type": "NutritionInformation", calories: `${r.nutrition.kcal} kcal` }, aggregateRating: { "@type": "AggregateRating", ratingValue: r.rating, reviewCount: 40 },
+    // No aggregateRating: the content has no real review data (a literal reviewCount violates Google's structured-data policy).
+    nutrition: { "@type": "NutritionInformation", calories: `${r.nutrition.kcal} kcal` },
     suitableForDiet: r.diet.includes("vegan") ? "https://schema.org/VeganDiet" : r.diet.includes("vegetarisch") ? "https://schema.org/VegetarianDiet" : undefined,
   };
 
@@ -91,7 +92,10 @@ export default async function RecipePage({ params }: { params: Promise<{ locale:
           <Stagger className="mt-2 space-y-6">
             {r.steps.map((s, i) => (
               <StaggerItem key={i} className="rule grid grid-cols-[3.5rem_1fr] gap-4 pt-6">
-                <span className="display text-[2.5rem] leading-none tracking-[-0.03em] tabular-nums text-red-text" aria-label={t("step", { n: i + 1 })}>{String(i + 1).padStart(2, "0")}</span>
+                <span className="display text-[2.5rem] leading-none tracking-[-0.03em] tabular-nums text-red-text">
+                  <span aria-hidden>{String(i + 1).padStart(2, "0")}</span>
+                  <span className="sr-only">{t("step", { n: i + 1 })}</span>
+                </span>
                 <p className="pt-1 text-lg leading-relaxed text-ink-2">{tx(s, locale)}</p>
               </StaggerItem>
             ))}

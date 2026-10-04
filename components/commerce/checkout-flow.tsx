@@ -1,34 +1,45 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import { Store, Truck } from "lucide-react";
 import { useRouter } from "@/i18n/navigation";
 import { useCart, cartTotals } from "@/lib/store/cart";
+import { useMounted } from "@/lib/hooks";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Cta } from "@/components/brand/cta";
 import { formatPrice, formatWeight } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import { boxInput, choiceCard, choiceCardOn, Field, StepTrack } from "./form-primitives";
+import { boxInput, choiceCard, choiceCardOn, Field, FieldError, StepTrack } from "./form-primitives";
 
 export interface Slot { id: string; day: "today" | "tomorrow"; from: string; to: string; price: number }
-interface Props { slots: Slot[]; deliveryFee: number; freeFrom: number; pickup: boolean }
+interface Props {
+  slots: Slot[]; deliveryFee: number; freeFrom: number; pickup: boolean;
+  /** Minimum order value for delivery (settings.delivery.minOrder); Click & Collect is not bound by it. */
+  minOrder: number;
+  /** True once /agb and /widerruf are both published — only then may the consent sentence reference them. */
+  legalReady: boolean;
+}
 const payments = ["klarna", "paypal", "giropay", "card"] as const;
 type Payment = (typeof payments)[number];
 const payKey = (p: string) => `pay${p[0].toUpperCase()}${p.slice(1)}` as "payKlarna" | "payPaypal" | "payGiropay" | "payCard";
 const makeOrderId = () => `RH-${Date.now().toString().slice(-6)}`;
+/** Error keys whose control id differs from the key (address fields use their own id). */
+const FOCUS_TARGET: Record<string, string> = { mode: "mode-delivery", minOrder: "min-order-note" };
 
 /**
  * Checkout (§4.27): 12-column sheet — form 8 / sticky summary 4, hairline step track, 48 px inputs, radio cards with
  * the 3 px red left rule when selected, 240 ms step slide, one primary CTA („Weiter" / „Zahlungspflichtig bestellen").
  */
-export function CheckoutFlow({ slots, freeFrom, pickup }: Props) {
+export function CheckoutFlow({ slots, freeFrom, minOrder, pickup, legalReady }: Props) {
   const t = useTranslations("checkout");
   const tc = useTranslations("cart");
   const tco = useTranslations("common");
   const locale = useLocale();
   const router = useRouter();
+  const mounted = useMounted();
+  const placed = useRef(false);
   const reduce = useReducedMotion();
   const lines = useCart((s) => s.lines);
   const clear = useCart((s) => s.clear);
@@ -42,6 +53,8 @@ export function CheckoutFlow({ slots, freeFrom, pickup }: Props) {
   const chosen = slots.find((s) => s.id === slot);
   const shipping = mode === "pickup" ? 0 : subtotal >= freeFrom ? 0 : (chosen?.price ?? 0);
   const total = subtotal + pfand + shipping;
+  const belowMin = subtotal < minOrder;
+  const minFmt = formatPrice(minOrder, locale);
   const steps = [t("step1"), t("step2"), t("step3"), t("step4")];
   const slotLabel = mode === "pickup" ? t("slotPickup") : chosen ? `${tco(chosen.day)} ${chosen.from}–${chosen.to}` : "—";
   const field = (k: keyof typeof addr) => ({ value: addr[k], onChange: (e: React.ChangeEvent<HTMLInputElement>) => setAddr({ ...addr, [k]: e.target.value }), "aria-invalid": !!errors[k], className: boxInput });
@@ -51,18 +64,34 @@ export function CheckoutFlow({ slots, freeFrom, pickup }: Props) {
     if (step === 0) {
       (["firstName", "lastName", "street", "city"] as const).forEach((k) => { if (!addr[k].trim()) e[k] = t("errorRequired"); });
       if (!/^\d{5}$/.test(addr.zip)) e.zip = t("errorZip");
+      // Without Click & Collect there is no way around the minimum — stop on the first step instead of at the slot.
+      if (belowMin && !pickup) e.minOrder = t("errorMinOrderFill", { min: minFmt });
     }
+    if (step === 1 && mode === "delivery" && belowMin) e.mode = t("errorMinOrder", { min: minFmt });
     setErrors(e);
-    return Object.keys(e).length === 0;
+    const first = Object.keys(e)[0];
+    // Failed submit: move focus to the first invalid control so its `aria-describedby` error is read, not the submit button.
+    if (first) requestAnimationFrame(() => document.getElementById(FOCUS_TARGET[first] ?? first)?.focus());
+    return !first;
+  };
+  const chooseMode = (m: "delivery" | "pickup") => {
+    setMode(m);
+    setErrors(({ mode: _mode, ...rest }) => { void _mode; return rest; });
   };
   const next = () => {
     if (!validate()) return;
     if (step < 3) { setStep(step + 1); return; }
     const id = makeOrderId();
     try { sessionStorage.setItem("rewe-rh-order", JSON.stringify({ id, name: addr.firstName, slot: slotLabel, total })); } catch {}
+    placed.current = true; // `clear()` empties the cart — the redirect below must not race the confirmation route
     clear();
     router.push("/checkout/bestaetigung");
   };
+
+  // An empty cart has no checkout: back to the basket (which owns the empty state) instead of „Fast geschafft." above it.
+  useEffect(() => {
+    if (mounted && lines.length === 0 && !placed.current) router.replace("/warenkorb");
+  }, [mounted, lines.length, router]);
 
   if (lines.length === 0) {
     return (
@@ -85,6 +114,13 @@ export function CheckoutFlow({ slots, freeFrom, pickup }: Props) {
             {step === 0 && (
               <>
                 <p className="display text-xl text-ink">{t("step1")}</p>
+                {belowMin && (
+                  <p id="min-order-note" tabIndex={-1} className="flex items-start gap-2 border border-line p-4 text-[13px] leading-relaxed text-ink">
+                    <Truck className="mt-0.5 h-4 w-4 shrink-0 text-ink-muted" strokeWidth={1.75} aria-hidden />
+                    <span>{t(pickup ? "minOrderNote" : "minOrderNoteNoPickup", { min: minFmt, amount: formatPrice(minOrder - subtotal, locale) })}</span>
+                  </p>
+                )}
+                {belowMin && !pickup && <FieldError id="minOrder-error" msg={errors.minOrder} className="-mt-3" />}
                 <div className="grid gap-5 md:grid-cols-2">
                   <Field id="firstName" label={t("firstName")} error={errors.firstName}><Input id="firstName" autoComplete="given-name" {...field("firstName")} /></Field>
                   <Field id="lastName" label={t("lastName")} error={errors.lastName}><Input id="lastName" autoComplete="family-name" {...field("lastName")} /></Field>
@@ -100,15 +136,16 @@ export function CheckoutFlow({ slots, freeFrom, pickup }: Props) {
               <div>
                 <p className="display mb-5 text-xl text-ink">{t("slotTitle")}</p>
                 <div className="mb-5 grid gap-2 sm:grid-cols-2">
-                  <button type="button" onClick={() => setMode("delivery")} aria-pressed={mode === "delivery"} className={cn(choiceCard, mode === "delivery" && choiceCardOn)}>
+                  <button id="mode-delivery" type="button" onClick={() => chooseMode("delivery")} aria-pressed={mode === "delivery"} aria-describedby={errors.mode ? "mode-error" : undefined} className={cn(choiceCard, mode === "delivery" && choiceCardOn)}>
                     <Truck className="h-4 w-4 shrink-0 text-ink-muted" strokeWidth={1.75} aria-hidden /> {tc("modeDelivery")}
                   </button>
                   {pickup && (
-                    <button type="button" onClick={() => setMode("pickup")} aria-pressed={mode === "pickup"} className={cn(choiceCard, mode === "pickup" && choiceCardOn)}>
+                    <button type="button" onClick={() => chooseMode("pickup")} aria-pressed={mode === "pickup"} className={cn(choiceCard, mode === "pickup" && choiceCardOn)}>
                       <Store className="h-4 w-4 shrink-0 text-ink-muted" strokeWidth={1.75} aria-hidden /> {tc("modePickup")}
                     </button>
                   )}
                 </div>
+                <FieldError id="mode-error" msg={errors.mode} className="-mt-4 mb-3" />
                 {mode === "delivery" ? (
                   <RadioGroup value={slot} onValueChange={setSlot} className="grid gap-2 sm:grid-cols-2">
                     {slots.map((s) => (
@@ -149,7 +186,7 @@ export function CheckoutFlow({ slots, freeFrom, pickup }: Props) {
                   <div><dt className="eyebrow">{t("step2")}</dt><dd className="num mt-2">{slotLabel}</dd></div>
                   <div><dt className="eyebrow">{t("step3")}</dt><dd className="mt-2">{t(payKey(pay))}</dd></div>
                 </dl>
-                <p className="rule pt-4 text-[12px] leading-relaxed text-ink-muted">{t("legalHint")} · {t("demoNote")}</p>
+                <p className="rule pt-4 text-[12px] leading-relaxed text-ink-muted">{legalReady ? `${t("legalHint")} · ` : ""}{t("demoNote")}</p>
               </div>
             )}
           </m.div>
@@ -175,7 +212,7 @@ export function CheckoutFlow({ slots, freeFrom, pickup }: Props) {
           <div className="flex justify-between"><dt className="text-ink-muted">{mode === "pickup" ? tc("pickup") : tc("delivery")}</dt><dd className="text-ink">{shipping === 0 ? tc("deliveryFree") : formatPrice(shipping, locale)}</dd></div>
           <div className="mt-3 flex items-baseline justify-between border-t-2 border-line-strong pt-3 text-[20px] font-bold text-ink"><dt>{tc("total")}</dt><dd>{formatPrice(total, locale)}</dd></div>
         </dl>
-        <p className="mt-3 text-[12px] text-ink-muted">{tc("vat")} · {t("legalHint")}</p>
+        <p className="mt-3 text-[12px] text-ink-muted">{tc("vat")}{legalReady ? ` · ${t("legalHint")}` : ""}</p>
       </aside>
     </div>
   );

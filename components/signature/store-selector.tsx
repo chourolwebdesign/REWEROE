@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { MapPin, Check } from "lucide-react";
 import { usePrefs } from "@/lib/store/prefs";
 import { Cta } from "@/components/brand/cta";
+import { boxInput } from "@/components/commerce/form-primitives";
 import { cn } from "@/lib/utils";
 import { tx, type L10n } from "@/lib/l10n";
 
@@ -48,7 +49,7 @@ export function StoreSelector({ stores, className, compact }: { stores: StoreLit
           onChange={(e) => setQ(e.target.value)}
           placeholder={t("storeSearch")}
           aria-label={t("storeSearch")}
-          className="h-12 w-full rounded-[2px] border border-line-input bg-paper pl-10 pr-3 text-[15px] text-ink outline-none transition-colors duration-[var(--dur-ui)] placeholder:text-ink-muted focus:border-ink"
+          className={cn(boxInput, "w-full border pl-10")}
         />
       </label>
       <ul className="mt-2 divide-y divide-line">

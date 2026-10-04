@@ -7,6 +7,7 @@ import { Slider as SliderPrimitive } from "radix-ui"
 /**
  * `aria-label` / `aria-labelledby` are forwarded to the thumbs (the elements with `role="slider"`), not to the
  * generic root span, so the control has an accessible name. For range sliders pass `thumbLabels` (one per thumb).
+ * The 12 px thumb carries a 44 px pseudo-element hit area (`after:-inset-4`).
  */
 function Slider({
   className,
@@ -57,7 +58,7 @@ function Slider({
           key={index}
           aria-label={thumbLabels?.[index] ?? ariaLabel}
           aria-labelledby={thumbLabels?.[index] ? undefined : ariaLabelledBy}
-          className="relative block size-3 shrink-0 rounded-full border border-ring bg-white ring-ring/50 transition-[color,box-shadow] select-none after:absolute after:-inset-2 hover:ring-3 focus-visible:ring-3 focus-visible:outline-hidden active:ring-3 disabled:pointer-events-none disabled:opacity-50"
+          className="relative block size-3 shrink-0 rounded-full border border-ring bg-white ring-ring/50 transition-[color,box-shadow] select-none after:absolute after:-inset-4 hover:ring-3 focus-visible:ring-3 focus-visible:outline-hidden active:ring-3 disabled:pointer-events-none disabled:opacity-50"
         />
       ))}
     </SliderPrimitive.Root>

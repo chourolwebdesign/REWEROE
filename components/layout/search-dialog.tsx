@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { Search, X } from "lucide-react";
+import { ArrowUpRight, Search, X } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { useUi } from "@/lib/store/ui";
 import { cn } from "@/lib/utils";
@@ -10,10 +10,23 @@ import { SmartImage } from "@/components/ui/smart-image";
 import { tx } from "@/lib/l10n";
 import type { L10n } from "@/lib/l10n";
 
-export interface SearchEntry { type: "product" | "recipe" | "article"; slug: string; title: L10n; sub?: L10n; image: string; keywords?: string }
+/**
+ * One searchable thing. Content entries (product/recipe/article) link to `/<route>/<slug>`;
+ * `page` entries are the static routes layout.tsx adds (Angebote, Regional, Öffnungszeiten …): `href` or `slug` is the path, image optional.
+ */
+export interface SearchEntry { type: "product" | "recipe" | "article" | "page"; slug: string; title: L10n; sub?: L10n; image?: string; keywords?: string; href?: string }
 
-const TYPES = ["product", "recipe", "article"] as const;
-const LABEL_KEY = { product: "products", recipe: "recipes", article: "articles" } as const;
+const TYPES = ["page", "product", "recipe", "article"] as const;
+const LABEL_KEY = { page: "pages", product: "products", recipe: "recipes", article: "articles" } as const;
+
+/** Lower-case, NFD, marks stripped — „Äpfel" → "apfel", „Öffnungszeiten" → "offnungszeiten". */
+const strip = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/ß/g, "ss");
+/** German transliteration fallback so "aepfel" / "oeffnungszeiten" also hit. */
+const translit = (s: string) => s.toLowerCase().replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss");
+/** Diacritic-insensitive substring match in both foldings. */
+export function matches(haystack: string, needle: string) {
+  return strip(haystack).includes(strip(needle)) || translit(haystack).includes(translit(needle));
+}
 
 /** Command-style search (§4.25): paper sheet with a hairline frame, results grouped by type with eyebrow headers. */
 export function SearchDialog({ index }: { index: SearchEntry[] }) {
@@ -32,16 +45,22 @@ export function SearchDialog({ index }: { index: SearchEntry[] }) {
   }, [setSearchOpen]);
 
   const results = useMemo(() => {
-    const needle = q.trim().toLowerCase();
+    const needle = q.trim();
     if (needle.length < 2) return [];
     return index
-      .filter((e) => `${tx(e.title, locale)} ${tx(e.sub, locale)} ${e.keywords ?? ""}`.toLowerCase().includes(needle))
+      .filter((e) => matches(`${tx(e.title, locale)} ${tx(e.sub, locale)} ${e.keywords ?? ""}`, needle))
       .slice(0, 12);
   }, [q, index, locale]);
 
   const groups = useMemo(() => TYPES.map((type) => ({ type, items: results.filter((r) => r.type === type) })).filter((g) => g.items.length > 0), [results]);
 
-  const hrefFor = (e: SearchEntry) => (e.type === "product" ? `/produkt/${e.slug}` : e.type === "recipe" ? `/rezepte/${e.slug}` : `/magazin/${e.slug}`);
+  const hrefFor = (e: SearchEntry) => {
+    if (e.type === "product") return `/produkt/${e.slug}`;
+    if (e.type === "recipe") return `/rezepte/${e.slug}`;
+    if (e.type === "article") return `/magazin/${e.slug}`;
+    const path = e.href ?? e.slug;
+    return path.startsWith("/") ? path : `/${path}`;
+  };
 
   return (
     <Dialog open={searchOpen} onOpenChange={(v) => { setSearchOpen(v); if (!v) setQ(""); }}>
@@ -54,7 +73,7 @@ export function SearchDialog({ index }: { index: SearchEntry[] }) {
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder={t("searchPlaceholder")}
-            className="h-14 w-full bg-transparent text-lg text-ink outline-none placeholder:text-ink-muted"
+            className="h-14 w-full bg-transparent text-lg text-ink outline-none placeholder:text-ink-muted focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[color:var(--focus)]"
             aria-label={ts("title")}
           />
           <kbd className="data hidden shrink-0 border border-line px-1.5 py-0.5 text-ink-muted sm:block">ESC</kbd>
@@ -81,8 +100,12 @@ export function SearchDialog({ index }: { index: SearchEntry[] }) {
                   {g.items.map((e) => (
                     <li key={`${e.type}-${e.slug}`}>
                       <Link href={hrefFor(e)} onClick={() => setSearchOpen(false)} className="flex min-h-14 items-center gap-3 px-5 py-2 transition-colors duration-[var(--dur-ui)] hover:bg-surface-2">
-                        <span className="frame relative h-12 w-12 shrink-0 overflow-hidden bg-surface">
-                          <SmartImage src={e.image} alt="" fill sizes="48px" className={cn("object-cover", e.type !== "product" && "img-grade")} />
+                        <span className="frame relative inline-flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden bg-surface text-ink-muted">
+                          {e.image ? (
+                            <SmartImage src={e.image} alt="" fill sizes="48px" className={cn("object-cover", e.type !== "product" && "img-grade")} />
+                          ) : (
+                            <ArrowUpRight className="h-5 w-5" strokeWidth={1.75} aria-hidden />
+                          )}
                         </span>
                         <span className="min-w-0 flex-1">
                           <span className="block truncate text-sm font-medium text-ink">{tx(e.title, locale)}</span>

@@ -1,3 +1,4 @@
+import { cloneElement, isValidElement } from "react";
 import { AlertCircle } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -22,38 +23,61 @@ export function FieldLabel({ htmlFor, children, className }: { htmlFor: string; 
 }
 
 /** Error line: never colour alone — `AlertCircle` 14 px beside the message. Reserves its height so layouts do not jump. */
-export function FieldError({ msg, className }: { msg?: string; className?: string }) {
+export function FieldError({ id, msg, className }: { id?: string; msg?: string; className?: string }) {
   return (
-    <p className={cn("mt-1.5 flex min-h-5 items-center gap-1.5 text-[12px] font-medium text-error", className)} aria-live="polite">
+    <p id={id} className={cn("mt-1.5 flex min-h-5 items-center gap-1.5 text-[12px] font-medium text-error", className)} aria-live="polite">
       {msg ? (<><AlertCircle className="h-3.5 w-3.5 shrink-0" strokeWidth={2} aria-hidden />{msg}</>) : null}
     </p>
   );
 }
 
-/** Label + control + error line. */
+type ControlProps = { id?: string; "aria-describedby"?: string; "aria-invalid"?: React.AriaAttributes["aria-invalid"] };
+
+/**
+ * Label + control + error line. The error line carries `id="${id}-error"`; when the direct child is the control itself
+ * (its `id` matches), `aria-describedby` / `aria-invalid` are injected so the message is announced with the field.
+ */
 export function Field({ id, label, error, className, children }: { id: string; label: string; error?: string; className?: string; children: React.ReactNode }) {
+  const errorId = `${id}-error`;
+  const control =
+    isValidElement<ControlProps>(children) && children.props.id === id
+      ? cloneElement(children, {
+          "aria-describedby": error ? [errorId, children.props["aria-describedby"]].filter(Boolean).join(" ") : children.props["aria-describedby"],
+          "aria-invalid": error ? true : children.props["aria-invalid"],
+        })
+      : children;
   return (
     <div className={className}>
       <FieldLabel htmlFor={id}>{label}</FieldLabel>
-      {children}
-      <FieldError msg={error} />
+      {control}
+      <FieldError id={errorId} msg={error} />
     </div>
   );
 }
 
-/** Step indicator (§4.27): hairline cells, 2 px track with a red fill, `data` labels „01 Adresse". */
+const stepNum = (i: number) => String(i + 1).padStart(2, "0");
+
+/**
+ * Step indicator (§4.27): hairline cells, 2 px track with a red fill, `data` labels „01 Adresse". Below `sm` the cells
+ * show the numerals only (names stay in the accessibility tree) and the current step's name sits beneath the track.
+ */
 export function StepTrack({ steps, current, label }: { steps: string[]; current: number; label: string }) {
   return (
-    <ol className="grid divide-x divide-line border-y border-line" style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))` }} aria-label={label}>
-      {steps.map((s, i) => (
-        <li key={s} className="px-3 py-3" aria-current={i === current ? "step" : undefined}>
-          <div className="h-[2px] w-full bg-surface-2" aria-hidden>
-            <div className="h-full bg-red transition-[width] duration-[var(--dur-move)] ease-[var(--ease-ui)]" style={{ width: i <= current ? "100%" : "0%" }} />
-          </div>
-          <p className={cn("data mt-2 truncate", i === current ? "text-ink" : "text-ink-muted")}>{String(i + 1).padStart(2, "0")} {s}</p>
-        </li>
-      ))}
-    </ol>
+    <div>
+      <ol className="grid divide-x divide-line border-y border-line" style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))` }} aria-label={label}>
+        {steps.map((s, i) => (
+          <li key={s} className="px-3 py-3" aria-current={i === current ? "step" : undefined}>
+            <div className="h-[2px] w-full bg-surface-2" aria-hidden>
+              <div className="h-full bg-red transition-[width] duration-[var(--dur-move)] ease-[var(--ease-ui)]" style={{ width: i <= current ? "100%" : "0%" }} />
+            </div>
+            <p className={cn("data mt-2 truncate", i === current ? "text-ink" : "text-ink-muted")}>
+              {stepNum(i)}<span className="max-sm:sr-only"> {s}</span>
+            </p>
+          </li>
+        ))}
+      </ol>
+      <p className="data mt-3 text-ink sm:hidden" aria-hidden>{stepNum(current)} {steps[current]}</p>
+    </div>
   );
 }
 

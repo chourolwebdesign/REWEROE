@@ -34,6 +34,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { alternates: alternatesFor(locale, `/produkt/${slug}`), title: tx(p.name, locale), description: `${tx(p.subtitle, locale)} — ${tx(p.origin.story, locale)}`, openGraph: { images: [p.images[0].src] } };
 }
 
+export const revalidate = 3600;
+
 const TRIGGER = "display rounded-none py-4 text-lg font-[number:var(--fw-display)] text-ink hover:no-underline";
 
 export default async function ProductPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
@@ -55,12 +57,12 @@ export default async function ProductPage({ params }: { params: Promise<{ locale
   // Weight semantics (§4.39): weight-based items read „ca. 400 g · 3,99 € / 1 kg"; piece-based items read their unit label.
   const weightBased = /^(kg|g|l)$/i.test(p.unit.unit);
   const weightCopy = weightBased ? `${t("approx")} ${formatWeight(p.weightGrams, locale)} · ${formatBasePrice(card.basePrice.amount, card.basePrice.per, locale)}` : card.unitLabel;
+  const prefix = locale === "en" ? "/en" : "";
 
   const ld = {
     "@context": "https://schema.org", "@type": "Product", name: card.name, description: tx(p.origin.story, locale), sku: p.sku, image: `${settings.brand.siteUrl}${p.images[0].src}`,
     brand: { "@type": "Brand", name: producer?.name ?? "REWE" },
-    aggregateRating: { "@type": "AggregateRating", ratingValue: p.rating, reviewCount: p.reviews },
-    offers: { "@type": "Offer", priceCurrency: "EUR", price: card.price, availability: "https://schema.org/InStock", url: `${settings.brand.siteUrl}/produkt/${p.slug}`, seller: { "@type": "Organization", name: settings.brand.merchantLegal } },
+    offers: { "@type": "Offer", priceCurrency: "EUR", price: card.price, availability: "https://schema.org/InStock", url: `${settings.brand.siteUrl}${prefix}/produkt/${p.slug}`, seller: { "@type": "Organization", name: settings.brand.merchantLegal } },
   };
   const nutritionRows: [string, string][] = [
     [t("kcal"), `${p.nutrition.kcal} kcal`], [t("fat"), `${p.nutrition.fat} g`], [t("carbs"), `${p.nutrition.carbs} g`], [t("sugar"), `${p.nutrition.sugar} g`], [t("protein"), `${p.nutrition.protein} g`], [t("salt"), `${p.nutrition.salt} g`],
@@ -74,11 +76,34 @@ export default async function ProductPage({ params }: { params: Promise<{ locale
       </div>
 
       <section className="container-x grid gap-10 py-10 lg:grid-cols-12 lg:gap-x-6">
+        {/* Gallery — below lg its width is capped so the 4:5 plate stays ≤ 70svh and the h1 + buy box follow right after */}
         <div className="lg:col-span-7">
-          <ProductGallery images={gallery} />
+          <div className="mx-auto w-full max-w-[56svh] lg:mx-0 lg:max-w-none">
+            <ProductGallery images={gallery} />
+          </div>
+        </div>
 
+        {/* Sticky buy rail (§4.39) — second in DOM order; spans both grid rows on lg so it stays sticky beside the accordion */}
+        <div className="flex flex-col gap-5 self-start lg:sticky lg:top-[88px] lg:col-span-5 lg:row-span-2">
+          <Badges badges={p.badges} discount={card.discount} size="md" />
+          <div>
+            <p className="eyebrow">{t("eyebrow")} · {t("sku")} {p.sku}</p>
+            <h1 className="mt-3 text-[clamp(2rem,3.4vw,3.25rem)] leading-[1.02] tracking-[-0.025em] text-ink">{card.name}</h1>
+            <p className="mt-3 text-lg text-ink-muted">{card.subtitle} · <span className="num">{weightCopy}</span></p>
+          </div>
+          <Rating value={p.rating} count={p.reviews} />
+          <div>
+            <PriceTag price={card.price} oldPrice={card.oldPrice} basePrice={card.basePrice} pfand={card.pfand || undefined} size="lg" />
+            {card.pfand > 0 && <p className="mt-2 text-[13px] text-ink-muted">{t("pfandNote", { amount: formatPrice(card.pfand, locale) })}</p>}
+          </div>
+          <p className="text-[13px] font-medium text-ink">{t("availableIn")}</p>
+          <BuyBox p={card} />
+        </div>
+
+        {/* Herkunft · Nährwerte · Frischegarantie — after the rail in DOM order, back under the gallery on lg */}
+        <div className="lg:col-span-7 lg:col-start-1 lg:row-start-2">
           <h2 className="sr-only">{t("origin")} · {t("nutritionTitle")}</h2>
-          <Accordion type="single" collapsible defaultValue="origin" className="mt-10 border-t border-line">
+          <Accordion type="single" collapsible defaultValue="origin" className="border-t border-line lg:mt-2">
             <AccordionItem value="origin" className="border-line">
               <AccordionTrigger className={TRIGGER}>{t("origin")}</AccordionTrigger>
               <AccordionContent className="pb-5 text-base text-ink-2">
@@ -101,25 +126,6 @@ export default async function ProductPage({ params }: { params: Promise<{ locale
               <AccordionContent className="pb-5 text-base text-ink-2">{t("freshnessText")}</AccordionContent>
             </AccordionItem>
           </Accordion>
-        </div>
-
-        {/* Sticky buy rail (§4.39) */}
-        <div className="flex flex-col gap-5 self-start lg:sticky lg:top-[88px] lg:col-span-5">
-          <Badges badges={p.badges} discount={card.discount} size="md" />
-          <div>
-            <p className="eyebrow">{t("eyebrow")} · {t("sku")} {p.sku}</p>
-            <h1 className="mt-3 text-[clamp(2rem,3.4vw,3.25rem)] leading-[1.02] tracking-[-0.025em] text-ink">{card.name}</h1>
-            <p className="mt-3 text-lg text-ink-muted">{card.subtitle} · <span className="num">{weightCopy}</span></p>
-          </div>
-          <Rating value={p.rating} count={p.reviews} />
-          <div>
-            <PriceTag price={card.price} oldPrice={card.oldPrice} basePrice={card.basePrice} pfand={card.pfand || undefined} size="lg" />
-            {card.pfand > 0 && <p className="mt-2 text-[13px] text-ink-muted">{t("pfandNote", { amount: formatPrice(card.pfand, locale) })}</p>}
-          </div>
-          <p className="flex items-center gap-2 text-[13px] font-medium text-ink">
-            <span className="h-2 w-2 shrink-0 rounded-full bg-bio-text" aria-hidden /> {t("availableIn")}
-          </p>
-          <BuyBox p={card} />
         </div>
       </section>
 

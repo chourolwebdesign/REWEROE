@@ -66,7 +66,7 @@ export async function SiteFooter() {
             <dt className="shrink-0 text-block-muted">{t("phone")}</dt>
             <dd className="text-right">
               {store.phone ? (
-                <a href={`tel:${store.phone.replace(/\s+/g, "")}`} className="num inline-flex min-h-6 items-center text-block-ink underline-offset-4 hover:underline">{store.phone}</a>
+                <a href={`tel:${store.phone.replace(/\s+/g, "")}`} className="num -my-2.5 inline-flex min-h-11 items-center text-block-ink underline-offset-4 hover:underline">{store.phone}</a>
               ) : (
                 <span className="text-block-muted">{t("phonePending")}</span>
               )}
@@ -109,7 +109,7 @@ export async function SiteFooter() {
 
         {/* Row 3 — legal */}
         <div className="flex flex-col gap-4 border-t border-block-line py-6 md:flex-row md:items-center md:justify-between">
-          <div className="flex flex-wrap items-center gap-2" aria-label={t("payments")}>
+          <div className="flex flex-wrap items-center gap-2" role="group" aria-label={t("payments")}>
             <span className="mr-1 text-[12px] font-medium text-block-muted">{t("payments")}</span>
             {s.payments.map((p) => (
               <span key={p} className="data rounded-[2px] border border-block-line px-2 py-1 text-block-muted">{paymentMarks[p] ?? p}</span>
@@ -121,7 +121,7 @@ export async function SiteFooter() {
 
       {/* Watermark — the district, never the wordmark */}
       <div className="container-x overflow-hidden" aria-hidden>
-        <div className="footer-watermark -mb-[0.18em] select-none text-[clamp(5rem,20vw,19rem)] leading-[0.8]" data-text="Rödelheim" />
+        <div className="footer-watermark -mb-[0.18em] select-none text-[clamp(4rem,19vw,19rem)] leading-[0.8]" data-text="Rödelheim" />
       </div>
     </footer>
   );

@@ -9,11 +9,12 @@ import type { Badge as BadgeKind } from "@/lib/content/types";
  * green field (#0E6B34) is 2.85:1 against dark paper, and no token flips it — so in dark it becomes the tinted
  * outline (`bg-bio-tint text-bio-text border-bio-text/40`), exactly what the spec table asks for.
  * Regional keeps static ink (`text-[#141414]`) on the yellow shelf-sign field in both schemes (12.49:1).
+ * The light Bio field carries a 1 px `paper/60` hairline so it still reads over dark-green produce photography.
  */
 const styles: Record<BadgeKind, string> = {
   angebot: "bg-red text-white",
   knaller: "border border-red-text bg-paper text-red-text",
-  bio: "bg-bio text-white dark:border dark:border-bio-text/40 dark:bg-bio-tint dark:text-bio-text",
+  bio: "border border-paper/60 bg-bio text-white dark:border-bio-text/40 dark:bg-bio-tint dark:text-bio-text",
   regional: "bg-regional text-[#141414]",
   vegan: "bg-bio-tint text-bio-text",
   neu: "bg-ink text-paper",

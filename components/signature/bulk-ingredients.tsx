@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { ShoppingBag, Check } from "lucide-react";
@@ -17,8 +17,9 @@ export interface IngredientVM { name: string; amount: number; unit: string; prod
 /**
  * Signature feature (§4.38): every ingredient line can be added — or all of them in one click (the page's one red).
  * „Habe ich schon" skips lines. Prices are ink, never red; the shell is a hairline card.
- * Rows are a subgrid (checkbox · amount · name) with the pill on its own line, so the sidebar card never overflows
- * horizontally — its inner width is only ~230–330 px from md up and 308 px at 390 px.
+ * Rows are a two-line subgrid: checkbox · amount · name on the first line, price (or shop status) · pill on the second,
+ * indented to the amount column. The sidebar card is only ~230–350 px wide from md up and 308 px at 390 px, so the name
+ * never shares its line with price or pill.
  */
 export function BulkIngredients({ ingredients, servings }: { ingredients: IngredientVM[]; servings: number }) {
   const t = useTranslations("recipes");
@@ -29,11 +30,17 @@ export function BulkIngredients({ ingredients, servings }: { ingredients: Ingred
   const addable = ingredients.map((ing, i) => ({ ing, i })).filter(({ ing, i }) => ing.product && !have.has(i));
   const total = addable.reduce((n, { ing }) => n + (ing.product?.price ?? 0), 0);
 
+  // The „✓" state on the add-all button resets after 1.6 s; the timer dies with the component.
+  useEffect(() => {
+    if (!done) return;
+    const id = setTimeout(() => setDone(false), 1600);
+    return () => clearTimeout(id);
+  }, [done]);
+
   const addAll = () => {
     addable.forEach(({ ing }) => add(toCartItem(ing.product!)));
     setDone(true);
     toast.success(t("addedAll", { n: addable.length }));
-    setTimeout(() => setDone(false), 1600);
   };
 
   return (
@@ -55,15 +62,19 @@ export function BulkIngredients({ ingredients, servings }: { ingredients: Ingred
             <li key={i} className={cn("col-span-3 grid grid-cols-subgrid items-center gap-y-2 py-3 transition-opacity duration-[var(--dur-ui)]", skipped && "opacity-45")}>
               <Checkbox id={`have-${i}`} className="rounded-[2px]" checked={skipped} onCheckedChange={(v) => { const s = new Set(have); if (v) s.add(i); else s.delete(i); setHave(s); }} aria-label={t("haveIt")} />
               <label htmlFor={`have-${i}`} className="num whitespace-nowrap text-sm text-ink">{ing.amount} {ing.unit}</label>
-              <span className={cn("min-w-0 text-sm text-ink [overflow-wrap:anywhere]", skipped && "line-through")}>
+              <span className={cn("min-w-0 text-sm leading-snug text-ink [overflow-wrap:anywhere]", skipped && "line-through")}>
                 {ing.product ? <Link href={`/produkt/${ing.product.slug}`} className="underline-offset-4 hover:underline">{ing.name}</Link> : ing.name}
-                {ing.product && <span className="num ml-2 inline-block text-[12px] text-ink">{formatPrice(ing.product.price, locale)}</span>}
               </span>
-              {ing.product ? (
-                <AddToCart item={toCartItem(ing.product)} variant="pill" className="col-span-3 justify-self-end" />
-              ) : (
-                <span className="col-span-3 justify-self-end text-[12px] text-ink-muted">{t("notInShop")}</span>
-              )}
+              <div className="col-span-2 col-start-2 flex items-center justify-between gap-3">
+                {ing.product ? (
+                  <>
+                    <span className="num text-[12px] text-ink">{formatPrice(ing.product.price, locale)}</span>
+                    <AddToCart item={toCartItem(ing.product)} variant="pill" />
+                  </>
+                ) : (
+                  <span className="text-[12px] text-ink-muted">{t("notInShop")}</span>
+                )}
+              </div>
             </li>
           );
         })}

@@ -24,7 +24,7 @@ export default async function NotFound() {
         <div className="scrim-editorial absolute inset-0 -z-10" aria-hidden />
         <div className="container-x flex min-h-[60svh] flex-col justify-end pb-14 pt-16">
           <Breadcrumbs inverse items={[{ label: tn("home"), href: "/" }, { label: t("eyebrow") }]} />
-          <p className="eyebrow mt-8 text-block-muted">{t("eyebrow")}</p>
+          <p className="eyebrow mt-8 text-block-ink/80">{t("label")}</p>
           <h1 className="mt-4 max-w-[14ch] text-block-ink">{t("title")}</h1>
           <p className="mt-6 max-w-2xl text-lg text-block-ink/90">{t("text")}</p>
           <div className="mt-10 flex flex-wrap gap-3">

@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import { useMounted, useTick } from "@/lib/hooks";
 import { useLocale, useTranslations } from "next-intl";
 import { m } from "framer-motion";
@@ -40,7 +41,14 @@ export function FreshnessClock({ slots, hours, hoursStatus = "published", classN
   const locale = useLocale();
   const t = useTranslations("freshness");
   const mounted = useMounted();
+  const [announce, setAnnounce] = useState(false);
   useTick(30_000);
+  // The message is empty on SSR and filled on mount; `aria-live` is switched on one frame later so the initial fill is not announced on every page load.
+  useEffect(() => {
+    if (!mounted) return;
+    const id = requestAnimationFrame(() => setAnnounce(true));
+    return () => cancelAnimationFrame(id);
+  }, [mounted]);
   const now = mounted ? new Date() : null;
   const slot = now ? pickSlot(slots, berlinHour(now)) : null;
   const time = now ? new Intl.DateTimeFormat("de-DE", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Berlin" }).format(now) : "";
@@ -60,7 +68,7 @@ export function FreshnessClock({ slots, hours, hoursStatus = "published", classN
         {time && ` · ${time}`}
       </span>
       {size !== "sm" && (
-        <span aria-live="polite" className="text-[13px] font-medium leading-tight text-ink">
+        <span aria-live={announce ? "polite" : undefined} className="text-[13px] font-medium leading-tight text-ink">
           {message && (
             <m.span key={message} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.24, ease: [0.2, 0, 0, 1] }} className="inline-block">
               {message}

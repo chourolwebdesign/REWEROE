@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
 import { formatNumber } from "@/lib/format";
 import { toCardProduct } from "@/lib/view-models";
 import {
-  getActiveCampaigns, getCategories, getPrimaryStore, getProducers, getProduct, getProducts, getRecipes, getRegionalProducts, getSettings, getStores,
+  getActiveCampaigns, getCategories, getPrimaryStore, getProduct, getProducts, getRecipes, getRegionalProducers, getRegionalProducts, getSettings, getStores,
 } from "@/lib/content";
 
 const STORE_PLATE = "/images/placeholders/filiale-roedelheim-aussen.jpg";
@@ -33,7 +33,7 @@ type Proof = { label: string; value: string };
 function WorldTile({ sub, alt, eyebrow, title, text, proof, cta, href }: { sub: "regional" | "bio"; alt: string; eyebrow?: string; title: string; text: string; proof: Proof[]; cta: string; href: string }) {
   const src = WORLD_IMAGES[sub];
   return (
-    <article className="frame col-span-4 flex flex-col md:col-span-6">
+    <article className="frame flex w-full flex-col">
       <div className="relative aspect-[16/9] overflow-hidden border-b border-line bg-surface">
         <SmartImage src={src} alt={alt} blur={getBlur(src)} fill sizes="(max-width:768px) 100vw, 50vw" className="img-grade object-cover" />
       </div>
@@ -42,11 +42,12 @@ function WorldTile({ sub, alt, eyebrow, title, text, proof, cta, href }: { sub: 
         {eyebrow && <Eyebrow regional className="mt-6">{eyebrow}</Eyebrow>}
         <h3 className={cn("display text-[clamp(1.75rem,2.6vw,2.5rem)] text-ink", eyebrow ? "mt-3" : "mt-6")}>{title}</h3>
         <p className="mt-3 max-w-[48ch] text-[15px] leading-relaxed text-ink-2">{text}</p>
-        <dl className="mt-6 grid grid-cols-3 divide-x divide-line border-y border-line">
+        {/* Proof points: label-left / value-right rows on phones, three divided columns from sm (78 px cells broke words mid-syllable). */}
+        <dl className="mt-6 grid grid-cols-1 divide-y divide-line border-y border-line sm:grid-cols-3 sm:divide-x sm:divide-y-0">
           {proof.map((cell) => (
-            <div key={cell.label} className="flex flex-col-reverse gap-1 px-3 py-3 first:pl-0">
+            <div key={cell.label} className="flex items-baseline justify-between gap-3 py-3 sm:flex-col-reverse sm:items-start sm:gap-1 sm:px-3 sm:first:pl-0">
               <dt className="eyebrow">{cell.label}</dt>
-              <dd className="num hyphens-auto break-words text-[18px] font-bold leading-tight text-ink md:text-[20px]">{cell.value}</dd>
+              <dd className="num text-right text-[16px] font-bold leading-tight text-ink sm:text-left lg:text-[18px]">{cell.value}</dd>
             </div>
           ))}
         </dl>
@@ -57,6 +58,9 @@ function WorldTile({ sub, alt, eyebrow, title, text, proof, cta, href }: { sub: 
     </article>
   );
 }
+
+/** Offer prices and campaign windows are baked into the static page — regenerate hourly so expired campaigns drop out (§4.15). */
+export const revalidate = 3600;
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -70,7 +74,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const recipes = getRecipes().slice(0, 3);
   const stores = getStores().map((s) => ({ slug: s.slug, name: s.name, district: s.address.district, city: s.address.city, zip: s.address.zip, intro: s.intro }));
   const regional = getRegionalProducts().slice(0, 4).map((p) => toCardProduct(p, locale));
-  const regionalProducers = getProducers().filter((p) => p.distanceKm <= 100).length;
+  const regionalProducers = getRegionalProducers().length; // canonical count (triage contract) — never a literal
+  const stats = settings.stats.map((s) => (s.id === "producers" ? { ...s, value: regionalProducers } : s));
   const bioItems = getProducts().filter((p) => p.badges.includes("bio")).length;
 
   return (
@@ -154,12 +159,12 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               <p className="data-lg mt-8 text-block-muted">— {t("manifestoAuthor")}</p>
               <Cta href="/nachhaltigkeit" variant="inverse" className="mt-10">{t("manifestoCta")}</Cta>
             </Reveal>
-            <Stagger className="col-span-4 grid grid-cols-2 gap-px self-end border border-block-line bg-block-line md:col-span-4 md:col-start-9">
-              {settings.stats.map((s) => (
+            <Stagger className="col-span-4 grid grid-cols-2 gap-px self-end border border-block-line bg-block-line md:col-span-5 md:col-start-8 lg:col-span-4 lg:col-start-9">
+              {stats.map((s) => (
                 <StaggerItem key={s.id} className="bg-block p-6">
-                  <p className="display text-[clamp(2.5rem,1.9rem+2.5vw,4.5rem)] leading-none tracking-[-0.03em] text-block-ink tabular-nums lining-nums">
+                  <p className="display whitespace-nowrap text-[clamp(2rem,0.9rem+2.5vw,4rem)] leading-none tracking-[-0.03em] text-block-ink tabular-nums lining-nums">
                     <Counter value={s.value} locale={locale} />
-                    {s.suffix && <span className="text-block-red">{s.suffix}</span>}
+                    {s.suffix && <span className="text-[0.5em] text-block-red">{s.suffix}</span>}
                   </p>
                   <p className="mt-2 text-[13px] text-block-muted">{tx(s.label, locale)}</p>
                 </StaggerItem>

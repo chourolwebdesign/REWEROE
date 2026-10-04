@@ -23,7 +23,7 @@ export async function RecipeCard({ r, locale, className, large }: { r: Recipe; l
         <div className="num rule mt-auto flex items-center gap-4 pt-3 text-[12px] font-medium text-ink-muted">
           <span className="inline-flex items-center gap-1"><Clock className="h-3.5 w-3.5" aria-hidden /> {t("minutes", { n: r.time })}</span>
           <span className="inline-flex items-center gap-1"><Users className="h-3.5 w-3.5" aria-hidden /> <span className="sr-only">{t("servings", { n: r.servings })}</span><span aria-hidden>{r.servings}</span></span>
-          <span className="ml-auto text-ink" aria-label={t("rating", { rating: r.rating })}>★ {formatNumber(r.rating, locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}</span>
+          <span className="ml-auto text-ink" role="img" aria-label={t("rating", { rating: r.rating })}>★ {formatNumber(r.rating, locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}</span>
         </div>
       </div>
     </Link>

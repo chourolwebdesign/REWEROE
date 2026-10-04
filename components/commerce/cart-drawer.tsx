@@ -1,7 +1,8 @@
 "use client";
+import { useSyncExternalStore } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Trash2, X } from "lucide-react";
-import { Link } from "@/i18n/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 import { useCart, cartTotals } from "@/lib/store/cart";
 import { useUi } from "@/lib/store/ui";
 import { formatPrice, formatWeight } from "@/lib/format";
@@ -24,7 +25,7 @@ export function CartDrawer() {
 
   return (
     <Sheet open={cartOpen} onOpenChange={setCartOpen}>
-      <SheetContent side="right" showCloseButton={false} className="flex w-full flex-col gap-0 rounded-none border-l border-line bg-paper p-0 text-ink sm:max-w-md">
+      <SheetContent side="right" showCloseButton={false} className="flex flex-col gap-0 rounded-none border-l border-line bg-paper p-0 text-ink data-[side=right]:w-full data-[side=right]:sm:max-w-md">
         <SheetHeader className="flex-row items-start justify-between gap-4 border-b border-line px-6 py-5">
           <div>
             <p className="eyebrow">{t("eyebrow")}</p>
@@ -86,21 +87,40 @@ export function CartDrawer() {
   );
 }
 
-/** Sticky mobile summary (< md): anthracite block with the one red chip „Zur Kasse". */
+/** `:root[data-pdp-bar]` is toggled by `BuyBox` (§4.39) while the PDP's own bottom bar is on screen. */
+const subscribePdpBar = (cb: () => void) => {
+  const mo = new MutationObserver(cb);
+  mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-pdp-bar"] });
+  return () => mo.disconnect();
+};
+const usePdpBarVisible = () => useSyncExternalStore(subscribePdpBar, () => document.documentElement.hasAttribute("data-pdp-bar"), () => false);
+
+/** Routes that render the cart themselves — there the bar would only cover totals, the Weiter/Bestellen row and the footer legal line. */
+const CART_ROUTES = /^\/(warenkorb|checkout)(\/|$)/;
+
+/**
+ * Sticky mobile summary (< md): anthracite block with the one red chip „Zur Kasse". Yields to the PDP bottom bar, stays
+ * off /warenkorb and /checkout, and reserves its own height below the footer (anthracite spacer) while mounted.
+ */
 export function MobileCartBar() {
   const t = useTranslations("cart");
   const locale = useLocale();
+  const pathname = usePathname();
+  const pdpBar = usePdpBarVisible();
   const lines = useCart((s) => s.lines);
   const setCartOpen = useUi((s) => s.setCartOpen);
   const { count, total } = cartTotals(lines);
-  if (count === 0) return null;
+  if (count === 0 || pdpBar || CART_ROUTES.test(pathname)) return null;
   return (
-    <div className="fixed inset-x-3 bottom-3 z-40 md:hidden">
-      <button type="button" onClick={() => setCartOpen(true)} className="on-block flex h-14 w-full items-center justify-between rounded-[2px] px-5 shadow-pop">
-        <span className="data text-block-muted">{t("items", { n: count })}</span>
-        <span className="price price-sm text-block-ink">{formatPrice(total, locale)}</span>
-        <span className="inline-flex h-9 items-center rounded-[2px] bg-red px-3 text-xs font-semibold text-white">{t("checkout")}</span>
-      </button>
-    </div>
+    <>
+      <div aria-hidden className="h-20 bg-block md:hidden" />
+      <div className="fixed inset-x-3 bottom-3 z-40 md:hidden">
+        <button type="button" onClick={() => setCartOpen(true)} className="on-block flex h-14 w-full items-center justify-between rounded-[2px] px-5 shadow-pop">
+          <span className="data text-block-muted">{t("items", { n: count })}</span>
+          <span className="price price-sm text-block-ink">{formatPrice(total, locale)}</span>
+          <span className="inline-flex h-9 items-center rounded-[2px] bg-red px-3 text-xs font-semibold text-white">{t("checkout")}</span>
+        </button>
+      </div>
+    </>
   );
 }

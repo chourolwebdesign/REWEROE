@@ -29,7 +29,8 @@ const styles: Record<Variant, string> = {
   icon: "h-11 w-11 bg-ink text-paper hover:bg-ink/90",
   full: `${bar} bg-ink text-paper hover:bg-ink/90`,
   primary: `${bar} btn-primary bg-red text-white hover:bg-red-hover active:bg-red-deep`,
-  pill: "h-9 gap-1 border border-line-strong px-3 text-[12px] font-semibold text-ink hover:bg-ink hover:text-paper pointer-coarse:before:absolute pointer-coarse:before:-inset-1.5 pointer-coarse:before:content-['']",
+  /** Visual 36 px; the ::before inset gives a 48 px hit area on every pointer (rule 8: hit area, not visual size). */
+  pill: "h-9 gap-1 border border-line-strong px-3 text-[12px] font-semibold text-ink hover:bg-ink hover:text-paper before:absolute before:-inset-1.5 before:content-['']",
 };
 
 const ICON_W = 44;

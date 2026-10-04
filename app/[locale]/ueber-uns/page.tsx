@@ -86,10 +86,16 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         <Stagger className="mt-12 grid grid-cols-2 gap-6 md:grid-cols-4">
           {a.team.map((m, i) => (
             <StaggerItem key={i}>
-              <div className="frame relative aspect-[4/5] overflow-hidden bg-surface">
-                <SmartImage src={m.image.src} alt={tx(m.image.alt, locale)} blur={getBlur(m.image.src)} fill sizes="(max-width:768px) 50vw, 25vw" className="img-grade object-cover" />
-                {m.status === "pending" && <span className="on-paper absolute left-3 top-3 rounded-[2px] bg-paper/92 px-2 py-1 text-[12px] font-medium text-ink backdrop-blur-[2px]">{tc("contentSoon")}</span>}
-              </div>
+              {/* No stock portraits for people who are not the team: pending members get the §6 placeholder frame until real portraits exist */}
+              {m.status === "pending" ? (
+                <div className="frame flex aspect-[4/5] items-center justify-center bg-surface">
+                  <span className="data text-ink-muted">{tc("imagePending")}</span>
+                </div>
+              ) : (
+                <div className="frame relative aspect-[4/5] overflow-hidden bg-surface">
+                  <SmartImage src={m.image.src} alt={tx(m.image.alt, locale)} blur={getBlur(m.image.src)} fill sizes="(max-width:768px) 50vw, 25vw" className="img-grade object-cover" />
+                </div>
+              )}
               <p className="mt-4 font-medium text-ink">{m.name ?? "—"}</p>
               <p className="text-[13px] text-ink-muted">{tx(m.role, locale)}</p>
             </StaggerItem>

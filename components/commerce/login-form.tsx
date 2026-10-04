@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Cta } from "@/components/brand/cta";
 import { boxInput, Field, FieldError, plate } from "./form-primitives";
 
-/** Login / register (§4.28): paper sheet, 48 px box inputs, error with icon, one primary CTA. Demo mode — no server. */
+/** Login / register (§4.28): paper sheet, 48 px box inputs, error with icon, one primary CTA. Demo mode — no server; the demo note is dev-only. */
 export function LoginForm() {
   const t = useTranslations("account");
   const router = useRouter();
@@ -17,7 +17,7 @@ export function LoginForm() {
   const [err, setErr] = useState("");
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(email) || pw.length < 6 || (mode === "register" && !name.trim())) return setErr(t("demoNote"));
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(email) || pw.length < 6 || (mode === "register" && !name.trim())) return setErr(t("errorCredentials"));
     try { localStorage.setItem("rewe-rh-user", JSON.stringify({ name: name || email.split("@")[0], email })); } catch {}
     router.push("/konto");
   };
@@ -32,17 +32,17 @@ export function LoginForm() {
       {mode === "register" && (
         <Field id="l-name" label={t("name")}><Input id="l-name" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} className={boxInput} /></Field>
       )}
-      <Field id="l-email" label={t("email")}><Input id="l-email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} aria-invalid={!!err} className={boxInput} /></Field>
-      <Field id="l-pw" label={t("password")}><Input id="l-pw" type="password" autoComplete={mode === "login" ? "current-password" : "new-password"} value={pw} onChange={(e) => setPw(e.target.value)} aria-invalid={!!err} className={boxInput} /></Field>
-      <FieldError msg={err} className="-mt-3" />
+      <Field id="l-email" label={t("email")}><Input id="l-email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} aria-invalid={!!err} aria-describedby={err ? "l-error" : undefined} className={boxInput} /></Field>
+      <Field id="l-pw" label={t("password")}><Input id="l-pw" type="password" autoComplete={mode === "login" ? "current-password" : "new-password"} value={pw} onChange={(e) => setPw(e.target.value)} aria-invalid={!!err} aria-describedby={err ? "l-error" : undefined} className={boxInput} /></Field>
+      <FieldError id="l-error" msg={err} className="-mt-3" />
       <Cta type="submit" className="w-full">{mode === "login" ? t("login") : t("register")}</Cta>
-      <div className="flex flex-wrap items-center justify-between gap-x-4">
+      <div className="flex flex-wrap items-center gap-x-4">
         <button type="button" onClick={() => { setMode(mode === "login" ? "register" : "login"); setErr(""); }} className={linkBtn}>
           {mode === "login" ? `${t("noAccount")} ${t("register")}` : `${t("hasAccount")} ${t("login")}`}
         </button>
-        {mode === "login" && <button type="button" className={linkBtn}>{t("forgot")}</button>}
       </div>
-      <p className="rule pt-4 text-center text-[12px] text-ink-muted">{t("demoNote")}</p>
+      {/* No password reset exists without a server — a dead „Passwort vergessen?" would only promise one. */}
+      {process.env.NODE_ENV !== "production" && <p className="rule pt-4 text-center text-[12px] text-ink-muted">{t("demoNote")}</p>}
     </form>
   );
 }

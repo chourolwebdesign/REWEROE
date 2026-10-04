@@ -11,7 +11,7 @@ import { AddToCart } from "@/components/commerce/add-to-cart";
 import { Cta } from "@/components/brand/cta";
 import { Countdown } from "@/components/motion/countdown";
 import { SmartImage } from "@/components/ui/smart-image";
-import { formatBasePrice, formatDateShort, formatPrice } from "@/lib/format";
+import { formatBasePrice, formatDateShort, formatNumber, formatPrice } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { toCartItem, type CardProduct } from "@/lib/view-models";
 
@@ -23,6 +23,8 @@ const CHIP_ON = "border-ink bg-ink text-paper";
 const CHIP_OFF = "border-line text-ink hover:bg-surface-2";
 const PAGER = "inline-flex h-11 w-11 items-center justify-center rounded-[2px] border border-line-strong text-ink transition-colors duration-[var(--dur-ui)] ease-[var(--ease-ui)] hover:bg-ink hover:text-paper disabled:border-line disabled:text-ink-muted disabled:hover:bg-transparent disabled:hover:text-ink-muted";
 const pad = (n: number) => String(n).padStart(2, "0");
+/** `unitLabel` arrives as "0.75 l" from the view model — print the amount with the locale's decimal mark ("0,75 l" in de). */
+const localizeUnit = (label: string, locale: string) => label.replace(/^\d+(?:[.,]\d+)?/, (n) => formatNumber(Number(n.replace(",", ".")), locale));
 
 /** Hero deal (§4.15): first active campaign on the first brochure page — poster price, full countdown, ink add-to-cart. */
 function HeroDeal({ item, className }: { item: BrochureItem; className?: string }) {
@@ -36,14 +38,15 @@ function HeroDeal({ item, className }: { item: BrochureItem; className?: string 
       </Link>
       <div className="flex flex-col gap-4">
         <div className="flex flex-wrap items-center gap-1.5">
-          <Badges badges={["knaller", ...item.badges]} discount={item.discount} size="md" max={4} />
+          {/* Spec caps a tile at three chips: discount · Knaller · one more — „Neu" yields to Knaller here. */}
+          <Badges badges={["knaller", ...item.badges.filter((b) => b !== "neu")]} discount={item.discount} size="md" />
         </div>
         <div>
           <p className="eyebrow">{t("heroEyebrow")} · {item.campaignTitle}</p>
           <h3 className="display mt-3 text-[clamp(1.5rem,2.4vw,2.25rem)] leading-[1.05] text-ink">
             <Link href={`/produkt/${item.slug}`} className="decoration-red decoration-2 underline-offset-[6px] hover:underline">{item.name}</Link>
           </h3>
-          <p className="mt-2 text-sm text-ink-muted">{item.subtitle} · <span className="num">{item.unitLabel}</span></p>
+          <p className="mt-2 text-sm text-ink-muted">{item.subtitle} · <span className="num">{localizeUnit(item.unitLabel, locale)}</span></p>
         </div>
         <PriceTag size="poster" price={item.price} oldPrice={item.oldPrice} basePrice={item.basePrice} pfand={item.pfand || undefined} />
         {item.validUntil && (
@@ -112,8 +115,26 @@ export function FlipBrochure({ pages, categories, hero }: { pages: BrochurePage[
           {allItems.length === 0 ? (
             <p className="py-16 text-center text-ink-muted">{t("empty")}</p>
           ) : view === "list" ? (
-            <div className="on-paper border border-line-strong p-4 md:p-6">
-              <div className="overflow-x-auto">
+            <div className="on-paper min-w-0 max-w-full border border-line-strong p-4 md:p-6">
+              {/* Below md the eight-column table cannot fit a phone: a stacked list carries the same legal data (name · content · Grundpreis · price · statt · Pfand · validity). */}
+              <ul className="divide-y divide-line border-t border-line-strong md:hidden">
+                {allItems.map((p) => (
+                  <li key={p.slug} className="flex flex-col gap-3 py-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <Link href={`/produkt/${p.slug}`} className="text-[15px] font-medium leading-snug text-ink underline-offset-4 hover:underline">{p.name}</Link>
+                        <p className="num mt-0.5 text-[12px] text-ink-muted">{p.campaignTitle} · {localizeUnit(p.unitLabel, locale)}</p>
+                      </div>
+                      <AddToCart item={toCartItem(p)} variant="pill" className="shrink-0" />
+                    </div>
+                    <div className="flex items-end justify-between gap-3">
+                      <PriceTag size="sm" price={p.price} oldPrice={p.oldPrice} basePrice={p.basePrice} pfand={p.pfand || undefined} />
+                      {p.validUntil && <p className="price-meta shrink-0 text-right">{t("valid", { date: formatDateShort(p.validUntil, locale) })}</p>}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <div className="hidden w-full overflow-x-auto md:block">
                 <table className="num w-full min-w-[760px] text-sm">
                   <thead>
                     <tr className="text-left">
@@ -134,7 +155,7 @@ export function FlipBrochure({ pages, categories, hero }: { pages: BrochurePage[
                           <Link href={`/produkt/${p.slug}`} className="underline-offset-4 hover:underline">{p.name}</Link>
                           <span className="block text-[12px] font-normal text-ink-muted">{p.campaignTitle}</span>
                         </th>
-                        <td className="py-3 pr-4 text-ink-muted">{p.unitLabel}</td>
+                        <td className="py-3 pr-4 text-ink-muted">{localizeUnit(p.unitLabel, locale)}</td>
                         <td className="py-3 pr-4 text-ink-muted">{formatBasePrice(p.basePrice.amount, p.basePrice.per, locale)}</td>
                         <td className="py-3 pr-4"><span className={cn("price price-sm", p.oldPrice && p.oldPrice > p.price && "price-offer")}>{formatPrice(p.price, locale)}</span></td>
                         <td className="py-3 pr-4">{p.oldPrice && p.oldPrice > p.price ? <s className="price-old">{formatPrice(p.oldPrice, locale)}</s> : <span className="text-ink-muted">—</span>}</td>
@@ -160,8 +181,9 @@ export function FlipBrochure({ pages, categories, hero }: { pages: BrochurePage[
                   transition={{ duration: reduce ? 0.2 : 0.45, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <div className="rule-b mb-6 flex items-end justify-between gap-4 pb-4">
-                    <p className="display text-[2rem] leading-none tabular-nums text-ink" aria-label={t("page", { n: safeIdx + 1, total })}>
-                      <span className="text-red-text">{pad(safeIdx + 1)}</span> <span className="text-ink-muted">/ {pad(total)}</span>
+                    <p className="display text-[2rem] leading-none tabular-nums text-ink">
+                      <span aria-hidden><span className="text-red-text">{pad(safeIdx + 1)}</span> <span className="text-ink-muted">/ {pad(total)}</span></span>
+                      <span className="sr-only">{t("page", { n: safeIdx + 1, total })}</span>
                     </p>
                     {validUntil && <p className="num text-[12px] text-ink-muted">{t("valid", { date: formatDateShort(validUntil, locale) })}</p>}
                   </div>

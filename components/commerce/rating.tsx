@@ -6,7 +6,7 @@ export function Rating({ value, count, className, showCount = true }: { value: n
   const t = useTranslations("common");
   const pct = Math.max(0, Math.min(100, (value / 5) * 100));
   return (
-    <span className={cn("inline-flex items-center gap-1.5", className)} aria-label={t("rating", { rating: value })}>
+    <span className={cn("inline-flex items-center gap-1.5", className)} role="img" aria-label={t("rating", { rating: value })}>
       <span className="relative inline-block h-3.5 w-[74px] leading-none" aria-hidden>
         <span className="absolute inset-0 text-[13px] tracking-[1px] text-line-input">★★★★★</span>
         <span className="absolute inset-0 overflow-hidden text-[13px] tracking-[1px] text-ink" style={{ width: `${pct}%` }}>★★★★★</span>

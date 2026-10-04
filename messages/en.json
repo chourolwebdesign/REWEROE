@@ -2,7 +2,7 @@
   "meta": {
     "siteName": "REWE Rödelheim · Alamyaar",
     "defaultTitle": "REWE Rödelheim — Your market in Frankfurt-Rödelheim",
-    "defaultDescription": "Your REWE in Frankfurt-Rödelheim: in-store bakery, fresh counter, 48 regional producers, delivery and Click & Collect. Run by Ali Alamyaar."
+    "defaultDescription": "Your REWE in Frankfurt-Rödelheim: in-store bakery, fresh counter, regional producers from Hesse, delivery and Click & Collect. Run by Ali Alamyaar."
   },
   "nav": {
     "home": "Home",
@@ -37,7 +37,11 @@
     "regional": "Regional",
     "bio": "Bio",
     "more": "More",
-    "brandWorlds": "Brand worlds"
+    "brandWorlds": "Brand worlds",
+    "favoritesCount": "{n, plural, =1 {1 favourite} other {# favourites}}",
+    "homeAria": "REWE Rödelheim – Home",
+    "merchantLine": "Dein Markt · {legal}",
+    "merchantLegalShort": "Alamyaar oHG"
   },
   "common": {
     "addToCart": "Add to basket",
@@ -148,7 +152,11 @@
       "glutenfrei": "Gluten-free"
     },
     "inCart": "In basket",
-    "progress": "Progress"
+    "progress": "Progress",
+    "breadcrumb": "Breadcrumb",
+    "decrease": "Decrease quantity",
+    "increase": "Increase quantity",
+    "imagePending": "Image to follow"
   },
   "home": {
     "eyebrow": "Freshness",
@@ -196,7 +204,7 @@
       "pfand": "Deposit returns"
     },
     "regionalEyebrow": "From your region · Rödelheim",
-    "heroAlt": "Fruit and vegetable department at REWE Rödelheim",
+    "heroAlt": "Wooden crates of apples, tomatoes, lettuce, kale and carrots in front of a window",
     "heroCaption": "Fruit & vegetables · Rödelheim",
     "addressPending": "Address to follow",
     "pendingShort": "to follow",
@@ -225,7 +233,7 @@
         "text": "EU organic as the baseline, Naturland as the ambition – and always GMO-free.",
         "alt": "Organic shelf at REWE Rödelheim – REWE Bio",
         "seal": "Certified",
-        "sealValue": "EU organic + Naturland",
+        "sealValue": "Naturland",
         "gmo": "Guaranteed",
         "gmoValue": "GMO-free",
         "items": "Organic items",
@@ -288,13 +296,13 @@
     "cookWith": "Cook with this product",
     "favorite": "Add to favourites",
     "unfavorite": "Remove from favourites",
-    "deliveryInfo": "Delivery today from 4 pm or Click & Collect",
+    "deliveryInfo": "Delivery Mon–Sat from 4 pm or Click & Collect",
     "pfandNote": "Deposit {amount} — returned at the machine.",
     "storyEyebrow": "Story",
     "sku": "Item no.",
     "share": "Share",
     "producerDistance": "{km} km from Rödelheim",
-    "availableIn": "Available in Rödelheim today",
+    "availableIn": "Available in Rödelheim",
     "toList": "Add to list",
     "approx": "approx.",
     "galleryLabel": "Product images",
@@ -378,7 +386,8 @@
     "videoEyebrow": "Store walkthrough",
     "distanceAway": "{km} km away",
     "finderEyebrow": "Store finder",
-    "liveHours": "Live status"
+    "liveHours": "Live status",
+    "videoDescription": "Silent clip, 20 seconds: a walk through the store hall, past plant and fruit stands to the produce department."
   },
   "about": {
     "eyebrow": "About us",
@@ -519,7 +528,8 @@
     "galleryEyebrow": "Pictures from the day",
     "videoEyebrow": "Walk-through",
     "heroImageAlt": "Open magazine with seasonal vegetables",
-    "noMatch": "No articles on this topic."
+    "noMatch": "No articles on this topic.",
+    "videoDescription": "Silent clip, 20 seconds: a walk through the store hall, past plant and fruit stands to the produce department."
   },
   "contact": {
     "eyebrow": "Contact",
@@ -547,7 +557,9 @@
     "serviceHours": "Mon–Sat 8 am–8 pm",
     "errorRequired": "Please fill in.",
     "errorEmail": "Please enter a valid email.",
-    "errorMin": "At least 20 characters."
+    "errorMin": "At least 20 characters.",
+    "serviceHoursLabel": "Phone hours",
+    "serviceHoursPending": "Phone hours to follow"
   },
   "legal": {
     "pendingTitle": "We're working on this content.",
@@ -591,7 +603,9 @@
     "demoNote": "Demo mode: sign-in without a server — data stays in your browser.",
     "name": "Name",
     "email": "Email",
-    "bonusLink": "To REWE Bonus"
+    "bonusLink": "To REWE Bonus",
+    "errorCredentials": "Please complete all fields: a valid email address and a password with at least 6 characters.",
+    "bonusSignIn": "Sign in to see your points balance."
   },
   "cart": {
     "eyebrow": "Basket",
@@ -617,7 +631,8 @@
     "modeDelivery": "Home delivery",
     "modePickup": "Click & Collect in store",
     "vat": "incl. VAT",
-    "minOrder": "Minimum order {amount}"
+    "minOrder": "Minimum order {amount}",
+    "minOrderHint": "{amount} to go to reach the {min} minimum order for delivery."
   },
   "checkout": {
     "eyebrow": "Checkout",
@@ -652,14 +667,19 @@
     "errorRequired": "Please fill in.",
     "errorZip": "Please enter a 5-digit postcode.",
     "demoNote": "Demo checkout: no payment is triggered.",
-    "orderId": "Order number"
+    "orderId": "Order number",
+    "minOrderNote": "Minimum order for delivery: {min}. You're {amount} short — or choose Click & Collect in the next step.",
+    "minOrderNoteNoPickup": "Minimum order for delivery: {min}. You're {amount} short.",
+    "errorMinOrder": "Minimum order of {min} not reached — choose Click & Collect or add to your basket.",
+    "errorMinOrderFill": "Minimum order of {min} not reached — please add to your basket."
   },
   "notFound": {
     "eyebrow": "404",
     "title": "This shelf is empty.",
     "text": "That page doesn't exist (anymore). But below are three things selling particularly well right now.",
     "search": "Search",
-    "popular": "Popular right now"
+    "popular": "Popular right now",
+    "label": "Page not found"
   },
   "footer": {
     "brand": "Brand",
@@ -697,7 +717,8 @@
     "onlyNecessary": "Necessary only",
     "settings": "Settings",
     "privacy": "Privacy policy",
-    "eyebrow": "Privacy · Cookies"
+    "eyebrow": "Privacy · Cookies",
+    "textShort": "Necessary cookies always, statistics and marketing only with your consent."
   },
   "freshness": {
     "label": "Freshness clock"
@@ -707,7 +728,11 @@
     "hours": "h",
     "minutes": "m",
     "seconds": "s",
-    "over": "Over"
+    "over": "Over",
+    "srDays": "{n, plural, one {# day} other {# days}}",
+    "srHours": "{n, plural, one {# hour} other {# hours}}",
+    "srMinutes": "{n, plural, one {# minute} other {# minutes}}",
+    "srLeft": "{time} left"
   },
   "search": {
     "title": "Search",
@@ -715,7 +740,16 @@
     "products": "Products",
     "recipes": "Recipes",
     "articles": "Magazine",
-    "empty": "Type a term — we search the range, recipes and magazine."
+    "empty": "Type a term — we search the range, recipes and magazine.",
+    "pages": "Pages",
+    "pageSub": {
+      "offers": "Leaflet, deals and countdown",
+      "regional": "Producers from Hesse within 100 km",
+      "bio": "The REWE Bio range",
+      "store": "Address, directions and services in Rödelheim",
+      "hours": "When our store is open",
+      "contact": "Write to us or call"
+    }
   },
   "regional": {
     "metaTitle": "REWE Regional – From your region",
@@ -809,6 +843,14 @@
     "ctaTitle": "Organic is one part. Sustainability is the whole.",
     "ctaText": "Reusables, less plastic, regional sourcing: how we work in the store – and what you can cook with organic ingredients.",
     "ctaSustainability": "Our sustainability",
-    "ctaRecipes": "Discover recipes"
+    "ctaRecipes": "Discover recipes",
+    "sealsScrollHint": "Scroll sideways to compare"
+  },
+  "error": {
+    "eyebrow": "Error",
+    "title": "Something went wrong.",
+    "text": "This page could not be loaded right now. Try again — or head back to the home page.",
+    "retry": "Try again",
+    "code": "Error code {digest}"
   }
 }

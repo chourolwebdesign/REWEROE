@@ -50,7 +50,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
         <SmartImage src={a.cover.src} alt={tx(a.cover.alt, locale)} blur={getBlur(a.cover.src)} fill priority sizes="100vw" className="img-grade absolute inset-0 -z-10 object-cover" />
         <div className="scrim-editorial absolute inset-0 -z-10" aria-hidden />
         <div className="container-x flex min-h-[60svh] flex-col justify-end pb-14 pt-16">
-          <Breadcrumbs inverse className="mb-6" items={[{ label: tn("home"), href: "/" }, { label: tn("magazine"), href: "/magazin" }, { label: tx(a.title, locale) }]} />
+          {/* The current crumb (the article title) is truncated on phones so the trail stays one line */}
+          <Breadcrumbs inverse className="mb-6 [&_[aria-current]]:max-w-[60vw] [&_[aria-current]]:truncate md:[&_[aria-current]]:max-w-none" items={[{ label: tn("home"), href: "/" }, { label: tn("magazine"), href: "/magazin" }, { label: tx(a.title, locale) }]} />
           <p className="eyebrow text-block-muted">{t(`category.${a.category}`)} · {t("readTime", { n: a.readMinutes })}</p>
           <h1 className="mt-4 max-w-[14ch] text-block-ink">{tx(a.title, locale)}</h1>
           <p className="num mt-8 border-t border-block-line pt-3 text-[13px] text-block-ink/80">{t("by")} {a.author.status === "pending" ? t("authorPending") : a.author.name} · {formatDate(a.publishedAt, locale)}</p>
@@ -73,11 +74,15 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
             {a.video && (
               <figure className="md:col-span-5 lg:col-span-4">
                 <div className="frame mx-auto aspect-[9/16] max-w-[420px] overflow-hidden bg-surface md:mx-0">
-                  <video controls playsInline preload="none" poster={a.video.poster} className="h-full w-full object-cover" aria-label={a.video.caption ? tx(a.video.caption, locale) : t("videoEyebrow")}>
+                  {/* The clip has no soundtrack: `muted` + a one-sentence description linked via aria-describedby */}
+                  <video controls muted playsInline preload="none" poster={a.video.poster} className="h-full w-full object-cover" aria-label={a.video.caption ? tx(a.video.caption, locale) : t("videoEyebrow")} aria-describedby={`article-video-desc-${a.slug}`}>
                     <source src={a.video.src} type="video/mp4" />
                   </video>
                 </div>
-                <figcaption className="data mt-2 max-w-[420px] text-ink-muted md:mx-0">{t("videoEyebrow")}{a.video.caption ? ` · ${tx(a.video.caption, locale)}` : ""}</figcaption>
+                <figcaption className="mx-auto mt-2 max-w-[420px] md:mx-0">
+                  <span className="data block text-ink-muted">{t("videoEyebrow")}{a.video.caption ? ` · ${tx(a.video.caption, locale)}` : ""}</span>
+                  <span id={`article-video-desc-${a.slug}`} className="mt-1 block text-[12px] leading-relaxed text-ink-muted">{t("videoDescription")}</span>
+                </figcaption>
               </figure>
             )}
             {gallery.length > 0 && (

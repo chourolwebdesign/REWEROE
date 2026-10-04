@@ -50,15 +50,16 @@ export function BuyBox({ p }: { p: CardProduct }) {
   return (
     <>
       <div ref={ref} className="flex flex-col gap-4">
-        <div className="flex items-center gap-3">
+        {/* < sm: stepper + favourite share the first row, the red CTA takes a full row beneath — „In den Warenkorb" never wraps. */}
+        <div className="flex flex-wrap items-center gap-3">
           <QuantityStepper value={qty} onChange={setQty} min={1} input label={tc("qty")} />
-          <AddToCart item={item} qty={qty} variant="primary" className="flex-1" />
+          <AddToCart item={item} qty={qty} variant="primary" className="order-last basis-full sm:order-none sm:flex-1 sm:basis-0" />
           <button
             type="button"
             onClick={() => toggle(p.slug)}
             aria-pressed={fav}
             aria-label={fav ? t("unfavorite") : t("favorite")}
-            className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-[2px] border border-line-strong text-ink transition-colors duration-[var(--dur-ui)] ease-[var(--ease-ui)] hover:bg-surface-2"
+            className="ml-auto inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-[2px] border border-line-strong text-ink transition-colors duration-[var(--dur-ui)] ease-[var(--ease-ui)] hover:bg-surface-2 sm:ml-0"
           >
             <m.span animate={fav && !reduce ? { scale: [1, 1.25, 1] } : { scale: 1 }} transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1], times: [0, 0.5, 1] }} className="inline-flex">
               <Heart className={cn("h-5 w-5", fav && "fill-red-text text-red-text")} aria-hidden />

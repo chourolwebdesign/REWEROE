@@ -1,12 +1,15 @@
 /**
  * Hero-only word stagger (50 ms/word) — pure CSS (`.word-mask` > `.word-in` in globals.css), so the headline
  * paints before JavaScript arrives (LCP-safe) and prefers-reduced-motion disables it. Each word rises out of its
- * own overflow mask (translateY 110 % → 0, 650 ms); no blur, no opacity. Screen readers get the plain text.
+ * own overflow mask (translateY 110 % → 0, 650 ms); no blur, no opacity.
+ * Accessibility: the animated word masks are `aria-hidden`; assistive tech reads the plain headline from the
+ * `sr-only` span (no non-standard `role="text"`).
  */
 export function WordReveal({ text, className, delay = 0.1 }: { text: string; className?: string; delay?: number }) {
   const words = text.split(" ");
   return (
-    <span className={className} aria-label={text} role="text">
+    <span className={className}>
+      <span className="sr-only">{text}</span>
       {words.map((w, i) => (
         <span key={i} className="word-mask" aria-hidden>
           <span className="word-in" style={{ animationDelay: `${delay + i * 0.05}s` }}>{w}</span>

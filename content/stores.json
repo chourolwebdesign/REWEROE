@@ -16,7 +16,10 @@
       50.1256,
       8.6085
     ],
-    "coordsNote": "Ungefähre Position Stadtteilzentrum Rödelheim — exakte Adresse folgt.",
+    "coordsNote": {
+      "de": "Ungefähre Position Stadtteilzentrum Rödelheim — exakte Adresse folgt.",
+      "en": "Approximate position in the centre of Rödelheim — exact address to follow."
+    },
     "phone": "",
     "email": "",
     "hours": {
@@ -59,34 +62,34 @@
     ],
     "images": [
       {
-        "src": "/images/placeholders/filiale-roedelheim-aussen.jpg",
-        "alt": {
-          "de": "Außenansicht REWE Rödelheim",
-          "en": "Exterior of REWE Rödelheim"
-        },
-        "ratio": "16:9"
-      },
-      {
-        "src": "/images/placeholders/filiale-roedelheim-innen.jpg",
-        "alt": {
-          "de": "Obst- und Gemüseabteilung",
-          "en": "Produce department"
-        },
-        "ratio": "16:9"
-      },
-      {
-        "src": "/images/placeholders/filiale-roedelheim-baeckerei.jpg",
-        "alt": {
-          "de": "Bäckereitheke",
-          "en": "Bakery counter"
-        },
-        "ratio": "16:9"
-      },
-      {
         "src": "/images/store/resilienzwoche-2026-frische.jpg",
         "alt": {
-          "de": "Rundgang durch die Frischeabteilung (Resilienzwoche 2026)",
-          "en": "Walk through the fresh department (Resilience Week 2026)"
+          "de": "Unsere Frischeabteilung mit den „Aus deiner Region“-Ständen (Resilienzwoche 2026)",
+          "en": "Our fresh department with the “Aus deiner Region” stands (Resilience Week 2026)"
+        },
+        "ratio": "3:2"
+      },
+      {
+        "src": "/images/store/resilienzwoche-2026-stand.jpg",
+        "alt": {
+          "de": "Vorsorge-Stand der Resilienzwoche 2026 in der Obst- und Gemüseabteilung",
+          "en": "Resilience Week 2026 preparedness stand in the produce department"
+        },
+        "ratio": "3:2"
+      },
+      {
+        "src": "/images/store/resilienzwoche-2026-rundgang.jpg",
+        "alt": {
+          "de": "Rundgang durch den Markt: Gäste des Landes Hessen packen den Vorsorge-Einkaufswagen",
+          "en": "Store walk-through: guests from the State of Hesse fill the preparedness trolley"
+        },
+        "ratio": "3:2"
+      },
+      {
+        "src": "/images/store/resilienzwoche-2026-gruppenbild.jpg",
+        "alt": {
+          "de": "Gruppenbild am Vorsorge-Stand mit Feuerwehr Frankfurt, BBK und Land Hessen",
+          "en": "Group photo at the preparedness stand with Frankfurt fire brigade, BBK and the State of Hesse"
         },
         "ratio": "3:2"
       }

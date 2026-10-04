@@ -1,5 +1,5 @@
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import settings from "@/content/settings.json";
 import { cn } from "@/lib/utils";
 
 /** REWE wordmark path (simple-icons geometry, bbox 24 × 6.41 at y 8.797–15.205). Used by the lockup and app/icon.svg. */
@@ -49,7 +49,11 @@ interface Props {
   logoSrc?: string | null;
   /** District line, e.g. settings.brand.district — "Frankfurt-" is stripped. Omit to hide the merchant lockup. */
   merchant?: string;
-  /** Second line's legal part; defaults to a shortened settings.brand.merchantLegal ("Alamyaar oHG"). */
+  /**
+   * Merchant's legal name (settings.brand.merchantLegal), passed down by the layout — never imported here, so
+   * settings.json stays out of the client chunk. Shortened to „Alamyaar oHG"; without it the line falls back to
+   * the `nav.merchantLegalShort` message.
+   */
   legal?: string;
   size?: LogoSize;
 }
@@ -60,11 +64,13 @@ interface Props {
  */
 export function Logo({ className, inverse, logoSrc, merchant, legal, size = "header" }: Props) {
   void inverse;
+  const t = useTranslations("nav");
   const h = logoHeight(size);
   const district = merchant?.replace(/^Frankfurt-/, "");
-  const legalShort = legal ?? shortMerchantLegal(settings.brand.merchantLegal);
+  const legalShort = legal ? shortMerchantLegal(legal) : t("merchantLegalShort");
   return (
-    <Link href="/" className={cn("group inline-flex items-center gap-3", className)} aria-label="REWE Rödelheim – Startseite">
+    // min-h-11: the 32 px header block alone is below the 44 px target (§0 rule 8).
+    <Link href="/" className={cn("group inline-flex min-h-11 items-center gap-3", className)} aria-label={t("homeAria")}>
       {logoSrc ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={logoSrc} alt="REWE" style={{ height: h }} className="block w-auto" />
@@ -76,7 +82,7 @@ export function Logo({ className, inverse, logoSrc, merchant, legal, size = "hea
           <span aria-hidden className="h-6 w-px bg-line" />
           <span className="flex flex-col justify-center leading-none">
             <span className="text-[13px] font-semibold text-ink">{district}</span>
-            <span className="mt-1 text-[11px] font-medium text-ink-muted">Dein Markt · {legalShort}</span>
+            <span className="mt-1 text-[11px] font-medium text-ink-muted">{t("merchantLine", { legal: legalShort })}</span>
           </span>
         </span>
       )}

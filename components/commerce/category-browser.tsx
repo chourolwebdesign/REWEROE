@@ -1,5 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { SlidersHorizontal, X } from "lucide-react";
 import { Link } from "@/i18n/navigation";
@@ -8,7 +9,7 @@ import { Cta } from "@/components/brand/cta";
 import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { formatPrice } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { CardProduct } from "@/lib/view-models";
@@ -24,19 +25,28 @@ const CHIP = "inline-flex h-11 items-center rounded-[2px] border px-3 text-[13px
 const CHIP_ON = "border-ink bg-ink text-paper";
 const CHIP_OFF = "border-line text-ink hover:bg-surface-2";
 
+/**
+ * Reads `useSearchParams` (`?herkunft=regional|bio` from the Regional/Bio world CTAs preselects the origin filter), so the
+ * page wraps it in `<Suspense>`; a user toggle overrides the URL seed until the filters are cleared.
+ */
 export function CategoryBrowser({ products, categories, current }: { products: CardProduct[]; categories: Cat[]; current: string }) {
   const t = useTranslations("category");
   const tc = useTranslations("common");
+  const tn = useTranslations("nav");
   const locale = useLocale();
+  const params = useSearchParams();
+  const herkunft = params.getAll("herkunft").flatMap((v) => v.split(","));
   const maxPrice = Math.ceil(Math.max(...products.map((p) => p.price), 1));
   const [price, setPrice] = useState(maxPrice);
   const [diet, setDiet] = useState<string[]>([]);
-  const [regional, setRegional] = useState(false);
-  const [bio, setBio] = useState(false);
+  const [regionalPick, setRegionalPick] = useState<boolean | null>(null);
+  const [bioPick, setBioPick] = useState<boolean | null>(null);
   const [minRating, setMinRating] = useState(0);
   const [sort, setSort] = useState<Sort>("popular");
   const [page, setPage] = useState(1);
   const [sheet, setSheet] = useState(false);
+  const regional = regionalPick ?? herkunft.includes("regional");
+  const bio = bioPick ?? herkunft.includes("bio");
 
   const filtered = useMemo(() => {
     let list = products.filter((p) => p.price <= price && p.rating >= minRating);
@@ -57,11 +67,17 @@ export function CategoryBrowser({ products, categories, current }: { products: C
   const chips: { label: string; clear: () => void }[] = [
     ...(price < maxPrice ? [{ label: t("upTo", { price: formatPrice(price, locale) }), clear: () => setPrice(maxPrice) }] : []),
     ...diet.map((d) => ({ label: tc(`badges.${d}`), clear: () => setDiet(diet.filter((x) => x !== d)) })),
-    ...(regional ? [{ label: t("regionalOnly"), clear: () => setRegional(false) }] : []),
-    ...(bio ? [{ label: t("bioOnly"), clear: () => setBio(false) }] : []),
+    ...(regional ? [{ label: t("regionalOnly"), clear: () => setRegionalPick(false) }] : []),
+    ...(bio ? [{ label: t("bioOnly"), clear: () => setBioPick(false) }] : []),
     ...(minRating ? [{ label: t("ratingMin", { n: minRating }), clear: () => setMinRating(0) }] : []),
   ];
-  const resetAll = () => { setPrice(maxPrice); setDiet([]); setRegional(false); setBio(false); setMinRating(0); setPage(1); };
+  const resetAll = () => { setPrice(maxPrice); setDiet([]); setRegionalPick(false); setBioPick(false); setMinRating(0); setPage(1); };
+  /** Pager: jump to the top — smooth only when the OS allows motion. */
+  const goTo = (n: number) => {
+    setPage(n);
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+  };
 
   const sideLink = (active: boolean) =>
     cn("flex min-h-11 items-center justify-between gap-3 px-2 text-sm transition-colors duration-[var(--dur-ui)] ease-[var(--ease-ui)]", active ? "bg-ink text-paper hover:bg-ink" : "text-ink hover:bg-surface-2");
@@ -105,11 +121,11 @@ export function CategoryBrowser({ products, categories, current }: { products: C
         <p className="eyebrow mb-2">{t("origin")}</p>
         <ul>
           <li className="flex min-h-11 items-center gap-3">
-            <Checkbox id="f-regional" className="rounded-[2px]" checked={regional} onCheckedChange={(v) => { setRegional(Boolean(v)); setPage(1); }} />
+            <Checkbox id="f-regional" className="rounded-[2px]" checked={regional} onCheckedChange={(v) => { setRegionalPick(Boolean(v)); setPage(1); }} />
             <label htmlFor="f-regional" className="flex-1 text-sm text-ink">{t("regionalOnly")}</label>
           </li>
           <li className="flex min-h-11 items-center gap-3">
-            <Checkbox id="f-bio" className="rounded-[2px]" checked={bio} onCheckedChange={(v) => { setBio(Boolean(v)); setPage(1); }} />
+            <Checkbox id="f-bio" className="rounded-[2px]" checked={bio} onCheckedChange={(v) => { setBioPick(Boolean(v)); setPage(1); }} />
             <label htmlFor="f-bio" className="flex-1 text-sm text-ink">{t("bioOnly")}</label>
           </li>
         </ul>
@@ -147,7 +163,8 @@ export function CategoryBrowser({ products, categories, current }: { products: C
           <div className="ml-auto flex items-center gap-2">
             <Cta variant="secondary" size="sm" arrow={false} type="button" onClick={() => setSheet(true)} className="lg:hidden"><SlidersHorizontal className="h-4 w-4" aria-hidden /> {t("filters")}</Cta>
             <Select value={sort} onValueChange={(v) => setSort(v as Sort)}>
-              <SelectTrigger className="h-11 w-[200px] rounded-[2px] border-line-input text-sm text-ink" aria-label={t("sort")}><SelectValue /></SelectTrigger>
+              {/* shadcn sizes the trigger via `data-size`; the variant class is what actually wins over its h-8 */}
+              <SelectTrigger className="h-11 w-[200px] rounded-[2px] border-line-input text-sm text-ink data-[size=default]:h-11" aria-label={t("sort")}><SelectValue /></SelectTrigger>
               <SelectContent className="rounded-[2px] border border-line-strong shadow-pop ring-0">
                 <SelectItem value="popular">{t("sortPopular")}</SelectItem>
                 <SelectItem value="priceAsc">{t("sortPriceAsc")}</SelectItem>
@@ -172,7 +189,7 @@ export function CategoryBrowser({ products, categories, current }: { products: C
               <button
                 key={n}
                 type="button"
-                onClick={() => { setPage(n); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                onClick={() => goTo(n)}
                 aria-current={page === n ? "page" : undefined}
                 aria-label={t("page", { n })}
                 className={cn("num inline-flex h-11 w-11 items-center justify-center rounded-[2px] border text-sm transition-colors duration-[var(--dur-ui)] ease-[var(--ease-ui)]", page === n ? CHIP_ON : CHIP_OFF)}
@@ -185,8 +202,15 @@ export function CategoryBrowser({ products, categories, current }: { products: C
       </div>
 
       <Sheet open={sheet} onOpenChange={setSheet}>
-        <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto rounded-t-none border-t border-line-strong bg-paper p-6 text-ink shadow-pop">
-          <SheetTitle className="display mb-6 text-2xl text-ink">{t("filters")}</SheetTitle>
+        <SheetContent side="bottom" showCloseButton={false} className="max-h-[85vh] overflow-y-auto rounded-t-none border-t border-line-strong bg-paper p-6 text-ink shadow-pop">
+          <div className="mb-6 flex items-center justify-between gap-4">
+            <SheetTitle className="display text-2xl text-ink">{t("filters")}</SheetTitle>
+            <SheetClose asChild>
+              <button type="button" className="-mr-3 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-[2px] text-ink transition-colors duration-[var(--dur-ui)] ease-[var(--ease-ui)] hover:bg-surface-2" aria-label={tn("close")}>
+                <X className="h-5 w-5" aria-hidden />
+              </button>
+            </SheetClose>
+          </div>
           {filters}
           <Cta variant="primary" arrow={false} type="button" onClick={() => setSheet(false)} className="mt-8 w-full">{tc("apply")}</Cta>
         </SheetContent>

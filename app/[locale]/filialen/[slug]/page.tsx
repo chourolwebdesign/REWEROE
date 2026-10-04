@@ -109,7 +109,7 @@ export default async function StorePage({ params }: { params: Promise<{ locale: 
             <a href={route} target="_blank" rel="noopener noreferrer" className={btnSecondary}><Navigation className="h-4 w-4" aria-hidden />{t("route")}</a>
             <a href={geo} className={cn(btnSecondary, "md:hidden")}>{t("routeApp")}</a>
           </div>
-          {s.coordsNote && <p className="mt-3 text-[12px] text-ink-muted">{s.coordsNote}</p>}
+          {s.coordsNote && <p className="mt-3 text-[12px] text-ink-muted">{tx(s.coordsNote, locale)}</p>}
           <div className="rule mt-5 pt-5"><MyStoreButton slug={s.slug} /></div>
         </Reveal>
 
@@ -121,7 +121,7 @@ export default async function StorePage({ params }: { params: Promise<{ locale: 
         <Reveal delay={0.1} className="col-span-4">
           <Eyebrow>{t("services")}</Eyebrow>
           <ul className="mt-4 flex flex-wrap gap-1.5">
-            {s.services.map((sv) => <li key={sv} className="data rounded-[2px] border border-line px-2 py-1.5 text-ink-muted">{tc(`services.${sv}`)}</li>)}
+            {s.services.map((sv) => <li key={sv} className="rounded-[2px] border border-line px-2 py-1.5 text-[12px] font-medium text-ink-muted">{tc(`services.${sv}`)}</li>)}
           </ul>
           <dl className="mt-6 text-sm">
             {[{ label: t("pickupService"), on: pickup }, { label: t("deliveryService"), on: delivery }].map((row) => (
@@ -160,11 +160,15 @@ export default async function StorePage({ params }: { params: Promise<{ locale: 
             <StaggerItem className="md:col-span-4 md:row-span-2">
               <figure className="mx-auto max-w-[420px] md:mx-0">
                 <div className="frame relative aspect-[9/16] overflow-hidden bg-surface">
-                  <video controls playsInline preload="none" poster={s.video.poster} className="img-grade h-full w-full object-cover" aria-label={tx(s.video.caption, locale) || t("videoEyebrow")}>
+                  {/* The clip has no soundtrack: `muted` + a one-sentence description linked via aria-describedby */}
+                  <video controls muted playsInline preload="none" poster={s.video.poster} className="img-grade h-full w-full object-cover" aria-label={tx(s.video.caption, locale) || t("videoEyebrow")} aria-describedby={`store-video-desc-${s.slug}`}>
                     <source src={s.video.src} type="video/mp4" />
                   </video>
                 </div>
-                <figcaption className="data mt-2 text-ink-muted">{t("videoEyebrow")}{s.video.caption ? ` · ${tx(s.video.caption, locale)}` : ""}</figcaption>
+                <figcaption className="mt-2">
+                  <span className="data block text-ink-muted">{t("videoEyebrow")}{s.video.caption ? ` · ${tx(s.video.caption, locale)}` : ""}</span>
+                  <span id={`store-video-desc-${s.slug}`} className="mt-1 block text-[12px] leading-relaxed text-ink-muted">{t("videoDescription")}</span>
+                </figcaption>
               </figure>
             </StaggerItem>
           )}

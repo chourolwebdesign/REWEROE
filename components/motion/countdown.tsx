@@ -25,6 +25,8 @@ const pad = (n: number) => String(n).padStart(2, "0");
 /**
  * Countdown as data (§4.15): Geist Mono, tabular, red signal text, 1 s tick, `aria-live="off"`.
  * `compact` → one `data-lg` string ("2T 04:12:08"); full → `data-lg` 20 px numerals with `eyebrow` labels.
+ * The visible digits are `aria-hidden` (they would be read letter by letter); screen readers get a spoken
+ * form without seconds — „Noch 5 Tage 7 Stunden 43 Minuten" — that changes at most once a minute.
  */
 export function Countdown({ until, className, compact }: { until: string; className?: string; compact?: boolean }) {
   const t = useTranslations("countdown");
@@ -35,9 +37,16 @@ export function Countdown({ until, className, compact }: { until: string; classN
   if (left === undefined) return <span className={cn("data-lg text-red-text", className)} aria-hidden>··:··:··</span>;
   if (left === null) return <span className={cn("eyebrow", className)}>{t("over")}</span>;
 
+  const spoken = t("srLeft", { time: [left.d > 0 ? t("srDays", { n: left.d }) : null, t("srHours", { n: left.h }), t("srMinutes", { n: left.m })].filter(Boolean).join(" ") });
+
   if (compact) {
     const text = [left.d > 0 ? `${left.d}${t("days")}` : null, `${pad(left.h)}:${pad(left.m)}:${pad(left.s)}`].filter(Boolean).join(" ");
-    return <span className={cn("data-lg inline-flex items-baseline tabular-nums text-red-text", className)} aria-live="off">{text}</span>;
+    return (
+      <span className={cn("data-lg inline-flex items-baseline tabular-nums text-red-text", className)} aria-live="off">
+        <span aria-hidden>{text}</span>
+        <span className="sr-only">{spoken}</span>
+      </span>
+    );
   }
 
   const parts: [string | number, string][] = [
@@ -49,11 +58,12 @@ export function Countdown({ until, className, compact }: { until: string; classN
   return (
     <span className={cn("inline-flex items-baseline gap-3 tabular-nums", className)} aria-live="off">
       {parts.map(([v, l], i) => (
-        <span key={i} className="inline-flex items-baseline gap-1">
+        <span key={i} className="inline-flex items-baseline gap-1" aria-hidden>
           <span className="data-lg text-[20px] text-red-text">{v}</span>
           <span className="eyebrow">{l}</span>
         </span>
       ))}
+      <span className="sr-only">{spoken}</span>
     </span>
   );
 }

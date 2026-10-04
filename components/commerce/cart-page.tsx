@@ -14,6 +14,8 @@ import { boxInput, choiceCard, choiceCardOn, FieldError } from "./form-primitive
 
 export interface DeliveryCfg { deliveryFee: number; freeFrom: number; minOrder: number; pickup: boolean }
 const COUPONS: Record<string, number> = { WILLKOMMEN10: 0.1, FRISCHE5: 0.05 };
+/** „750 g", „1 kg", „1 l" already state the quantity — appending the weight would read „750 g · 750 g". */
+const unitIsMeasure = (unitLabel: string) => /\s(g|kg|ml|l)$/i.test(unitLabel.trim());
 
 export function useCheckoutTotals(cfg: DeliveryCfg) {
   const lines = useCart((s) => s.lines);
@@ -41,6 +43,8 @@ export function CartPage({ cfg }: { cfg: DeliveryCfg }) {
   const discount = coupon ? subtotal * coupon.pct : 0;
   const shipping = mode === "pickup" ? 0 : subtotal >= cfg.freeFrom ? 0 : cfg.deliveryFee;
   const total = subtotal - discount + pfand + shipping;
+  // Minimum order applies to delivery only — Click & Collect stays open below it.
+  const belowMin = mode === "delivery" && subtotal < cfg.minOrder;
   const applyCoupon = () => {
     const key = code.trim().toUpperCase();
     const pct = COUPONS[key];
@@ -70,7 +74,7 @@ export function CartPage({ cfg }: { cfg: DeliveryCfg }) {
                   <div className="min-w-0">
                     <Link href={`/produkt/${l.slug}`} className="text-[15px] font-medium text-ink underline-offset-4 hover:underline">{l.name}</Link>
                     <p className="num mt-0.5 text-[12px] text-ink-muted">
-                      {l.unitLabel} · {formatWeight(l.weightGrams, locale)}{l.pfand ? ` · ${tc("pfand")} ${formatPrice(l.pfand, locale)}` : ""}
+                      {l.unitLabel}{unitIsMeasure(l.unitLabel) ? "" : ` · ${formatWeight(l.weightGrams, locale)}`}{l.pfand ? ` · ${tc("pfand")} ${formatPrice(l.pfand, locale)}` : ""}
                     </p>
                   </div>
                   <button type="button" onClick={() => remove(l.slug)} aria-label={`${tc("remove")}: ${l.name}`} className="-mr-2 -mt-2 inline-flex h-11 w-11 shrink-0 items-center justify-center text-ink-muted transition-colors duration-[var(--dur-ui)] hover:text-error">
@@ -117,13 +121,21 @@ export function CartPage({ cfg }: { cfg: DeliveryCfg }) {
           )}
 
           <div className="mt-5 flex gap-2">
-            <input value={code} onChange={(e) => setCode(e.target.value)} placeholder={t("coupon")} aria-label={t("coupon")} aria-invalid={!!couponErr} autoCapitalize="characters" className={cn(boxInput, "num w-full min-w-0 flex-1 border")} />
+            <input value={code} onChange={(e) => setCode(e.target.value)} placeholder={t("coupon")} aria-label={t("coupon")} aria-invalid={!!couponErr} aria-describedby={couponErr ? "coupon-error" : undefined} autoCapitalize="characters" className={cn(boxInput, "num w-full min-w-0 flex-1 border")} />
             <button type="button" onClick={applyCoupon} className="h-12 shrink-0 rounded-[2px] border border-line-strong px-4 text-[13px] font-semibold text-ink transition-colors duration-[var(--dur-ui)] hover:bg-ink hover:text-paper">{t("couponApply")}</button>
           </div>
-          <FieldError msg={couponErr} />
+          <FieldError id="coupon-error" msg={couponErr} />
 
-          <Cta href="/checkout" className="mt-3 w-full">{t("checkout")}</Cta>
-          {subtotal < cfg.minOrder && <p className="price-meta mt-3 text-center">{t("minOrder", { amount: formatPrice(cfg.minOrder, locale) })}</p>}
+          {belowMin ? (
+            <Cta type="button" disabled aria-describedby="cart-min-order" className="mt-3 w-full">{t("checkout")}</Cta>
+          ) : (
+            <Cta href="/checkout" className="mt-3 w-full">{t("checkout")}</Cta>
+          )}
+          {belowMin && (
+            <p id="cart-min-order" className="mt-3 text-center text-[12px] font-medium leading-relaxed text-ink">
+              {t("minOrderHint", { min: formatPrice(cfg.minOrder, locale), amount: formatPrice(cfg.minOrder - subtotal, locale) })}
+            </p>
+          )}
         </div>
       </aside>
     </div>

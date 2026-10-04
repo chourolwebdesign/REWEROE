@@ -5,11 +5,11 @@
     { "year": "1950er", "title": { "de": "Selbstbedienung", "en": "Self-service" }, "text": { "de": "Die ersten Selbstbedienungsläden: Der Einkauf wird zum Erlebnis — und zur Entscheidung des Kunden.", "en": "The first self-service shops: shopping becomes an experience — and the customer's decision." } },
     { "year": "1980er", "title": { "de": "Selbstständige Kaufleute", "en": "Independent merchants" }, "text": { "de": "Das Partnerschaftsmodell: Kaufleute führen ihre Märkte eigenverantwortlich — mit REWE im Rücken.", "en": "The partnership model: merchants run their stores on their own responsibility — backed by REWE." } },
     { "year": "2008", "title": { "de": "Regional & Bio", "en": "Regional & organic" }, "text": { "de": "Regionalität wird zum Prinzip, Bio zum festen Teil jedes Sortiments.", "en": "Regionality becomes a principle, organic a fixed part of every range." } },
-    { "year": "Heute", "title": { "de": "REWE Rödelheim", "en": "REWE Rödelheim" }, "text": { "de": "Ali Alamyaar übernimmt den Markt in Rödelheim — mit eigener Bäckerei, Frischetheke und 48 regionalen Erzeugern. (Eröffnungsjahr folgt.)", "en": "Ali Alamyaar takes over the store in Rödelheim — with its own bakery, fresh counter and 48 regional producers. (Opening year to follow.)" }, "status": "pending" }
+    { "year": "Heute", "title": { "de": "REWE Rödelheim", "en": "REWE Rödelheim" }, "text": { "de": "Ali Alamyaar übernimmt den Markt in Rödelheim — mit eigener Bäckerei, Frischetheke und Erzeugern aus der Region. (Eröffnungsjahr folgt.)", "en": "Ali Alamyaar takes over the store in Rödelheim — with its own bakery, fresh counter and producers from the region. (Opening year to follow.)" }, "status": "pending" }
   ],
   "values": [
     { "id": "frische", "title": { "de": "Frische", "en": "Freshness" }, "text": { "de": "Zweimal täglich Lieferung. Bäckerei ab 4 Uhr. Was nicht frisch ist, verkaufen wir nicht.", "en": "Deliveries twice a day. Bakery from 4 am. What isn't fresh, we don't sell." } },
-    { "id": "region", "title": { "de": "Regionalität", "en": "Regionality" }, "text": { "de": "100 Kilometer, 48 Höfe, jede Herkunft auf der Produktseite.", "en": "100 kilometres, 48 farms, every origin on the product page." } },
+    { "id": "region", "title": { "de": "Regionalität", "en": "Regionality" }, "text": { "de": "100 Kilometer, Höfe mit Namen, jede Herkunft auf der Produktseite.", "en": "100 kilometres, farms with a name, every origin on the product page." } },
     { "id": "fairness", "title": { "de": "Fairness", "en": "Fairness" }, "text": { "de": "Faire Preise für Erzeuger, faire Arbeitszeiten für unser Team, faire Preise für dich.", "en": "Fair prices for producers, fair hours for our team, fair prices for you." } }
   ],
   "team": [

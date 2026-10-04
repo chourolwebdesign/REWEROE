@@ -35,11 +35,11 @@ export default async function RegionalPage({ params }: { params: Promise<{ local
   setRequestLocale(locale);
   const t = await getTranslations("regional");
   const tn = await getTranslations("nav");
-  const tc = await getTranslations("common");
   const r = getRegionalPage();
   const settings = getSettings();
   const store = getPrimaryStore();
   const producers = getRegionalProducers();
+  /** Farms outside the store (map copy says „plus Bäckerei und Metzgerei im Markt“); the headline count is the canonical `getRegionalProducers().length`. */
   const farms = producers.filter((p) => p.distanceKm > 0);
   const products = getRegionalProducts();
   const cards = products.slice(0, 8).map((p) => toCardProduct(p, locale));
@@ -56,7 +56,7 @@ export default async function RegionalPage({ params }: { params: Promise<{ local
   ];
 
   const proof = [
-    { label: t("proofProducers"), value: formatNumber(farms.length, locale) },
+    { label: t("proofProducers"), value: formatNumber(producers.length, locale) },
     { label: t("proofRadius"), value: t("proofRadiusValue", { km: REGIONAL_RADIUS_KM }) },
     { label: t("proofLabel"), value: t("proofLabelValue") },
     { label: t("proofRegion"), value: t("proofRegionValue") },
@@ -82,7 +82,7 @@ export default async function RegionalPage({ params }: { params: Promise<{ local
       >
         <dl className="grid grid-cols-2 gap-px border-b border-line bg-line md:grid-cols-4">
           {proof.map((cell) => (
-            <div key={cell.label} className="bg-paper px-4 py-4 first:pl-0">
+            <div key={cell.label} className="bg-paper px-4 py-4 odd:pl-0 md:odd:pl-4 md:first:pl-0">
               <dt className="eyebrow">{cell.label}</dt>
               <dd className="num mt-1 text-[20px] font-bold leading-none text-ink">{cell.value}</dd>
             </div>
@@ -136,13 +136,13 @@ export default async function RegionalPage({ params }: { params: Promise<{ local
       {/* Regionale Produkte — surface band, yellow square eyebrow, the page's one primary CTA */}
       <section className="bg-surface py-20 md:py-28">
         <div className="container-x">
-          <SectionHeading regional eyebrow={t("productsEyebrow")} title={t("productsTitle")} text={t("productsText", { n: products.length })} aside={<Cta href="/kategorien/alle" variant="secondary" size="sm">{tc("showAll")}</Cta>} />
+          <SectionHeading regional eyebrow={t("productsEyebrow")} title={t("productsTitle")} text={t("productsText", { n: products.length })} />
           <Stagger className="mt-12 grid grid-cols-2 gap-6 md:grid-cols-4">
             {cards.map((p) => <StaggerItem key={p.slug}><ProductCard p={p} /></StaggerItem>)}
           </Stagger>
           <div className="rule mt-12 flex flex-wrap items-center justify-between gap-4 pt-8">
             <p className="num text-[15px] text-ink-muted">{t("productsCount", { n: products.length })}</p>
-            <Cta href="/kategorien/alle">{t("productsAll")}</Cta>
+            <Cta href="/kategorien/alle?herkunft=regional">{t("productsAll")}</Cta>
           </div>
         </div>
       </section>
@@ -196,20 +196,18 @@ export default async function RegionalPage({ params }: { params: Promise<{ local
         </Reveal>
       </section>
 
-      {/* CTA block — anthracite, live store chip, inverse + secondary (the primary red lives in the products band) */}
-      <section className="on-block py-20 md:py-28">
+      {/* CTA block — anthracite, live store chip, inverse + secondary (the primary red lives in the products band). `-mb-32` cancels the footer's mt-32 so block meets footer. */}
+      <section className="on-block -mb-32 py-20 md:py-28">
         <div className="container-x grid grid-cols-4 items-end gap-x-6 gap-y-10 md:grid-cols-12">
           <div className="col-span-4 md:col-span-7">
             <Eyebrow>{t("ctaEyebrow")}</Eyebrow>
             <h2 className="mt-4 text-ink">{t("ctaTitle")}</h2>
             <p className="mt-4 max-w-[48ch] text-ink-muted">{t("ctaText")}</p>
           </div>
-          <div className="col-span-4 flex flex-col gap-5 md:col-span-4 md:col-start-9 md:items-end">
+          <div className="col-span-4 flex flex-wrap items-center gap-3 md:col-span-4 md:col-start-9 md:justify-end">
             <StoreChip hours={store.hours} hoursStatus={store.hoursStatus} size="sm" storeSlug={store.slug} />
-            <div className="flex flex-wrap gap-3 md:justify-end">
-              <Cta variant="inverse" href="/filialen">{t("ctaStore")}</Cta>
-              <Cta variant="secondary" href="/angebote">{t("ctaOffers")}</Cta>
-            </div>
+            <Cta variant="inverse" href="/filialen">{t("ctaStore")}</Cta>
+            <Cta variant="secondary" href="/angebote">{t("ctaOffers")}</Cta>
           </div>
         </div>
       </section>

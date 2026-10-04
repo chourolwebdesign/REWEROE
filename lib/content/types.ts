@@ -64,7 +64,8 @@ export type Weekday = "mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun";
 export interface Store {
   slug: string; name: string; merchant: string; owner: string; storeNumber: string;
   address: { status: Status; street: string; zip: string; city: string; district: string };
-  coords: [number, number]; coordsNote?: string; phone: string; email: string;
+  /** `coordsNote`: shown under the route buttons while the exact address is pending — localized (render with tx()). */
+  coords: [number, number]; coordsNote?: L10n; phone: string; email: string;
   hours: Record<Weekday, [string, string] | null>; hoursStatus: Status;
   services: string[]; images: Img[]; video?: ContentVideo; intro: L10n; status: Status;
 }

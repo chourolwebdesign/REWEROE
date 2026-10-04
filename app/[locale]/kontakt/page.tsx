@@ -10,7 +10,22 @@ import { Reveal } from "@/components/motion/reveal";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { tx } from "@/lib/l10n";
-import { getFaq, getSettings } from "@/lib/content";
+import { getFaq, getPrimaryStore, getSettings } from "@/lib/content";
+import type { Hours } from "@/lib/hours";
+import type { Weekday } from "@/lib/content/types";
+
+const DAY_ORDER: Weekday[] = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+/** Consecutive days with identical hours → [from, to, hours] (same grouping as the footer; its helper lives in a client module). */
+function groupHours(hours: Hours) {
+  const groups: { from: Weekday; to: Weekday; hours: [string, string] | null }[] = [];
+  for (const d of DAY_ORDER) {
+    const h = hours[d];
+    const last = groups[groups.length - 1];
+    if (last && JSON.stringify(last.hours) === JSON.stringify(h)) last.to = d;
+    else groups.push({ from: d, to: d, hours: h });
+  }
+  return groups;
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -22,8 +37,14 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("contact");
+  const tc = await getTranslations("common");
   const faq = getFaq();
   const s = getSettings();
+  const store = getPrimaryStore();
+  // Phone hours follow the store's hours and inherit its pending state — nothing unreleased is published here.
+  const phoneHours = s.contact.status === "pending" || store.hoursStatus === "pending"
+    ? null
+    : groupHours(store.hours).filter((g) => g.hours).map((g) => `${g.from === g.to ? tc(`days.${g.from}`) : `${tc(`days.${g.from}`)}–${tc(`days.${g.to}`)}`} ${g.hours![0]}–${g.hours![1]}`);
   const ld = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faq.map((f) => ({ "@type": "Question", name: tx(f.q, locale), acceptedAnswer: { "@type": "Answer", text: tx(f.a, locale) } })) };
   return (
     <>
@@ -45,9 +66,12 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
                 <Mail className="h-4 w-4 shrink-0 text-block-ink" aria-hidden />
                 {s.contact.email ? <a href={`mailto:${s.contact.email}`} className="text-block-ink underline-offset-4 hover:underline">{s.contact.email}</a> : <span className="text-block-muted">{t("serviceEmailPending")}</span>}
               </li>
-              <li className="flex items-center gap-3 py-3">
-                <Clock className="h-4 w-4 shrink-0 text-block-ink" aria-hidden />
-                <span className="text-block-ink">{t("serviceHours")}</span>
+              <li className="flex items-start gap-3 py-3">
+                <Clock className="mt-0.5 h-4 w-4 shrink-0 text-block-ink" aria-hidden />
+                <div>
+                  <span className="block text-[12px] font-medium text-block-muted">{t("serviceHoursLabel")}</span>
+                  {phoneHours ? phoneHours.map((line) => <span key={line} className="num block text-block-ink">{line}</span>) : <span className="text-block-muted">{t("serviceHoursPending")}</span>}
+                </div>
               </li>
             </ul>
           </div>

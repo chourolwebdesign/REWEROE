@@ -226,7 +226,7 @@
   "stats": [
     {
       "id": "producers",
-      "value": 48,
+      "value": 10,
       "suffix": "",
       "label": {
         "de": "regionale Erzeuger",

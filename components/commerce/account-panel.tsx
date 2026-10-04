@@ -16,7 +16,7 @@ import type { CardProduct } from "@/lib/view-models";
 import { boxInput } from "./form-primitives";
 
 /** Underline tabs (§4.42) on the stock shadcn `Tabs` — `variant="line"` gives the pseudo underline, recoloured red via className. */
-const tabsList = "hide-scrollbar h-auto w-full justify-start gap-0 overflow-x-auto rounded-none border-b border-line bg-transparent p-0 group-data-horizontal/tabs:h-auto";
+const tabsList = "h-auto w-full justify-start gap-0 overflow-x-auto rounded-none border-b border-line bg-transparent p-0 [scrollbar-color:var(--line)_transparent] [scrollbar-width:thin] group-data-horizontal/tabs:h-auto";
 const tabsTrigger = "h-11 flex-none shrink-0 rounded-none border-0 px-4 text-sm font-semibold text-ink-muted hover:text-ink data-active:text-ink after:bg-red group-data-horizontal/tabs:after:bottom-0";
 
 export function AccountPanel({ products, welcomePoints }: { products: CardProduct[]; welcomePoints: number }) {
@@ -60,7 +60,7 @@ export function AccountPanel({ products, welcomePoints }: { products: CardProduc
         <TabsContent value="overview" className="mt-8 grid gap-4 md:grid-cols-3">
           <Stat label={t("tabs.favorites")} value={String(favorites.length)} icon={<Heart className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden />} />
           <Stat label={t("tabs.list")} value={String(list.filter((i) => !i.done).length)} />
-          <Stat label={t("bonusPoints")} value={String(welcomePoints)} />
+          <Stat label={t("bonusPoints")} value={user ? String(welcomePoints) : "0"} />
         </TabsContent>
         <TabsContent value="orders" className="mt-8"><Empty text={t("noOrders")} /></TabsContent>
         <TabsContent value="addresses" className="mt-8">
@@ -90,8 +90,17 @@ export function AccountPanel({ products, welcomePoints }: { products: CardProduc
           {favProducts.length === 0 ? <Empty text={t("noFavorites")} /> : <div className="grid grid-cols-2 gap-4 md:grid-cols-4">{favProducts.map((p) => <ProductCard key={p.slug} p={p} />)}</div>}
         </TabsContent>
         <TabsContent value="bonus" className="mt-8 grid gap-4 md:grid-cols-2">
-          <Stat label={t("bonusPoints")} value={String(welcomePoints)} />
-          <Stat label={t("bonusValue")} value={formatPrice(welcomePoints / 100, locale)} />
+          {user ? (
+            <>
+              <Stat label={t("bonusPoints")} value={String(welcomePoints)} />
+              <Stat label={t("bonusValue")} value={formatPrice(welcomePoints / 100, locale)} />
+            </>
+          ) : (
+            <div className="md:col-span-2">
+              <Empty text={t("bonusSignIn")} />
+              <Cta href="/login" variant="secondary" size="sm" className="mt-4">{t("login")}</Cta>
+            </div>
+          )}
           <Link href="/bonus" className="inline-flex min-h-11 items-center gap-2 text-[13px] font-semibold text-ink underline-offset-4 hover:underline md:col-span-2">
             {t("bonusLink")} <ArrowRight className="h-4 w-4" strokeWidth={1.75} aria-hidden />
           </Link>

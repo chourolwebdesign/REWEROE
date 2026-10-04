@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { m, useInView, useReducedMotion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
 import { formatNumber } from "@/lib/format";
@@ -17,6 +17,10 @@ const OUTLINE: [number, number][] = [
 const W = 600, H = 790, LNG0 = 5.5, LAT0 = 55.2, KX = 61.8, KY = 98;
 const project = ([lat, lng]: [number, number]) => ({ x: (lng - LNG0) * KX, y: (LAT0 - lat) * KY });
 const inside = (p: [number, number]) => p[0] > 47.2 && p[0] < 55.2 && p[1] > 5.5 && p[1] < 15.2;
+/** Labels are typeset at this many CSS px regardless of the viewBox crop (SVG text otherwise shrinks with the zoom). */
+const LABEL_PX = 12;
+/** Origin and destination closer than this (user units) get offset labels so „Rödelheim" cannot sit on „Obsthof Keller". */
+const CLOSE_UNITS = 30;
 
 export interface JourneyProps {
   from: [number, number]; to: [number, number]; fromLabel: string; toLabel: string; distanceKm: number; story: string; international?: boolean; local?: boolean; className?: string;
@@ -25,13 +29,27 @@ export interface JourneyProps {
 /**
  * Signature feature (§4.32): farm-to-shelf journey on a minimal SVG map of Germany with a drawn route.
  * Ink outline, hairline under-route, signal-red drawn route (1.6 s — documented data-visualisation exception), static origin dot, pulsing destination.
+ * Label size is derived from the rendered box (ResizeObserver) so short regional routes keep ≥ 12 px type; below md the map is capped at 260 px.
  */
 export function JourneyMap({ from, to, fromLabel, toLabel, distanceKm, story, international, local, className }: JourneyProps) {
   const t = useTranslations("product");
   const locale = useLocale();
   const ref = useRef<HTMLDivElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
   const inView = useInView(ref, { once: true, margin: "10000px 0px -15% 0px" });
   const reduce = useReducedMotion();
+  const [box, setBox] = useState({ w: 320, h: 420 });
+  useEffect(() => {
+    const el = svgRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver((entries) => {
+      const r = entries[0]?.contentRect;
+      if (r && r.width > 0 && r.height > 0) setBox({ w: r.width, h: r.height });
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   const outline = OUTLINE.map(project).map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
   const B = project(to);
   const A = inside(from) ? project(from) : { x: 40, y: H - 60 }; // international: enter from bottom-left edge
@@ -45,10 +63,22 @@ export function JourneyMap({ from, to, fromLabel, toLabel, distanceKm, story, in
   const viewBox = span >= W ? `0 0 ${W} ${H}` : `${(cx - vw / 2).toFixed(0)} ${(cy - vh / 2).toFixed(0)} ${vw.toFixed(0)} ${vh.toFixed(0)}`;
   const k = span / W; // scale factor for stroke/marker sizes so they stay visually constant
   const km = local ? "0" : formatNumber(distanceKm, locale);
+  // CSS px per user unit under `xMidYMid meet` → user-unit font size that paints at LABEL_PX.
+  const pxPerUnit = Math.min(box.w / vw, box.h / vh);
+  const fs = LABEL_PX / pxPerUnit;
+  // Short routes: push the labels apart — origin away from the destination (above-left when it lies north, below-left otherwise), destination the other way (right).
+  const close = !local && dist < CLOSE_UNITS;
+  const originNorth = A.y <= B.y;
+  const fromPos = close
+    ? { x: A.x - 12 * k, y: originNorth ? A.y - 14 * k : A.y + 26 * k, anchor: "end" as const }
+    : { x: A.x, y: A.y + 26 * k, anchor: (A.x < B.x ? "end" : "start") as "end" | "start" };
+  const toPos = close
+    ? { x: 16 * k, y: originNorth ? 26 * k : -14 * k, anchor: "start" as const }
+    : { x: 0, y: -18 * k, anchor: "middle" as const };
 
   return (
     <div ref={ref} className={cn("grid gap-8 border border-line bg-card p-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:p-8", className)}>
-      <svg viewBox={viewBox} role="img" aria-label={`${fromLabel} → ${toLabel}, ${km} km`} className="mx-auto h-auto w-full max-w-[360px]">
+      <svg ref={svgRef} viewBox={viewBox} role="img" aria-label={`${fromLabel} → ${toLabel}, ${km} km`} className="mx-auto h-auto max-h-[260px] w-full max-w-[360px] overflow-visible md:max-h-none">
         <polygon points={outline} className="fill-ink/[.04] stroke-ink/30" strokeWidth={1.5 * k} strokeLinejoin="round" />
         {!local && (
           <>
@@ -63,9 +93,9 @@ export function JourneyMap({ from, to, fromLabel, toLabel, distanceKm, story, in
         <g transform={`translate(${B.x} ${B.y})`}>
           <circle r={11 * k} className="fill-red-text" />
           {!reduce && <circle r={11 * k} className="pulse-dot fill-red-text/50" />}
-          <text y={-18 * k} textAnchor="middle" fontSize={11 * k} className="fill-ink font-sans font-semibold">{toLabel}</text>
+          <text x={toPos.x} y={toPos.y} textAnchor={toPos.anchor} fontSize={fs} className="fill-ink font-sans font-semibold">{toLabel}</text>
         </g>
-        {!local && <text x={A.x} y={A.y + 26 * k} fontSize={11 * k} textAnchor={A.x < B.x ? "end" : "start"} className="fill-ink font-sans font-semibold">{fromLabel}</text>}
+        {!local && <text x={fromPos.x} y={fromPos.y} fontSize={fs} textAnchor={fromPos.anchor} className="fill-ink font-sans font-semibold">{fromLabel}</text>}
       </svg>
       <div className="flex flex-col justify-center">
         <p className="eyebrow">{t("journeyEyebrow")}</p>

@@ -7,7 +7,7 @@
     },
     "image": {
       "src": "/images/placeholders/hero-regional.jpg",
-      "alt": { "de": "Ein Obstbauer übergibt eine Apfelkiste an eine REWE-Mitarbeiterin im Taunus", "en": "A fruit grower hands a crate of apples to a REWE employee in the Taunus" },
+      "alt": { "de": "Hessische Hügellandschaft am Morgen: Felder, ein Dorf mit Kirchturm und bewaldete Höhen im Dunst", "en": "Hessian hills in the morning: fields, a village with a church spire and wooded ridges in the haze" },
       "ratio": "16:9"
     }
   },
@@ -86,7 +86,7 @@
     },
     "image": {
       "src": "/images/placeholders/regional-hof.jpg",
-      "alt": { "de": "Hofplatz eines hessischen Bauernhofs am Morgen", "en": "Courtyard of a Hessian farm in the morning" },
+      "alt": { "de": "Apfelernte auf einer Streuobstwiese: Leiter am Baum, Körbe voller Äpfel, dahinter Fachwerkhaus und Kirchturm", "en": "Apple harvest in an orchard meadow: a ladder against the tree, baskets full of apples, a half-timbered house and church spire behind" },
       "ratio": "16:9"
     }
   },

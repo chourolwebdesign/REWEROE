@@ -7,7 +7,7 @@ import { getBlur } from "@/lib/blur";
 import { tx } from "@/lib/l10n";
 import { formatDateShort, formatNumber } from "@/lib/format";
 import { openState, toMinutes } from "@/lib/hours";
-import { getActiveCampaigns, getProducers } from "@/lib/content";
+import { getActiveCampaigns, getRegionalProducers } from "@/lib/content";
 import type { Settings, Store } from "@/lib/content/types";
 
 const PLATE = "/images/placeholders/hero-home.jpg";
@@ -27,6 +27,7 @@ function pfandUntil(store: Store): string | null {
  * Home hero (§4.5): light paper, no photo overlay, no gradient, no 100svh. Type column (Frische-Uhr · eyebrow ·
  * h1 WordReveal · lede · two CTAs) beside a 4:5 photograph in a hairline frame with a caption row, and a four-cell
  * data strip (assortment · offer validity · regional producers · Pfand return). The primary CTA is the viewport's one red.
+ * The type column is top-aligned and the plate capped at `100svh − 8rem` so that CTA stays above the fold on 768–800 px laptops.
  */
 export async function Hero({ settings, locale, store }: { settings: Settings; locale: string; store: Store }) {
   const t = await getTranslations("home");
@@ -34,7 +35,7 @@ export async function Hero({ settings, locale, store }: { settings: Settings; lo
 
   const street = store.address.status === "published" && store.address.street ? store.address.street : t("addressPending");
   const latestValid = getActiveCampaigns().map((c) => c.validUntil).sort().at(-1);
-  const producers = getProducers().filter((p) => p.distanceKm <= 100).length;
+  const producers = getRegionalProducers().length; // canonical count — same source as /regional and the Markenwelten tile
   const pfand = pfandUntil(store);
 
   const strip: { label: string; value: string }[] = [
@@ -46,7 +47,7 @@ export async function Hero({ settings, locale, store }: { settings: Settings; lo
 
   return (
     <section className="container-x pb-12 pt-10 md:pb-16 md:pt-14">
-      <div className="grid grid-cols-4 gap-x-6 gap-y-10 md:grid-cols-12 lg:items-end">
+      <div className="grid grid-cols-4 gap-x-6 gap-y-10 md:grid-cols-12 lg:items-start">
         {/* Type column */}
         <div className="col-span-4 flex flex-col md:col-span-12 lg:col-span-6">
           <FreshnessClock slots={settings.freshnessClock} hours={store.hours} hoursStatus={store.hoursStatus} className="self-start" />
@@ -63,19 +64,19 @@ export async function Hero({ settings, locale, store }: { settings: Settings; lo
 
         {/* Image plate */}
         <figure className="col-span-4 md:col-span-12 lg:col-span-6 lg:col-start-7">
-          <div className="frame relative aspect-[4/3] overflow-hidden bg-surface lg:aspect-[4/5] lg:max-h-[860px] lg:min-h-[70svh]">
+          <div className="frame relative aspect-[4/3] overflow-hidden bg-surface lg:aspect-[4/5] lg:max-h-[calc(100svh-8rem)] lg:min-h-[70svh]">
             <SmartImage src={PLATE} alt={t("heroAlt")} blur={getBlur(PLATE)} fill preload sizes="(max-width:1024px) 100vw, 48vw" className="img-grade object-cover" />
           </div>
           <figcaption className="rule mt-3 flex items-baseline justify-between gap-4 pt-2">
             <span className="data text-ink-muted">{t("heroCaption")}</span>
-            <span className="data text-right text-ink-muted">{settings.brand.merchant} · {store.address.zip} {store.address.city}</span>
+            <span className="data hidden text-right text-ink-muted sm:inline lg:hidden xl:inline">{settings.brand.merchant} · {store.address.zip} {store.address.city}</span>
           </figcaption>
         </figure>
 
         {/* Data strip */}
         <dl className="col-span-4 mt-6 grid grid-cols-2 gap-px border-y border-line bg-line md:col-span-12 md:grid-cols-4 lg:mt-10">
           {strip.map((cell) => (
-            <div key={cell.label} className="bg-paper px-4 py-4 first:pl-0">
+            <div key={cell.label} className="bg-paper px-4 py-4 max-md:odd:pl-0 md:first:pl-0">
               <dt className="eyebrow">{cell.label}</dt>
               <dd className="num mt-1 text-[20px] font-bold leading-none text-ink">{cell.value}</dd>
             </div>

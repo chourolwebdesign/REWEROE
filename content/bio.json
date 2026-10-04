@@ -7,7 +7,7 @@
     },
     "image": {
       "src": "/images/placeholders/hero-bio.jpg",
-      "alt": { "de": "Hände halten frisch geerntete Möhren mit Erde", "en": "Hands holding freshly harvested carrots with soil" },
+      "alt": { "de": "Apfelbaumreihen bei Sonnenaufgang, dahinter ein Tal im Morgennebel mit Dorf und Burgruine", "en": "Rows of apple trees at sunrise, with a misty valley, a village and a castle ruin behind" },
       "ratio": "16:9"
     }
   },
@@ -120,7 +120,7 @@
     },
     "image": {
       "src": "/images/placeholders/bio-regal.jpg",
-      "alt": { "de": "Bio-Regal mit Milch, Brot und Gemüse im Markt", "en": "Organic shelf with milk, bread and vegetables in the store" },
+      "alt": { "de": "Zutaten auf einem Holztisch von oben: Kräuter, Eier, Mehl, grüner Spargel, Zitronen und eine gusseiserne Pfanne", "en": "Ingredients on a wooden table from above: herbs, eggs, flour, green asparagus, lemons and a cast-iron pan" },
       "ratio": "16:9"
     }
   },

@@ -35,7 +35,7 @@ export function PfandKompass({ types }: { types: PfandType[] }) {
       <div className="on-block flex flex-col justify-between p-6">
         <div>
           <p className="eyebrow">{t("pfandTotal")}</p>
-          <m.p key={total} initial={{ scale: 0.96, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.24, ease: EASE }} className="display num mt-3 text-[3.5rem] leading-none text-block-bio">
+          <m.p key={total} initial={{ scale: 0.96, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.24, ease: EASE }} className="display mt-3 text-[3.5rem] leading-none text-block-bio [font-variant-numeric:proportional-nums_lining-nums]">
             {formatPrice(total, locale)}
           </m.p>
           <ul className="data mt-5 space-y-1.5 text-block-muted">

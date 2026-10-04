@@ -8,6 +8,8 @@
    1. Design tokens — light (REWE: white paper · anthracite ink · one red)
    ───────────────────────────────────────────────────────────────────────── */
 :root {
+  color-scheme: light dark;  /* form controls, scrollbars and UA defaults follow the OS scheme like the tokens below */
+
   /* surfaces */
   --paper: #FFFFFF;          /* page, header, cards, sheets */
   --surface: #F5F5F4;        /* section bands, image frames behind cut-outs, offers band, brochure stage */
@@ -386,8 +388,9 @@
   scrollbar-width: none;
   &::-webkit-scrollbar { display: none; }
 }
-/* The only text-on-photo overlay (Magazin article, Rezept detail, 404): ink-based, bottom-weighted */
-@utility scrim-editorial { background: linear-gradient(to top, rgb(20 20 20 / .78) 0%, rgb(20 20 20 / .35) 45%, rgb(20 20 20 / 0) 75%); }
+/* The only text-on-photo overlay (Magazin article, Rezept detail, 404): ink-based, bottom-weighted but covering the whole
+   text column — breadcrumbs and eyebrow at the top of the hero need ≥ 4.5:1 on bright photos too (.3 ink floor). */
+@utility scrim-editorial { background: linear-gradient(to top, rgb(20 20 20 / .82) 0%, rgb(20 20 20 / .62) 50%, rgb(20 20 20 / .3) 100%); }
 
 /* Primary button hover in dark mode: fill stays, a 2 px inset ring appears (fill steps are invisible or fail AA on dark) */
 @media (prefers-color-scheme: dark) {
@@ -400,7 +403,7 @@
   display: block;
   font-family: var(--font-display);
   font-weight: var(--fw-display);
-  font-size: clamp(5rem, 20vw, 19rem);
+  font-size: clamp(4rem, 19vw, 19rem);   /* 19vw keeps „Rödelheim" inside the 358 px column at 390 */
   line-height: 0.8;
   letter-spacing: -0.05em;
   color: rgb(255 255 255 / .05);
@@ -435,15 +438,19 @@
 .prose-editorial strong { font-weight: 600; color: var(--ink); }
 .prose-editorial a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--red); text-decoration-thickness: 2px; text-underline-offset: 4px; }
 
-/* Leaflet — greyscale newsprint map; the red store marker is the only colour */
+/* Leaflet — greyscale newsprint map; the red store marker is the only colour.
+   leaflet.css loads after this sheet (imported by the client-only map chunk), so overrides need higher specificity. */
 .leaflet-container { font-family: var(--font-sans); background: var(--surface); }
+.frame .leaflet-container, #main .leaflet-container { background: var(--surface); }   /* beats Leaflet's #ddd slab in dark mode */
 .leaflet-tile { filter: grayscale(1) contrast(1.06) brightness(1.03); }
 @media (prefers-color-scheme: dark) { .leaflet-tile { filter: invert(1) grayscale(1) brightness(.78) contrast(1.15); } }
 .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--card); color: var(--ink); border-radius: 0; box-shadow: var(--shadow-pop); border: 1px solid var(--line-strong); }
 .leaflet-popup-content { font: 500 13px/1.4 var(--font-sans); margin: 12px 14px; }
 .leaflet-popup-content strong { font-weight: 600; }
 .leaflet-control-zoom a { background: var(--card) !important; color: var(--ink) !important; border-color: var(--line) !important; border-radius: 0 !important; }
-.leaflet-control-attribution { background: color-mix(in oklab, var(--paper) 85%, transparent) !important; color: var(--ink-muted) !important; font-size: 10px; }
+/* 44 px zoom targets (Leaflet: 26 / 30 px) — `.leaflet-touch .leaflet-bar a` has the same specificity, hence the container hook */
+.leaflet-container .leaflet-bar a, .leaflet-container.leaflet-touch .leaflet-bar a { width: 44px; height: 44px; line-height: 44px; }
+.leaflet-container .leaflet-control-attribution { background: color-mix(in oklab, var(--paper) 85%, transparent) !important; color: var(--ink-muted) !important; font-size: 12px; }
 .leaflet-control-attribution a { color: var(--ink) !important; }
 
 /* Print: Prospekt and recipes on white, no overlays */

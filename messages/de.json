@@ -2,7 +2,7 @@
   "meta": {
     "siteName": "REWE Rödelheim · Alamyaar",
     "defaultTitle": "REWE Rödelheim — Dein Markt in Frankfurt-Rödelheim",
-    "defaultDescription": "Dein REWE in Frankfurt-Rödelheim: eigene Bäckerei, Frischetheke, 48 regionale Erzeuger, Lieferservice und Click & Collect. Geführt von Ali Alamyaar."
+    "defaultDescription": "Dein REWE in Frankfurt-Rödelheim: eigene Bäckerei, Frischetheke, regionale Erzeuger aus Hessen, Lieferservice und Click & Collect. Geführt von Ali Alamyaar."
   },
   "nav": {
     "home": "Start",
@@ -37,7 +37,11 @@
     "regional": "Regional",
     "bio": "Bio",
     "more": "Mehr",
-    "brandWorlds": "Markenwelten"
+    "brandWorlds": "Markenwelten",
+    "favoritesCount": "{n, plural, =1 {1 Favorit} other {# Favoriten}}",
+    "homeAria": "REWE Rödelheim – Startseite",
+    "merchantLine": "Dein Markt · {legal}",
+    "merchantLegalShort": "Alamyaar oHG"
   },
   "common": {
     "addToCart": "In den Warenkorb",
@@ -148,7 +152,11 @@
       "glutenfrei": "Glutenfrei"
     },
     "inCart": "Im Warenkorb",
-    "progress": "Fortschritt"
+    "progress": "Fortschritt",
+    "breadcrumb": "Pfadnavigation",
+    "decrease": "Menge verringern",
+    "increase": "Menge erhöhen",
+    "imagePending": "Bild folgt"
   },
   "home": {
     "eyebrow": "Frische",
@@ -196,7 +204,7 @@
       "pfand": "Pfand-Rückgabe"
     },
     "regionalEyebrow": "Aus deiner Region · Rödelheim",
-    "heroAlt": "Obst- und Gemüseabteilung im REWE Rödelheim",
+    "heroAlt": "Holzkisten mit Äpfeln, Tomaten, Salat, Grünkohl und Möhren vor einem Fenster",
     "heroCaption": "Obst & Gemüse · Rödelheim",
     "addressPending": "Adresse folgt",
     "pendingShort": "folgt",
@@ -225,9 +233,9 @@
         "text": "EU-Bio als Grundlage, Naturland als Anspruch – und ohne Gentechnik, immer.",
         "alt": "Bio-Regal im REWE Rödelheim – REWE Bio",
         "seal": "Siegel",
-        "sealValue": "EU-Bio + Naturland",
+        "sealValue": "Naturland",
         "gmo": "Garantiert",
-        "gmoValue": "ohne Gentechnik",
+        "gmoValue": "GVO-frei",
         "items": "Bio-Artikel",
         "cta": "Mehr Bio"
       }
@@ -288,13 +296,13 @@
     "cookWith": "Mit diesem Produkt kochen",
     "favorite": "Zu Favoriten",
     "unfavorite": "Aus Favoriten entfernen",
-    "deliveryInfo": "Lieferung heute ab 16 Uhr oder Click & Collect",
+    "deliveryInfo": "Lieferung Mo–Sa ab 16 Uhr oder Click & Collect",
     "pfandNote": "Pfand {amount} — kommt am Automaten zurück.",
     "storyEyebrow": "Geschichte",
     "sku": "Art.-Nr.",
     "share": "Teilen",
     "producerDistance": "{km} km von Rödelheim",
-    "availableIn": "Heute in Rödelheim verfügbar",
+    "availableIn": "In Rödelheim verfügbar",
     "toList": "Zur Liste",
     "approx": "ca.",
     "galleryLabel": "Produktbilder",
@@ -378,7 +386,8 @@
     "videoEyebrow": "Markt-Rundgang",
     "distanceAway": "{km} km entfernt",
     "finderEyebrow": "Filialfinder",
-    "liveHours": "Live-Status"
+    "liveHours": "Live-Status",
+    "videoDescription": "Clip ohne Ton, 20 Sekunden: ein Gang durch die Markthalle, vorbei an Pflanzen- und Obstständen zur Obst- und Gemüseabteilung."
   },
   "about": {
     "eyebrow": "Über uns",
@@ -519,7 +528,8 @@
     "galleryEyebrow": "Bilder vom Tag",
     "videoEyebrow": "Rundgang",
     "heroImageAlt": "Aufgeschlagenes Magazin mit saisonalem Gemüse",
-    "noMatch": "Keine Artikel zu diesem Thema."
+    "noMatch": "Keine Artikel zu diesem Thema.",
+    "videoDescription": "Clip ohne Ton, 20 Sekunden: ein Gang durch die Markthalle, vorbei an Pflanzen- und Obstständen zur Obst- und Gemüseabteilung."
   },
   "contact": {
     "eyebrow": "Kontakt",
@@ -547,7 +557,9 @@
     "serviceHours": "Mo–Sa 8–20 Uhr",
     "errorRequired": "Bitte ausfüllen.",
     "errorEmail": "Bitte gültige E-Mail eingeben.",
-    "errorMin": "Mindestens 20 Zeichen."
+    "errorMin": "Mindestens 20 Zeichen.",
+    "serviceHoursLabel": "Telefonzeiten",
+    "serviceHoursPending": "Telefonzeiten folgen"
   },
   "legal": {
     "pendingTitle": "Wir arbeiten an diesen Inhalten.",
@@ -591,7 +603,9 @@
     "demoNote": "Demo-Modus: Anmeldung ohne Server — Daten bleiben in deinem Browser.",
     "name": "Name",
     "email": "E-Mail",
-    "bonusLink": "Zu REWE Bonus"
+    "bonusLink": "Zu REWE Bonus",
+    "errorCredentials": "Bitte alle Felder ausfüllen: eine gültige E-Mail-Adresse und ein Passwort mit mindestens 6 Zeichen.",
+    "bonusSignIn": "Melde dich an, um deinen Punktestand zu sehen."
   },
   "cart": {
     "eyebrow": "Warenkorb",
@@ -617,7 +631,8 @@
     "modeDelivery": "Lieferung nach Hause",
     "modePickup": "Click & Collect im Markt",
     "vat": "inkl. MwSt.",
-    "minOrder": "Mindestbestellwert {amount}"
+    "minOrder": "Mindestbestellwert {amount}",
+    "minOrderHint": "Noch {amount} bis zum Mindestbestellwert von {min} für die Lieferung."
   },
   "checkout": {
     "eyebrow": "Kasse",
@@ -652,14 +667,19 @@
     "errorRequired": "Bitte ausfüllen.",
     "errorZip": "Bitte 5-stellige PLZ eingeben.",
     "demoNote": "Demo-Checkout: Es wird keine Zahlung ausgelöst.",
-    "orderId": "Bestellnummer"
+    "orderId": "Bestellnummer",
+    "minOrderNote": "Mindestbestellwert für die Lieferung: {min}. Dir fehlen noch {amount} — oder du wählst im nächsten Schritt Click & Collect.",
+    "minOrderNoteNoPickup": "Mindestbestellwert für die Lieferung: {min}. Dir fehlen noch {amount}.",
+    "errorMinOrder": "Mindestbestellwert von {min} nicht erreicht — bitte Click & Collect wählen oder den Warenkorb ergänzen.",
+    "errorMinOrderFill": "Mindestbestellwert von {min} nicht erreicht — bitte ergänze deinen Warenkorb."
   },
   "notFound": {
     "eyebrow": "404",
     "title": "Dieses Regal ist leer.",
     "text": "Die Seite gibt es nicht (mehr). Aber unten liegen drei Dinge, die gerade besonders gut gehen.",
     "search": "Suchen",
-    "popular": "Gerade beliebt"
+    "popular": "Gerade beliebt",
+    "label": "Seite nicht gefunden"
   },
   "footer": {
     "brand": "Marke",
@@ -697,7 +717,8 @@
     "onlyNecessary": "Nur notwendige",
     "settings": "Einstellungen",
     "privacy": "Datenschutzerklärung",
-    "eyebrow": "Datenschutz · Cookies"
+    "eyebrow": "Datenschutz · Cookies",
+    "textShort": "Notwendige Cookies immer, Statistik und Marketing nur mit deiner Zustimmung."
   },
   "freshness": {
     "label": "Frische-Uhr"
@@ -707,7 +728,11 @@
     "hours": "Std",
     "minutes": "Min",
     "seconds": "Sek",
-    "over": "Vorbei"
+    "over": "Vorbei",
+    "srDays": "{n, plural, one {# Tag} other {# Tage}}",
+    "srHours": "{n, plural, one {# Stunde} other {# Stunden}}",
+    "srMinutes": "{n, plural, one {# Minute} other {# Minuten}}",
+    "srLeft": "Noch {time}"
   },
   "search": {
     "title": "Suche",
@@ -715,7 +740,16 @@
     "products": "Produkte",
     "recipes": "Rezepte",
     "articles": "Magazin",
-    "empty": "Gib einen Begriff ein — wir durchsuchen Sortiment, Rezepte und Magazin."
+    "empty": "Gib einen Begriff ein — wir durchsuchen Sortiment, Rezepte und Magazin.",
+    "pages": "Seiten",
+    "pageSub": {
+      "offers": "Prospekt, Knaller und Countdown",
+      "regional": "Erzeuger aus Hessen im Umkreis von 100 km",
+      "bio": "Das REWE Bio-Sortiment",
+      "store": "Adresse, Anfahrt und Services in Rödelheim",
+      "hours": "Wann unser Markt geöffnet hat",
+      "contact": "Schreib uns oder ruf an"
+    }
   },
   "regional": {
     "metaTitle": "REWE Regional – Aus deiner Region",
@@ -809,6 +843,14 @@
     "ctaTitle": "Bio ist ein Teil. Nachhaltigkeit das Ganze.",
     "ctaText": "Mehrweg, weniger Plastik, regionaler Einkauf: Wie wir im Markt arbeiten – und was du mit Bio-Zutaten kochen kannst.",
     "ctaSustainability": "Unsere Nachhaltigkeit",
-    "ctaRecipes": "Rezepte entdecken"
+    "ctaRecipes": "Rezepte entdecken",
+    "sealsScrollHint": "Zum Vergleichen seitlich scrollen"
+  },
+  "error": {
+    "eyebrow": "Fehler",
+    "title": "Da ist etwas schiefgelaufen.",
+    "text": "Die Seite konnte gerade nicht geladen werden. Versuch es noch einmal — oder geh zurück zur Startseite.",
+    "retry": "Noch einmal versuchen",
+    "code": "Fehlercode {digest}"
   }
 }

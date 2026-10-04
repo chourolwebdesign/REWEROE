@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 interface Props {
   hours: Hours;
   hoursStatus: HoursStatus;
-  /** `sm` → 36 px, 12 px text (store teaser caption). Default 44 px, 13 px (header). */
+  /** `sm` → 12 px text (store teaser caption). Default 13 px (header). Both are 44 px tall (touch target). */
   size?: "md" | "sm";
   className?: string;
   /** Store page the chip links to (`/filialen/<slug>`). */
@@ -18,6 +18,7 @@ interface Props {
 /**
  * Live store chip (§4.2 / §4.34): dot (bio = open · ink-muted = closed · none while pending) + state word + data-chip time.
  * Hydration-safe: the time-dependent text renders after mount; the pending state is static. Re-evaluates every 30 s.
+ * `min-w-[9.5rem]` reserves the width of the open state so the sticky header does not shift when the text arrives.
  */
 export function StoreChip({ hours, hoursStatus, size = "md", className, storeSlug = "roedelheim" }: Props) {
   const t = useTranslations("common");
@@ -31,8 +32,8 @@ export function StoreChip({ hours, hoursStatus, size = "md", className, storeSlu
     <Link
       href={`/filialen/${storeSlug}`}
       className={cn(
-        "inline-flex items-center gap-2 rounded-[2px] border border-line px-3 text-ink transition-colors duration-[var(--dur-ui)] hover:border-line-strong",
-        size === "sm" ? "min-h-9 text-[12px]" : "min-h-11 text-[13px]",
+        "inline-flex min-h-11 min-w-[9.5rem] items-center gap-2 rounded-[2px] border border-line px-3 text-ink transition-colors duration-[var(--dur-ui)] hover:border-line-strong",
+        size === "sm" ? "text-[12px]" : "text-[13px]",
         className,
       )}
     >

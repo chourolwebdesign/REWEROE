@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { useLocale, useTranslations } from "next-intl";
 import { AlertCircle, Check, Clock, LocateFixed, MapPin } from "lucide-react";
@@ -43,15 +43,32 @@ const DAY_ORDER: Weekday[] = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 
 /**
  * Öffnungszeiten `dl` (§4.40): Mo…So, today highlighted with the open/closed dot, live line from `formatOpenState`.
- * Hydration-safe: today and the live state render after mount; the pending state is static.
+ * Hydration-safe: today and the live state render after mount. While `hoursStatus === "pending"` no table is published —
+ * only the pending line (the header chip, hero chip and footer say the same).
  */
 export function StoreHours({ hours, hoursStatus, className }: { hours: Hours; hoursStatus: HoursStatus; className?: string }) {
   const tc = useTranslations("common");
+  const ts = useTranslations("stores");
   const mounted = useMounted();
+  const [announce, setAnnounce] = useState(false);
   useTick(30_000);
+  // The live line is empty on SSR and filled on mount; `aria-live` is switched on one frame later so the initial fill is not announced.
+  useEffect(() => {
+    if (!mounted) return;
+    const id = requestAnimationFrame(() => setAnnounce(true));
+    return () => cancelAnimationFrame(id);
+  }, [mounted]);
   const today = mounted ? berlinParts(new Date()).weekday : null;
   const state = hoursStatus === "pending" ? openState(hours, "pending") : mounted ? openState(hours, hoursStatus) : null;
   const live = state ? formatOpenState(state, tc) : null;
+  if (hoursStatus === "pending") {
+    return (
+      <div className={className}>
+        <p className="text-[15px] font-medium text-ink-muted">{tc("hoursPendingShort")}</p>
+        <p className="mt-2 text-[13px] text-ink-muted">{ts("hoursPending")}</p>
+      </div>
+    );
+  }
   return (
     <div className={className}>
       <dl className="num divide-y divide-line text-sm">
@@ -69,7 +86,7 @@ export function StoreHours({ hours, hoursStatus, className }: { hours: Hours; ho
           );
         })}
       </dl>
-      <p className={cn("mt-4 min-h-5 text-[13px] font-medium", live?.tone === "open" ? "text-bio-text" : live?.tone === "closed" ? "text-ink" : "text-ink-muted")} aria-live="polite">
+      <p className={cn("mt-4 min-h-5 text-[13px] font-medium", live?.tone === "open" ? "text-bio-text" : live?.tone === "closed" ? "text-ink" : "text-ink-muted")} aria-live={announce ? "polite" : undefined}>
         {live?.text ?? " "}
       </p>
     </div>
@@ -132,7 +149,7 @@ export function StoreFinder({ stores }: { stores: FinderStore[] }) {
                 {user && <span className="num">· {t("distanceAway", { km: formatNumber(km(user, s.coords), locale, { maximumFractionDigits: 1 }) })}</span>}
               </p>
               <ul className="mt-3 flex flex-wrap gap-1.5" aria-label={t("services")}>
-                {s.services.map((sv) => <li key={sv} className="data rounded-[2px] border border-line px-2 py-1 text-ink-muted">{tc(`services.${sv}`)}</li>)}
+                {s.services.map((sv) => <li key={sv} className="rounded-[2px] border border-line px-2 py-1 text-[12px] font-medium text-ink-muted">{tc(`services.${sv}`)}</li>)}
               </ul>
               <div className="mt-4 flex flex-wrap gap-2">
                 <Cta href={`/filialen/${s.slug}`} size="sm" variant="secondary">{t("details")}</Cta>
