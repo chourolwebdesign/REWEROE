@@ -1,11 +1,11 @@
-
 @import "tailwindcss";
 
+/* ───────────── Tokens („Story“-Relaunch, siehe docs/superpowers/specs/2026-10-04-story-relaunch-design.md) ───────────── */
 @theme {
   --color-red: #cc071e;
   --color-red-hover: #b00619;
   --color-red-deep: #9c0516;
-  --color-red-bright: #ff5a6b;
+  --color-red-bright: #ff5a6b; /* Rot auf dunklem Grund */
   --color-red-tint: #fcebed;
   --color-ink: #121212;
   --color-ink-2: #2b2925;
@@ -34,6 +34,7 @@
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* ───────────── Typo-Skala ───────────── */
 @utility text-hero {
   font-size: clamp(2.75rem, 1.55rem + 5.2vw, 6rem);
   line-height: 0.95;
@@ -58,6 +59,7 @@
   font-size: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
   line-height: 1.5;
 }
+/* Dachzeile über Abschnittsüberschriften – klein, gesperrt, ruhig. */
 @utility text-eyebrow {
   font-size: 0.8125rem;
   font-weight: 700;
@@ -71,6 +73,7 @@
   padding-inline: clamp(1rem, 0.6rem + 1.8vw, 1.75rem);
 }
 
+/* Karte mit sanftem Anheben beim Zeigen. */
 @utility card-lift {
   transition:
     transform 0.35s var(--ease-out-expo),
@@ -130,6 +133,9 @@
   }
 }
 
+/* ───────────── Einblenden beim Scrollen ─────────────
+   Einmalig per IntersectionObserver (components/motion/reveal-observer.tsx). Versteckt wird nur, wenn JS läuft
+   (html.js) – ohne JS, für Crawler und Screenshots bleibt alles sichtbar. */
 .reveal {
   transition:
     opacity 0.8s var(--ease-out-expo),
@@ -142,6 +148,7 @@
   }
 }
 
+/* ───────────── Live-Punkt ───────────── */
 @keyframes pulse-ring {
   0% {
     box-shadow: 0 0 0 0 color-mix(in srgb, currentColor 45%, transparent);
@@ -163,6 +170,8 @@
   }
 }
 
+/* ───────────── Laufband (Markenband) ─────────────
+   Ruhig laufende Zeile mit belegten Angaben. Bei Zeigen pausiert, bei prefers-reduced-motion steht sie still. */
 @keyframes marquee-x {
   from {
     transform: translateX(0);
@@ -185,6 +194,7 @@
   }
 }
 
+/* ───────────── Beitragstext (Markdown) ───────────── */
 .prose-article {
   color: var(--color-ink-2);
   font-size: 1.125rem;
@@ -262,6 +272,7 @@
   text-wrap: balance;
 }
 
+/* Scrollbar in horizontalen Reihen ausblenden (Inhalt bleibt per Wischen/Tastatur erreichbar) */
 .no-scrollbar {
   scrollbar-width: none;
 }

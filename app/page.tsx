@@ -2,6 +2,7 @@ import { CareerBand } from "@/components/home/career-band";
 import { FlyerTicket } from "@/components/home/flyer-ticket";
 import { Highlights } from "@/components/home/highlights";
 import { MarqueeBand } from "@/components/home/marquee-band";
+import { NumbersBand } from "@/components/home/numbers-band";
 import { RegionalBand } from "@/components/home/regional-band";
 import { StoryHero } from "@/components/home/story-hero";
 import { OpenStatus } from "@/components/live/open-status";
@@ -29,31 +30,33 @@ export default function HomePage() {
         items={resolveStory(story)}
         intro={
           <>
-            <p className="text-eyebrow mb-5 text-white/75">REWE in Frankfurt-Rödelheim</p>
-            <h1 className="text-hero">
-              Willkommen in deinem <span className="text-red-bright">Markt.</span>
+            <p className="text-eyebrow mb-6 flex items-center gap-2.5 text-white/85">
+              <span aria-hidden className="h-px w-6 shrink-0 bg-white/60" />
+              REWE in Frankfurt-Rödelheim
+            </p>
+            <h1 className="text-hero lg:text-[clamp(4.5rem,1rem+5.6vw,7.5rem)]">
+              Willkommen in deinem{" "}
+              <span className="rounded-[0.16em] bg-white px-[0.12em] text-red [box-decoration-break:clone]">Markt.</span>
             </h1>
-            <p className="mt-6 hidden max-w-[30ch] text-lede text-white/80 lg:block">
+            <p className="mt-7 max-w-[34ch] text-lede text-white/85">
               Montag bis Samstag von 7 bis 22 Uhr in der Thudichumstraße – mit Bäckerei und Sushi im Markt.
             </p>
           </>
         }
         side={
-          <div className="grid gap-3 lg:max-w-[23rem] lg:justify-self-start">
+          <div className="grid gap-5">
             <OpenStatus tone="dark" className="justify-self-start" />
-            <p className="hidden text-lede text-white/75 lg:block">
-              {markt.address.street}
-              <br />
-              {markt.address.zip} Frankfurt-Rödelheim
-            </p>
-            <div className="mt-1 flex flex-wrap gap-2.5 lg:grid">
-              <ButtonLink href={markt.links.flyer} external size="lg" className="lg:w-full">
+            <div className="flex flex-wrap gap-3">
+              <ButtonLink href={markt.links.flyer} external variant="white" size="lg">
                 Prospekt KW <FlyerWeekText initial={week} field="kw" />
               </ButtonLink>
-              <ButtonLink href={markt.links.googleMaps} external variant="glass" size="lg" className="hidden lg:inline-flex lg:w-full">
+              <ButtonLink href={markt.links.googleMaps} external variant="glass" size="lg">
                 Route planen
               </ButtonLink>
             </div>
+            <p className="text-[0.9375rem] text-white/75">
+              {markt.address.street} · {markt.address.zip} Frankfurt-Rödelheim
+            </p>
           </div>
         }
       />
@@ -63,6 +66,8 @@ export default function HomePage() {
       <section aria-label="Prospekt der Woche" className="wrap pt-16 md:pt-24">
         <FlyerTicket />
       </section>
+
+      <NumbersBand className="pt-24 md:pt-32" />
 
       <RegionalBand className="wrap pt-24 md:pt-32" />
 

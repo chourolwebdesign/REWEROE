@@ -13,7 +13,8 @@ const ITEMS = [
 
 /**
  * Markenband unter dem Story-Hero: eine ruhig laufende Zeile mit den belegten Angaben des Markts.
- * Reine Zier – pausiert beim Zeigen und steht bei `prefers-reduced-motion` still.
+ * Reine Zier – pausiert beim Zeigen und steht bei `prefers-reduced-motion` still. Keine Aussage, die nicht
+ * auch im Hero, Footer oder in den Abschnitten steht.
  */
 export function MarqueeBand({ className }: { className?: string }) {
   const item =

@@ -39,7 +39,7 @@ export function SiteHeader() {
     dialogRef.current?.close();
   }, [pathname]);
 
-  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+  const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
 
   return (
     <header
@@ -78,7 +78,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2 lg:ml-0">
-          <ButtonLink href={markt.links.flyer} external size="sm" className="hidden sm:inline-flex">
+          <ButtonLink href={markt.links.flyer} external size="sm" variant={overHero ? "white" : "red"} className="hidden sm:inline-flex">
             Prospekt
           </ButtonLink>
           <button
@@ -133,7 +133,7 @@ export function SiteHeader() {
               <ButtonLink href={markt.links.flyer} external>
                 Prospekt der Woche
               </ButtonLink>
-              <a href={`tel:${markt.phone.e164}`} className={buttonClasses("glass")}>
+              <a href={"tel:" + markt.phone.e164} className={buttonClasses("glass")}>
                 <Phone className="size-[1.1em]" aria-hidden />
                 Anrufen
               </a>

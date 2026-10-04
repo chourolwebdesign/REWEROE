@@ -8,7 +8,7 @@ const ICONS = { baeckerei: Croissant, sushi: Fish } as const;
 
 /**
  * „Bei uns im Markt“: die REWE-Marken für Regionales und Bio sowie die belegten Services (rewe.de).
- * Alle Karten haben dieselben Aufbau – Bild- oder Symbolfeld oben, Text unten – damit das Raster ruhig bleibt.
+ * Alle Karten haben denselben Aufbau – Bild- oder Symbolfeld oben, Text unten – damit das Raster ruhig bleibt.
  */
 export function Highlights({ className }: { className?: string }) {
   const card = "reveal flex flex-col overflow-hidden rounded-[var(--radius-media)] bg-soft";
