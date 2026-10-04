@@ -55,25 +55,30 @@ export function Highlights({ className }: { className?: string }) {
         </div>
       </article>
 
-      {/* Services laut REWE-Marktseite */}
-      {markt.services.map((s) => {
-        const Icon = ICONS[s.id as keyof typeof ICONS] ?? Croissant;
-        return (
-          <article key={s.id} className={card}>
-            <div className="relative grid aspect-[5/4] place-items-center bg-ink">
-              <span aria-hidden className="absolute -right-10 -bottom-12 size-40 rounded-full bg-red/25 blur-3xl" />
-              <span className="relative grid size-20 place-items-center rounded-3xl bg-white/10 ring-1 ring-inset ring-white/15">
-                <Icon className="size-9 text-white" strokeWidth={1.6} aria-hidden />
-              </span>
-            </div>
-            <div className={body}>
-              <p className="text-eyebrow text-red">Im Markt</p>
-              <h3 className="mt-2 text-h3">{s.name}</h3>
-              <p className="mt-2 text-muted">{s.text}</p>
-            </div>
-          </article>
-        );
-      })}
+      {/* Services laut REWE-Marktseite – eine Karte statt zweier leerer Bildfelder */}
+      <article className="reveal on-dark relative flex flex-col overflow-hidden rounded-[var(--radius-media)] bg-ink p-6 text-white sm:col-span-2 md:p-9">
+        <span aria-hidden className="pointer-events-none absolute -right-16 -bottom-20 size-72 rounded-full bg-red/30 blur-3xl" />
+        <div className="relative">
+          <p className="text-eyebrow text-red-bright">Im Markt</p>
+          <h3 className="mt-3 font-display text-[clamp(1.75rem,1.3rem+1.6vw,2.5rem)] leading-[1.02] font-extrabold tracking-[-0.03em]">Frisch für dich da.</h3>
+        </div>
+        <ul className="relative mt-8 grid gap-4 sm:grid-cols-2 md:mt-auto md:pt-10">
+          {markt.services.map((s) => {
+            const Icon = ICONS[s.id as keyof typeof ICONS] ?? Croissant;
+            return (
+              <li key={s.id} className="flex items-start gap-4 rounded-2xl bg-white/[0.06] p-4 ring-1 ring-inset ring-white/10 md:p-5">
+                <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-red text-white">
+                  <Icon className="size-7" strokeWidth={1.75} aria-hidden />
+                </span>
+                <div>
+                  <p className="font-display text-[1.375rem] leading-tight font-bold">{s.name}</p>
+                  <p className="mt-1 text-white/75">{s.text}</p>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </article>
     </div>
   );
 }

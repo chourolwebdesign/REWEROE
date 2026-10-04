@@ -51,15 +51,17 @@ export default function HomePage() {
         side={
           <div className="grid gap-5">
             <OpenStatus tone="dark" className="justify-self-start" />
-            <div className="flex flex-wrap gap-3">
-              <ButtonLink href={markt.links.flyer} external variant="white" size="lg">
+            {/* mobil nebeneinander und kompakter, damit die Story schon im ersten Bildschirm zu sehen ist */}
+            <div className="flex flex-wrap gap-2.5 sm:gap-3">
+              <ButtonLink href={markt.links.flyer} external variant="white" size="lg" className="h-12 px-5 text-base sm:h-14 sm:px-7 sm:text-[1.0625rem]">
                 Prospekt KW <FlyerWeekText initial={week} field="kw" />
               </ButtonLink>
-              <ButtonLink href={markt.links.googleMaps} external variant="glass" size="lg">
-                Route planen
+              <ButtonLink href={markt.links.googleMaps} external variant="glass" size="lg" className="h-12 px-5 text-base sm:h-14 sm:px-7 sm:text-[1.0625rem]">
+                Route
+                <span className="hidden sm:inline">&nbsp;planen</span>
               </ButtonLink>
             </div>
-            <p className="text-[0.9375rem] text-white/75">
+            <p className="hidden text-[0.9375rem] text-white/75 sm:block">
               {markt.address.street} · {markt.address.zip} Frankfurt-Rödelheim
             </p>
           </div>

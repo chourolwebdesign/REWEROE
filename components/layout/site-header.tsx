@@ -56,7 +56,7 @@ export function SiteHeader() {
         Zum Inhalt springen
       </a>
       <div className="wrap flex h-full items-center gap-6">
-        <Logo tone={overHero ? "light" : "dark"} />
+        <Logo tone={overHero ? "light" : "dark"} framed={overHero} />
 
         <nav aria-label="Hauptnavigation" className="ml-auto hidden lg:block">
           <ul className="flex items-center gap-1">
