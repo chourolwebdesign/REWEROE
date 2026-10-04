@@ -42,6 +42,10 @@ function TileClip({ src }: { src: string }) {
   );
 }
 
+/**
+ * „Aus dem Markt“: kuratiertes Mosaik mit gleichen Seitenverhältnissen.
+ * Die erste Kachel ist breiter (16:10 über zwei Spalten) und liegt auf gleicher Höhe wie die Hochkant-Kacheln.
+ */
 export function Gallery({ items, className }: { items: GalleryMedia[]; className?: string }) {
   const [open, setOpen] = useState<number | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -58,26 +62,31 @@ export function Gallery({ items, className }: { items: GalleryMedia[]; className
 
   return (
     <>
-      <ul className={cn("columns-2 gap-2.5 md:columns-3 md:gap-4", className)}>
+      <ul className={cn("grid grid-cols-2 gap-2.5 sm:grid-cols-3 md:gap-4 lg:grid-cols-4", className)}>
         {items.map((it, i) => {
           const img = it.type === "image" ? it.image : it.poster;
+          const featured = i === 0;
           return (
-            <li key={i} className="mb-2.5 break-inside-avoid md:mb-4">
+            <li key={i} className={cn(featured && "sm:col-span-2")}>
               <button
                 type="button"
                 onClick={() => setOpen(i)}
-                className="group relative block w-full overflow-hidden rounded-[1.125rem] bg-soft text-left md:rounded-[1.375rem]"
+                className={cn(
+                  "group relative block w-full overflow-hidden rounded-[1.25rem] bg-soft text-left md:rounded-[1.5rem]",
+                  featured ? "aspect-[4/5] sm:aspect-[16/10]" : "aspect-[4/5]",
+                )}
                 aria-label={`${it.type === "clip" ? "Clip abspielen" : "Foto vergrößern"}: ${it.caption}`}
               >
                 <Image
                   src={img}
                   alt={it.alt}
-                  sizes="(min-width: 80rem) 420px, (min-width: 48rem) 31vw, 48vw"
+                  fill
+                  sizes="(min-width: 64rem) 420px, (min-width: 48rem) 31vw, 48vw"
                   quality={70}
-                  className={cn("h-auto w-full transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.03]", it.type === "clip" && "aspect-[9/16] object-cover")}
+                  className="object-cover transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.04]"
                 />
                 {it.type === "clip" && <TileClip src={it.src} />}
-                <span className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end gap-2 bg-gradient-to-t from-black/65 to-transparent px-3 pt-10 pb-3 text-[0.875rem] font-semibold text-white md:px-4 md:pb-4 md:text-[0.9375rem]">
+                <span className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end gap-2 bg-gradient-to-t from-black/70 via-black/25 to-transparent px-3 pt-12 pb-3 text-[0.875rem] font-semibold text-white md:px-4 md:pb-4 md:text-[0.9375rem]">
                   {it.type === "clip" && <Play className="mb-0.5 size-4 shrink-0 fill-current" aria-hidden />}
                   {it.caption}
                 </span>
