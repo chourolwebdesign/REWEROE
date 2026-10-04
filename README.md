@@ -64,6 +64,7 @@ ffmpeg -i quelle.mp4 -an -vf "scale=540:960:flags=lanczos" -c:v libx264 -profile
 | Als App / offline | `app/manifest.ts`, `public/sw.js`, `/offline` | Seiten network-first mit Offline-Kopie; bei Änderungen an der Cache-Logik `VERSION` in `sw.js` erhöhen |
 | Teilen | Prospekt-Ticket | System-Teilen-Menü, sonst WhatsApp / Link kopieren |
 | Aushang mit QR-Codes | `/aushang` (noindex) | A4 drucken; nach dem Domainwechsel neu drucken |
+| Teilen-Vorschau | `/og/<karte>.jpg`, `lib/og.tsx` | eigene Karte je Seite und Beitrag (roter Hero-Look, beim Build erzeugt); neue Seite: Karte in `lib/og.tsx → PAGES`, Metadaten mit `pageMetadata()` aus `lib/site.ts` |
 
 ## Grundsätze
 
