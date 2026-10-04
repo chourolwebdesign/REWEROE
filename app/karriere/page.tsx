@@ -34,7 +34,7 @@ export default function KarrierePage() {
 
       <section aria-labelledby="stellen-titel" className="wrap">
         <div className="grid gap-3 md:grid-cols-[1.1fr_1fr] md:gap-4">
-          <div className="reveal on-dark rounded-[1.75rem] bg-night p-7 text-white md:p-10">
+          <div className="reveal on-dark rounded-[var(--radius-media)] bg-night p-7 text-white md:p-10">
             <h2 id="stellen-titel" className="text-h3">
               Offene Stellen
             </h2>
@@ -62,7 +62,7 @@ export default function KarrierePage() {
               </ButtonLink>
             </div>
           </div>
-          <div className="reveal relative min-h-[18rem] overflow-hidden rounded-[1.75rem] bg-soft">
+          <div className="reveal relative min-h-[18rem] overflow-hidden rounded-[var(--radius-media)] bg-soft">
             <Image
               src={media["resilienzwoche-obst"].src}
               alt={media["resilienzwoche-obst"].alt}
@@ -82,9 +82,12 @@ export default function KarrierePage() {
         </h2>
         <ul className="mt-8 grid gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-4">
           {AREAS.map(({ icon: Icon, title, text }) => (
-            <li key={title} className="reveal rounded-[1.75rem] bg-soft p-6 md:p-7">
-              <span className="grid size-12 place-items-center rounded-2xl bg-white">
-                <Icon className="size-6 text-red" strokeWidth={1.9} aria-hidden />
+            <li
+              key={title}
+              className="reveal card-lift flex flex-col rounded-[var(--radius-media)] bg-soft p-6 ring-1 ring-line/60 md:p-7"
+            >
+              <span className="grid size-14 place-items-center rounded-2xl bg-ink text-white ring-1 ring-inset ring-white/10">
+                <Icon className="size-7" strokeWidth={1.7} aria-hidden />
               </span>
               <h3 className="mt-6 text-h3">{title}</h3>
               <p className="mt-2 text-muted">{text}</p>
@@ -94,9 +97,10 @@ export default function KarrierePage() {
       </section>
 
       <section aria-labelledby="initiativ-titel" className="wrap py-20 md:py-28">
-        <div className="reveal rounded-[2rem] bg-red-tint p-8 md:flex md:items-center md:justify-between md:gap-10 md:p-12">
+        <div className="reveal rounded-[var(--radius-stage)] bg-red-tint p-8 md:flex md:items-center md:justify-between md:gap-10 md:p-12">
           <div>
-            <h2 id="initiativ-titel" className="text-h3">
+            <p className="text-eyebrow text-red">Initiativbewerbung</p>
+            <h2 id="initiativ-titel" className="mt-3 text-h3">
               Lieber direkt fragen?
             </h2>
             <p className="mt-3 max-w-[52ch] text-ink-2">
