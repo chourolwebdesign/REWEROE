@@ -120,7 +120,7 @@ export function StoryHero({ items, intro, side }: { items: StoryMedia[]; intro: 
             <button type="button" onClick={() => go(-1)} className={NAV_BTN} aria-label="Vorheriges Bild">
               <ChevronLeft className="size-5" aria-hidden />
             </button>
-            <p className="min-w-[4.5rem] text-center text-[0.9375rem] font-semibold tabular-nums text-white/85" aria-hidden>
+            <p className="min-w-[4.5rem] text-center text-[0.9375rem] font-semibold tabular-nums text-white" aria-hidden>
               {index + 1} / {items.length}
             </p>
             <button type="button" onClick={() => go(1)} className={NAV_BTN} aria-label="Nächstes Bild">

@@ -1,5 +1,4 @@
 import { ButtonLink } from "@/components/ui/button";
-import { markt } from "@/content/markt";
 
 /** Karriere-Hinweis. Keine erfundenen Stellen: verweist auf /karriere und die REWE-Stellensuche. */
 export function CareerBand() {
@@ -15,11 +14,11 @@ export function CareerBand() {
           </p>
         </div>
         <div className="flex flex-wrap gap-3 md:justify-end">
-          <ButtonLink href="/karriere" variant="white" size="lg">
-            Mehr erfahren
+          <ButtonLink href="/karriere/bewerben" variant="white" size="lg">
+            In 60 Sekunden bewerben
           </ButtonLink>
-          <ButtonLink href={markt.links.jobs} external variant="glass" size="lg">
-            Stellensuche
+          <ButtonLink href="/karriere" variant="glass" size="lg">
+            Mehr erfahren
           </ButtonLink>
         </div>
       </div>

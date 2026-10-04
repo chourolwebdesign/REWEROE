@@ -6,6 +6,7 @@ import { Menu, Phone, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Logo } from "@/components/brand/logo";
 import { OpenStatus } from "@/components/live/open-status";
+import { InstallApp } from "@/components/pwa/install-app";
 import { buttonClasses, ButtonLink } from "@/components/ui/button";
 import { InstagramIcon } from "@/components/ui/icons";
 import { markt } from "@/content/markt";
@@ -55,7 +56,7 @@ export function SiteHeader() {
         Zum Inhalt springen
       </a>
       <div className="wrap flex h-full items-center gap-6">
-        <Logo tone={overHero ? "light" : "dark"} />
+        <Logo tone={overHero ? "light" : "dark"} framed={overHero} />
 
         <nav aria-label="Hauptnavigation" className="ml-auto hidden lg:block">
           <ul className="flex items-center gap-1">
@@ -141,6 +142,7 @@ export function SiteHeader() {
                 <InstagramIcon className="size-[1.1em]" />
                 Instagram<span className="sr-only"> (öffnet in neuem Tab)</span>
               </a>
+              <InstallApp variant="glass" />
             </div>
           </div>
         </nav>

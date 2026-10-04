@@ -4,6 +4,8 @@ import { Highlights } from "@/components/home/highlights";
 import { MarqueeBand } from "@/components/home/marquee-band";
 import { NumbersBand } from "@/components/home/numbers-band";
 import { RegionalBand } from "@/components/home/regional-band";
+import { Services } from "@/components/home/services";
+import { hasUpcomingTermine, TermineList } from "@/components/home/termine";
 import { StoryHero } from "@/components/home/story-hero";
 import { OpenStatus } from "@/components/live/open-status";
 import { FlyerWeekText } from "@/components/live/flyer-week";
@@ -18,11 +20,14 @@ import { galerie } from "@/content/galerie";
 import { markt } from "@/content/markt";
 import { story } from "@/content/story";
 import { flyerWeek } from "@/lib/flyer";
+import { berlinNow } from "@/lib/hours";
+import { absoluteUrl } from "@/lib/site";
 import { resolveGallery, resolveStory } from "@/lib/resolve";
 
 export default function HomePage() {
   const week = flyerWeek();
   const latest = posts[0];
+  const today = berlinNow(new Date()).date;
 
   return (
     <>
@@ -30,7 +35,7 @@ export default function HomePage() {
         items={resolveStory(story)}
         intro={
           <>
-            <p className="text-eyebrow mb-6 flex items-center gap-2.5 text-white/85">
+            <p className="text-eyebrow mb-6 flex items-center gap-2.5 text-white">
               <span aria-hidden className="h-px w-6 shrink-0 bg-white/60" />
               REWE in Frankfurt-Rödelheim
             </p>
@@ -38,7 +43,7 @@ export default function HomePage() {
               Willkommen in deinem{" "}
               <span className="rounded-[0.16em] bg-white px-[0.12em] text-red [box-decoration-break:clone]">Markt.</span>
             </h1>
-            <p className="mt-7 max-w-[34ch] text-lede text-white/85">
+            <p className="mt-7 max-w-[34ch] text-lede text-white">
               Montag bis Samstag von 7 bis 22 Uhr in der Thudichumstraße – mit Bäckerei und Sushi im Markt.
             </p>
           </>
@@ -46,15 +51,17 @@ export default function HomePage() {
         side={
           <div className="grid gap-5">
             <OpenStatus tone="dark" className="justify-self-start" />
-            <div className="flex flex-wrap gap-3">
-              <ButtonLink href={markt.links.flyer} external variant="white" size="lg">
+            {/* mobil nebeneinander und kompakter, damit die Story schon im ersten Bildschirm zu sehen ist */}
+            <div className="flex flex-wrap gap-2.5 sm:gap-3">
+              <ButtonLink href={markt.links.flyer} external variant="white" size="lg" className="h-12 px-5 text-base sm:h-14 sm:px-7 sm:text-[1.0625rem]">
                 Prospekt KW <FlyerWeekText initial={week} field="kw" />
               </ButtonLink>
-              <ButtonLink href={markt.links.googleMaps} external variant="glass" size="lg">
-                Route planen
+              <ButtonLink href={markt.links.googleMaps} external variant="glass" size="lg" className="h-12 px-5 text-base sm:h-14 sm:px-7 sm:text-[1.0625rem]">
+                Route
+                <span className="hidden sm:inline">&nbsp;planen</span>
               </ButtonLink>
             </div>
-            <p className="text-[0.9375rem] text-white/75">
+            <p className="hidden text-[0.9375rem] text-white sm:block">
               {markt.address.street} · {markt.address.zip} Frankfurt-Rödelheim
             </p>
           </div>
@@ -99,6 +106,25 @@ export default function HomePage() {
         />
         <Highlights className="mt-10" />
       </section>
+
+      <section aria-labelledby="praktisch-titel" className="wrap pt-24 md:pt-32">
+        <SectionHeading
+          id="praktisch-titel"
+          eyebrow="Praktisch"
+          title="Mehr als einkaufen."
+          lede="Kleine Helfer für den Alltag – ohne Anmeldung, ohne Werbung, ohne Datensammeln."
+        />
+        <Services calendarUrl={absoluteUrl("/kalender.ics")} className="mt-10" />
+      </section>
+
+      {hasUpcomingTermine(today) && (
+        <section aria-labelledby="termine-titel" className="wrap pt-24 md:pt-32">
+          <SectionHeading id="termine-titel" eyebrow="Termine" title="Demnächst im Markt." />
+          <div className="mt-10">
+            <TermineList today={today} />
+          </div>
+        </section>
+      )}
 
       {latest && (
         <section aria-labelledby="aktuelles-titel" className="wrap pt-24 md:pt-32">

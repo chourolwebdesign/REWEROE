@@ -67,7 +67,7 @@ export function Gallery({ items, className }: { items: GalleryMedia[]; className
           const img = it.type === "image" ? it.image : it.poster;
           const featured = i === 0;
           return (
-            <li key={i} className={cn(featured && "sm:col-span-2")}>
+            <li key={i} className={cn(featured && "col-span-2")}>
               <button
                 type="button"
                 onClick={() => setOpen(i)}
@@ -81,7 +81,7 @@ export function Gallery({ items, className }: { items: GalleryMedia[]; className
                   src={img}
                   alt={it.alt}
                   fill
-                  sizes="(min-width: 64rem) 420px, (min-width: 48rem) 31vw, 48vw"
+                  sizes={featured ? "(min-width: 64rem) 640px, (min-width: 40rem) 62vw, 100vw" : "(min-width: 64rem) 320px, (min-width: 40rem) 31vw, 48vw"}
                   quality={70}
                   className="object-cover transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.04]"
                 />

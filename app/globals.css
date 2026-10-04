@@ -279,3 +279,48 @@
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* ───────────── Nur mit / nur ohne JavaScript (html.js wird vor dem ersten Paint gesetzt) ───────────── */
+html:not(.js) .js-only {
+  display: none !important;
+}
+html.js .js-hidden {
+  display: none !important;
+}
+
+/* Bewerbungsformular: ohne JS alle Schritte untereinander, mit JS nur der aktive Schritt */
+.application-form .step + .step {
+  margin-top: 3rem;
+}
+html.js .application-form .step:not([data-active]) {
+  display: none;
+}
+html.js .application-form .step + .step {
+  margin-top: 0;
+}
+
+/* ───────────── Drucken (Aushang) ───────────── */
+@media print {
+  @page {
+    margin: 14mm;
+  }
+  body > header,
+  body > footer,
+  nav[aria-label="Schnellzugriff"],
+  nav[aria-label="Brotkrumen"] {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+  }
+}
+@media print {
+  .aushang {
+    width: 100% !important;
+    aspect-ratio: auto;
+    height: auto;
+  }
+  .aushang-wrap {
+    padding: 0 !important;
+  }
+}
