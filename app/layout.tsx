@@ -5,7 +5,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ldScript, storeJsonLd } from "@/lib/jsonld";
 import { INDEXABLE, SITE_URL } from "@/lib/site";
-import { display, text } from "./fonts";
+import { display } from "./fonts";
 import "./globals.css";
 
 const description =
@@ -40,7 +40,7 @@ export const revalidate = 3600;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="de" className={`${display.variable} ${text.variable}`} suppressHydrationWarning>
+    <html lang="de" className={display.variable} suppressHydrationWarning>
       <body>
         {/* Vor dem ersten Paint: Einblend-Animationen nur mit JS (siehe .reveal in globals.css) */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />

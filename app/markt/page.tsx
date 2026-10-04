@@ -44,7 +44,8 @@ export default function MarktPage() {
               src={media["resilienzwoche-obst"].src}
               alt={media["resilienzwoche-obst"].alt}
               fill
-              preload
+              loading="eager"
+              fetchPriority="high"
               sizes="(min-width: 48rem) 57vw, 100vw"
               quality={75}
               className="object-cover"

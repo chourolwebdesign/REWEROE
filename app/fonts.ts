@@ -1,4 +1,4 @@
-import { Bricolage_Grotesque, Inter } from "next/font/google";
+import { Bricolage_Grotesque } from "next/font/google";
 
 /** Überschriften: variable Bricolage Grotesque mit optischer Größe (große Titel bekommen den Display-Schnitt). */
 export const display = Bricolage_Grotesque({
@@ -8,9 +8,4 @@ export const display = Bricolage_Grotesque({
   display: "swap",
 });
 
-/** Fließtext und Bedienelemente. */
-export const text = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
+// Fließtext nutzt die Systemschrift (SF Pro, Roboto, Segoe UI): kein Download, sofort lesbar.

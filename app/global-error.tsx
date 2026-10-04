@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { display, text } from "./fonts";
+import { display } from "./fonts";
 import "./globals.css";
 
 /** Fehlergrenze für den gesamten Root-Layout-Baum – bringt eigenes <html>/<body> mit. */
@@ -11,7 +11,7 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
   }, [error]);
 
   return (
-    <html lang="de" className={`${display.variable} ${text.variable}`}>
+    <html lang="de" className={display.variable}>
       <body>
         <main className="wrap grid min-h-[100svh] content-center py-20">
           <p className="text-[0.9375rem] font-semibold text-red">Fehler</p>

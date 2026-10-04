@@ -61,7 +61,7 @@ export default async function PostPage({ params }: PageProps<"/aktuelles/[slug]"
 
       <figure className="wrap">
         <div className="relative aspect-[3/2] overflow-hidden rounded-[1.75rem] bg-soft md:aspect-[2/1]">
-          <Image src={cover.src} alt={cover.alt} fill preload sizes="(min-width: 82.5rem) 1270px, 100vw" quality={75} className="object-cover" />
+          <Image src={cover.src} alt={cover.alt} fill loading="eager" fetchPriority="high" sizes="(min-width: 82.5rem) 1270px, 100vw" quality={75} className="object-cover" />
         </div>
         <figcaption className="mt-3 text-[0.8125rem] text-muted">{cover.credit}</figcaption>
       </figure>

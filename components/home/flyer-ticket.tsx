@@ -15,7 +15,7 @@ export function FlyerTicket({ headingLevel = "h2", className }: { headingLevel?:
     <div className={cn("grid overflow-hidden rounded-[2rem] bg-white shadow-[var(--shadow-lift)] md:grid-cols-[minmax(15rem,20rem)_1fr]", className)}>
       <div className="relative bg-red p-7 text-white md:p-10">
         <p className="flex h-full items-end justify-between gap-4 md:flex-col md:items-start">
-          <span className="text-[0.9375rem] font-semibold text-white/85">
+          <span className="text-[0.9375rem] font-semibold text-white">
             Prospekt · <abbr title="Kalenderwoche" className="no-underline">KW</abbr>
           </span>
           <span className="font-display text-[5.5rem] leading-[0.8] font-extrabold tracking-[-0.05em] tabular-nums md:text-[9rem]">

@@ -97,7 +97,10 @@ export function StoryHero({ items, intro, side }: { items: StoryMedia[]; intro: 
         return;
       }
       if (!v.getAttribute("src")) v.src = it.src;
-      v.play().catch(() => setUserPaused(true));
+      // Nur blockiertes Autoplay zählt als Pause; ein unterbrochenes play() (AbortError) nicht.
+      v.play().catch((e: unknown) => {
+        if (e instanceof DOMException && e.name === "NotAllowedError") setUserPaused(true);
+      });
     });
     const b = backdropRef.current;
     if (b) {
@@ -204,7 +207,8 @@ export function StoryHero({ items, intro, side }: { items: StoryMedia[]; intro: 
                       src={it.poster}
                       alt={it.alt}
                       fill
-                      preload={i === 0}
+                      loading={i === 0 ? "eager" : "lazy"}
+                      fetchPriority={i === 0 ? "high" : "auto"}
                       sizes="(min-width: 64rem) 430px, 100vw"
                       quality={70}
                       className="object-cover"
@@ -228,7 +232,8 @@ export function StoryHero({ items, intro, side }: { items: StoryMedia[]; intro: 
                       src={it.image}
                       alt={it.alt}
                       fill
-                      preload={i === 0}
+                      loading={i === 0 ? "eager" : "lazy"}
+                      fetchPriority={i === 0 ? "high" : "auto"}
                       sizes="(min-width: 64rem) 430px, 100vw"
                       quality={70}
                       className="object-cover"
