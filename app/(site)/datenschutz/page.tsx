@@ -130,7 +130,9 @@ export default function DatenschutzPage() {
             Zweck ist, unseren Markt besser zu machen (berechtigtes Interesse, Art. 6 Abs. 1 lit. f DSGVO); Kontaktangaben nutzen wir nur für
             die Antwort (Art. 6 Abs. 1 lit. a DSGVO, Einwilligung durch die Angabe). Kontaktangaben löschen wir nach 90 Tagen, alles andere
             nach 12 Monaten. Gespeichert wird bei der Supabase Inc. in Frankfurt am Main (Auftragsverarbeitung, Art. 28 DSGVO); lesen können
-            nur die Marktleitung und von ihr berechtigte Mitarbeitende. Bei 1–2 Sternen bekommt die Marktleitung eine E-Mail.
+            nur die Marktleitung und von ihr berechtigte Mitarbeitende. Bei 1–2 Sternen bekommt die Marktleitung eine kurze E-Mail mit
+            Bewertung und Bereichen – ohne Kommentar und Kontaktangaben, die stehen nur im Markt-Cockpit. Deine Einwilligung zum Rückruf
+            kannst du jederzeit widerrufen, zum Beispiel im Markt oder telefonisch; dann löschen wir deine Kontaktangaben sofort.
           </p>
           <p>
             „Auf Google bewerten“ ist ein Link zu Google; erst mit dem Antippen verlässt du unsere Seite. Ob du ihn antippst, vermerken wir

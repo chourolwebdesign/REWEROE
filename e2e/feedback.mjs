@@ -49,6 +49,7 @@ try {
   // 1) zufrieden, Deutsch, Handy
   let page = await open();
   check((await text(page, "h1")) === "Wie war dein Einkauf?", "Deutsch per Accept-Language, „du“");
+  check((await page.$eval("[data-google-footer]", (a) => a.getAttribute("href")).catch(() => null))?.startsWith("https://"), "Google-Link für alle schon auf der Startseite (Fuß)");
   await axe(page, "/feedback Start 390px");
   await page.click('[data-face="5"]');
   const good = await done(page);
@@ -77,8 +78,13 @@ try {
   await page.type("textarea", marker);
   await page.type("[data-contact]", "e2e-feedback@example.org");
   await axe(page, "/feedback Details 1280px");
-  await page.click('[data-action="send"]', { clickCount: 2 });
+  await page.$eval('[data-action="send"]', (b) => {
+    b.click();
+    b.click();
+  });
   const bad = await done(page);
+  // ein zweiter Aufruf liefe nach dem ersten (Server Actions stehen in einer Warteschlange) – erst danach zählen
+  await new Promise((r) => setTimeout(r, 1500));
   check(Boolean(await page.$("[data-care]")), "2 Sterne → Hinweis der Marktleitung");
   check((await page.$eval("[data-google]", (a) => a.dataset.google)) === "dezent", "Google-Link auch bei 2 Sternen sichtbar, ruhig");
   const rows = await sb.from("feedback").select("id,rating,aspects,contact,lang").eq("comment", marker);
@@ -101,6 +107,19 @@ try {
   check((await page.$eval("[data-feedback-root]", (e) => e.dir)) === "ltr", "… wieder links nach rechts");
   await page.close();
 
+  // 3b) Doppeltipp auf ein Gesicht → genau eine Rückmeldung
+  const since = new Date(Date.now() - 1000).toISOString();
+  page = await open({ lang: "ru" });
+  await page.$eval('[data-face="5"]', (b) => {
+    b.click();
+    b.click();
+  });
+  await done(page);
+  await new Promise((r) => setTimeout(r, 1500));
+  const ru = await sb.from("feedback").select("id").eq("lang", "ru").gte("created_at", since);
+  check(ru.data?.length === 1, `Doppeltipp auf ein Gesicht → genau eine Zeile (${ru.data?.length})`);
+  await page.close();
+
   // 4) 320 px ohne waagerechtes Scrollen
   page = await open({ width: 320 });
   check(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), "320 px: Start ohne Überlauf");
@@ -117,10 +136,13 @@ try {
     await page.click('[data-face="4"]');
     await page.waitForSelector('[data-feedback-done], [role="alert"]', { timeout: 15000 });
     if (await page.$("[data-feedback-done]")) created.push(await page.$eval("[data-feedback-done]", (e) => e.getAttribute("data-feedback-id")));
-    else message = await text(page, '[role="alert"]');
+    else {
+      message = await text(page, '[role="alert"]');
+      check(Boolean(await page.$("[data-google-footer]")), "Fehler (Limit) → Google-Link bleibt erreichbar");
+    }
     await page.close();
   }
-  check(created.length === 12 && message.includes("Zu viele"), `11. Rückmeldung derselben Adresse in einer Stunde → „${message}“`);
+  check(created.length === 13 && message.includes("Zu viele"), `11. Rückmeldung derselben Adresse in einer Stunde → „${message}“`);
 } finally {
   const ids = created.filter(Boolean);
   if (ids.length) await sb.from("feedback").delete().in("id", ids);

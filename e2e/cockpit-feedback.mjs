@@ -43,7 +43,9 @@ try {
   await page.goto(`${BASE}/cockpit/feedback`, { waitUntil: "networkidle0" });
   const navRows = await page.$$eval('nav[aria-label="Cockpit"] li', (lis) => new Set(lis.map((li) => Math.round(li.getBoundingClientRect().top))).size);
   check(navRows === 1, `mobile Navigation in einer Reihe (${navRows})`);
-  check((await Promise.all(ids.map((id) => page.$(card(id))))).every(Boolean), "Eingang zeigt die neuen Rückmeldungen");
+  check(Boolean(await page.$(card(ids[0]))) && Boolean(await page.$(card(ids[1]))), "Eingang „Neu“ zeigt die Rückmeldungen mit 1–3 Sternen");
+  check(!(await page.$(card(ids[2]))), "5 Sterne (nichts zu tun) nicht unter „Neu“");
+  check((await page.$eval(card(ids[0]), (e) => e.textContent)).includes("Rückruf gewünscht"), "Kontakt hinterlassen → „Rückruf gewünscht“");
   check((await page.$eval(`${card(ids[0])} a[href^="tel:"]`, (a) => a.getAttribute("href"))) === "tel:+491701234567", "Telefon per Tipp anrufen");
   check((await page.$eval(`${card(ids[1])} a[href^="mailto:"]`, (a) => a.getAttribute("href"))) === "mailto:e2e-eingang@example.org", "E-Mail per Tipp schreiben");
   for (const vp of [mobile, { width: 1280, height: 900 }]) {

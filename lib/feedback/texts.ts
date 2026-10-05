@@ -36,6 +36,7 @@ export interface FeedbackTexts {
   pitchGood: string;
   pitchBad: string;
   googleButton: string;
+  googleFooter: string;
   newTab: string;
   privacy: string;
   privacyLink: string;
@@ -80,8 +81,9 @@ export const FEEDBACK_TEXTS: Record<Lang, FeedbackTexts> = {
     pitchGood: "Teile deine Erfahrung auf Google – das dauert 30 Sekunden.",
     pitchBad: "Du kannst deine Erfahrung auch öffentlich auf Google teilen.",
     googleButton: "Auf Google bewerten",
+    googleFooter: "Lieber gleich auf Google bewerten",
     newTab: "öffnet Google in einem neuen Tab",
-    privacy: "Keine Cookies, keine IP-Adresse, kein Tracking. Kontaktangaben löschen wir nach 90 Tagen, alles andere nach 12 Monaten.",
+    privacy: "Keine Cookies, keine Analyse-Dienste; deine IP-Adresse speichern wir nicht. Kontaktangaben löschen wir nach 90 Tagen, alles andere nach 12 Monaten.",
     privacyLink: "Datenschutz",
     errorInvalid: "Das hat nicht gepasst – bitte prüf deine Angaben.",
     errorTooMany: "Zu viele Rückmeldungen in kurzer Zeit. Bitte versuch es später noch einmal.",
@@ -121,8 +123,9 @@ export const FEEDBACK_TEXTS: Record<Lang, FeedbackTexts> = {
     pitchGood: "Deneyiminizi Google'da paylaşın – 30 saniye sürer.",
     pitchBad: "Deneyiminizi dilerseniz Google'da da paylaşabilirsiniz.",
     googleButton: "Google'da değerlendir",
+    googleFooter: "Doğrudan Google'da değerlendirin",
     newTab: "Google yeni sekmede açılır",
-    privacy: "Çerez yok, IP adresi yok, izleme yok. İletişim bilgilerini 90 gün, diğer her şeyi 12 ay sonra sileriz.",
+    privacy: "Çerez yok, analiz hizmeti yok; IP adresinizi saklamıyoruz. İletişim bilgilerini 90 gün, diğer her şeyi 12 ay sonra sileriz.",
     privacyLink: "Gizlilik (Almanca)",
     errorInvalid: "Bir şeyler uymadı – lütfen bilgilerinizi kontrol edin.",
     errorTooMany: "Kısa sürede çok fazla geri bildirim. Lütfen daha sonra tekrar deneyin.",
@@ -162,8 +165,9 @@ export const FEEDBACK_TEXTS: Record<Lang, FeedbackTexts> = {
     pitchGood: "شارك تجربتك على Google — يستغرق ذلك ٣٠ ثانية.",
     pitchBad: "يمكنك أيضاً مشاركة تجربتك علناً على Google.",
     googleButton: "قيّمنا على Google",
+    googleFooter: "قيّمنا مباشرة على Google",
     newTab: "يفتح Google في علامة تبويب جديدة",
-    privacy: "لا ملفات تعريف ارتباط، لا عنوان IP، لا تتبع. نحذف بيانات الاتصال بعد ٩٠ يوماً وكل ما عدا ذلك بعد ١٢ شهراً.",
+    privacy: "لا ملفات تعريف ارتباط ولا خدمات تحليل؛ لا نحفظ عنوان IP الخاص بك. نحذف بيانات الاتصال بعد ٩٠ يوماً وكل ما عدا ذلك بعد ١٢ شهراً.",
     privacyLink: "الخصوصية (بالألمانية)",
     errorInvalid: "هناك خطأ في البيانات — يرجى التحقق منها.",
     errorTooMany: "ملاحظات كثيرة في وقت قصير. يرجى المحاولة لاحقاً.",
@@ -203,8 +207,9 @@ export const FEEDBACK_TEXTS: Record<Lang, FeedbackTexts> = {
     pitchGood: "Поделитесь опытом в Google — это займёт 30 секунд.",
     pitchBad: "Вы также можете публично поделиться опытом в Google.",
     googleButton: "Оценить в Google",
+    googleFooter: "Оценить сразу в Google",
     newTab: "Google откроется в новой вкладке",
-    privacy: "Без cookie, без IP-адреса, без отслеживания. Контакты удаляем через 90 дней, всё остальное — через 12 месяцев.",
+    privacy: "Без cookie и сервисов аналитики; ваш IP-адрес мы не сохраняем. Контакты удаляем через 90 дней, всё остальное — через 12 месяцев.",
     privacyLink: "Конфиденциальность (на немецком)",
     errorInvalid: "Что-то не так — проверьте, пожалуйста, данные.",
     errorTooMany: "Слишком много отзывов за короткое время. Попробуйте позже.",
@@ -244,8 +249,9 @@ export const FEEDBACK_TEXTS: Record<Lang, FeedbackTexts> = {
     pitchGood: "Share your experience on Google – it takes 30 seconds.",
     pitchBad: "You are also welcome to share your experience publicly on Google.",
     googleButton: "Review us on Google",
+    googleFooter: "Review us directly on Google",
     newTab: "opens Google in a new tab",
-    privacy: "No cookies, no IP address, no tracking. We delete contact details after 90 days and everything else after 12 months.",
+    privacy: "No cookies, no analytics; we do not store your IP address. We delete contact details after 90 days and everything else after 12 months.",
     privacyLink: "Privacy (in German)",
     errorInvalid: "Something did not fit – please check your entries.",
     errorTooMany: "Too much feedback in a short time. Please try again later.",

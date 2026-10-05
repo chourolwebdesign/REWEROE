@@ -241,7 +241,23 @@ export function FeedbackFlow({ initialLang, googleUrl }: { initialLang: Lang; go
         )}
       </main>
 
-      <footer className="mt-12 text-[0.875rem] text-muted">
+      <footer className="mt-12 grid gap-2 text-[0.875rem] text-muted">
+        {/* Google für alle und in jedem Schritt – auch wenn das Senden scheitert (keine selektive Einholung); im Dank steht er groß */}
+        {step !== "done" && (
+          <p>
+            <a
+              data-google-footer
+              href={googleUrl}
+              target="_blank"
+              rel="noopener"
+              className="inline-flex min-h-11 items-center gap-1.5 font-semibold text-ink underline underline-offset-4"
+            >
+              {t.googleFooter}
+              <ExternalLink className="size-[1em] rtl:-scale-x-100" aria-hidden />
+              <span className="sr-only"> ({t.newTab})</span>
+            </a>
+          </p>
+        )}
         <p>
           {t.privacy}{" "}
           <a href="/datenschutz#feedback" className="font-semibold text-ink underline underline-offset-4">

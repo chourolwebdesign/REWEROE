@@ -38,6 +38,10 @@ try {
   const seen = await editor.from("feedback").select("rating,aspects,comment,contact,status").eq("id", fbBad.data).single();
   assert.deepEqual(seen.data, { rating: 2, aspects: ["kasse"], comment: "RLS-Test", contact: "rls@example.org", status: "neu" });
   assert.equal((await editor.from("feedback").select("contact").eq("id", fbGood.data).single()).data?.contact, "", "bei 4–5 Sternen kein Kontakt");
+  // 4–5 Sterne haben nichts zu erledigen (kein Kommentar, kein Kontakt) – sie landen nicht im Eingang „Neu“
+  const goodState = (await editor.from("feedback").select("status,handled_at").eq("id", fbGood.data).single()).data;
+  assert.ok(goodState?.status === "erledigt" && goodState.handled_at, "4–5 Sterne gleich erledigt");
+  assert.equal((await editor.from("feedback").select("status").eq("id", fbBad.data).single()).data?.status, "neu", "1–3 Sterne neu");
   assert.ok((await editor.from("feedback").update({ comment: "geändert" }).eq("id", fbBad.data)).error, "Editor ändert keinen Text");
   assert.ifError((await editor.from("feedback").update({ status: "erledigt", handled_at: new Date().toISOString() }).eq("id", fbBad.data)).error);
   assert.ifError((await guest.rpc("feedback_google_click", { p_key: process.env.FEEDBACK_KEY, p_id: fbGood.data })).error);

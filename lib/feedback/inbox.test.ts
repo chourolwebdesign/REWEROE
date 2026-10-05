@@ -56,6 +56,17 @@ describe("contactHref", () => {
     expect(contactHref("+49 (69) 945158-650")).toBe("tel:+4969945158650");
     expect(contactHref("0049 170/1234567")).toBe("tel:+491701234567");
   });
+  it("arabisch-indische und persische Ziffern (arabische Tastatur) → tel", () => {
+    expect(contactHref("٠١٧٠ ١٢٣٤٥٦٧")).toBe("tel:01701234567");
+    expect(contactHref("۰۱۷۰۱۲۳۴۵۶۷")).toBe("tel:01701234567");
+  });
+  it("„+49 (0) 170 …“ ohne die (0) – sonst wählt das Telefon eine falsche Nummer", () => {
+    expect(contactHref("+49 (0) 170 1234567")).toBe("tel:+491701234567");
+  });
+  it("keine versteckten mailto-Parameter (BCC) aus der Eingabe", () => {
+    expect(contactHref("kunde@x.de?bcc=attacker%40evil.com")).toBeNull();
+    expect(contactHref("kunde@x.de&subject=x")).toBeNull();
+  });
   it("sonst kein Link", () => {
     expect(contactHref("ruft mich an")).toBeNull();
     expect(contactHref("12")).toBeNull();

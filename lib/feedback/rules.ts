@@ -24,6 +24,9 @@ export interface CleanFeedback {
   lang: Lang;
 }
 
+/** Arabisch-indische (٠–٩) und persische (۰–۹) Ziffern → 0–9: arabische Handy-Tastaturen tippen sie standardmäßig. */
+export const asciiDigits = (s: string) => s.replace(/[\u0660-\u0669\u06f0-\u06f9]/g, (d) => String((d.charCodeAt(0) & 0xf) % 10));
+
 /** Zeichen wie in Postgres (char_length), nicht UTF-16-Einheiten wie String#length. */
 const chars = (s: string) => [...s].length;
 
@@ -34,7 +37,8 @@ export function checkFeedback(i: FeedbackInput): CleanFeedback | null {
   const picked = new Set(i.aspects);
   if (![...picked].every((a) => (ASPECTS as readonly string[]).includes(a))) return null;
   const comment = String(i.comment ?? "").trim();
-  const contact = i.rating < PROMOTE ? String(i.contact ?? "").trim() : "";
+  // Kontakt lesbar für die Marktleitung: Ziffern als 0–9 speichern (Kommentare bleiben, wie sie getippt sind)
+  const contact = i.rating < PROMOTE ? asciiDigits(String(i.contact ?? "").trim()) : "";
   if (chars(comment) > MAX_COMMENT || chars(contact) > MAX_CONTACT) return null;
   return { rating: i.rating, aspects: ASPECTS.filter((a) => picked.has(a)), comment, contact, lang: i.lang as Lang };
 }

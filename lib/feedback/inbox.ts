@@ -1,4 +1,4 @@
-import { ASPECTS, type Aspect } from "./rules";
+import { ASPECTS, asciiDigits, type Aspect } from "./rules";
 import { FEEDBACK_TEXTS } from "./texts";
 
 /** Eine Rückmeldung, wie das Cockpit sie liest */
@@ -64,9 +64,11 @@ export const newFeedbackLine = (n: number) => (n === 0 ? "Keine neuen Rückmeldu
 
 /** mailto:/tel: für einen Tipp; null, wenn weder E-Mail noch Telefonnummer erkennbar ist (dann nur als Text zeigen). */
 export function contactHref(contact: string): string | null {
-  const c = contact.trim();
-  if (/^[^\s@<>"']+@[^\s@<>"']+\.[a-z]{2,}$/i.test(c)) return `mailto:${c}`;
-  let digits = c.replace(/[\s()/.-]/g, "");
+  const c = asciiDigits(contact.trim());
+  // nur schlichte Adressen: keine ?, &, % – sonst ließe sich ein verstecktes BCC in den mailto-Link schreiben
+  if (/^[A-Za-z0-9._+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(c)) return `mailto:${c}`;
+  // „+49 (0) 170 …“: die (0) entfällt bei der Landesvorwahl
+  let digits = c.replace(/\(0\)/g, "").replace(/[\s()/.-]/g, "");
   if (digits.startsWith("00")) digits = `+${digits.slice(2)}`;
   return /^\+?\d{6,15}$/.test(digits) ? `tel:${digits}` : null;
 }

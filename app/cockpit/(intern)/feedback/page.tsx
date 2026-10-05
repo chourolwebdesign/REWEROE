@@ -4,6 +4,7 @@ import { Download } from "lucide-react";
 import { FeedbackCard } from "@/components/cockpit/feedback-card";
 import { requireEditor } from "@/lib/cockpit/auth";
 import { FEEDBACK_FIELDS, feedbackStats, inboxFilter, inboxHref, type FeedbackRow, type InboxFilter } from "@/lib/feedback/inbox";
+import { allPages } from "@/lib/feedback/pages";
 import { FEEDBACK_TEXTS } from "@/lib/feedback/texts";
 import { cn } from "@/lib/utils";
 
@@ -30,11 +31,15 @@ export default async function FeedbackInboxPage({ searchParams }: PageProps<"/co
   let query = supabase.from("feedback").select(FEEDBACK_FIELDS).order("created_at", { ascending: false }).limit(200);
   if (filter.status !== "alle") query = query.eq("status", filter.status);
   if (filter.stars) query = query.eq("rating", filter.stars);
-  const [{ data: rows }, { data: recent }] = await Promise.all([
+  const since = new Date(now.getTime() - 30 * 864e5).toISOString();
+  const [{ data: rows }, recent] = await Promise.all([
     query,
-    supabase.from("feedback").select("created_at,rating,aspects").gte("created_at", new Date(now.getTime() - 30 * 864e5).toISOString()),
+    // alle Zeilen der 30 Tage, seitenweise (je Abfrage höchstens 1000)
+    allPages<Pick<FeedbackRow, "created_at" | "rating" | "aspects">>((from, to) =>
+      supabase.from("feedback").select("created_at,rating,aspects").gte("created_at", since).order("created_at", { ascending: false }).order("id").range(from, to),
+    ),
   ]);
-  const stats = feedbackStats(recent ?? [], now);
+  const stats = feedbackStats(recent, now);
   const de = FEEDBACK_TEXTS.de;
 
   return (

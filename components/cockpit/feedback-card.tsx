@@ -49,6 +49,7 @@ export function FeedbackCard({ row }: { row: FeedbackRow }) {
           </p>
         </div>
       </header>
+      {row.contact && <p className="mt-3 inline-flex rounded-full bg-red-tint px-3 py-1 text-[0.875rem] font-semibold text-red-deep">Rückruf gewünscht</p>}
       {row.aspects.length > 0 && (
         <ul aria-label="Bereiche" className="mt-3 flex flex-wrap gap-1.5">
           {row.aspects.map((a) => (

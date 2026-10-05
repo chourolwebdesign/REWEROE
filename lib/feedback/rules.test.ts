@@ -7,6 +7,10 @@ describe("checkFeedback", () => {
   it("bereinigt gültige Angaben; Bereiche in fester Reihenfolge", () => {
     expect(checkFeedback(ok)).toEqual({ rating: 2, aspects: ["wartezeit", "kasse"], comment: "Lange Schlange", contact: "0170 123456", lang: "tr" });
   });
+  it("Kontakt mit arabisch-indischen Ziffern wird lesbar gespeichert", () => {
+    expect(checkFeedback({ ...ok, contact: "٠١٧٠ ١٢٣٤٥٦٧" })?.contact).toBe("0170 1234567");
+    expect(checkFeedback({ ...ok, comment: "٣ Kassen zu" })?.comment).toBe("٣ Kassen zu");
+  });
   it("Kontakt nur bei 1–3 Sternen", () => {
     expect(checkFeedback({ ...ok, rating: 4 })?.contact).toBe("");
   });
