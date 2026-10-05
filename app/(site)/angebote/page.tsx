@@ -11,7 +11,7 @@ import { markt } from "@/content/markt";
 import { publishedFlyers } from "@/lib/data/flyers";
 import { weekRows } from "@/lib/hours";
 import { breadcrumbJsonLd, ldScript } from "@/lib/jsonld";
-import { pickFlyers } from "@/lib/prospekt/select";
+import { pickFlyers, viewerTabs } from "@/lib/prospekt/select";
 import { uploadWeek } from "@/lib/prospekt/week";
 import { absoluteUrl, pageMetadata } from "@/lib/site";
 
@@ -43,10 +43,13 @@ const HINTS = [
 export default async function AngebotePage() {
   const open = weekRows().find((r) => r.hours) ?? weekRows()[0];
   const choice = pickFlyers(await publishedFlyers(), new Date());
-  const weeks: ViewerWeek[] = [
-    ...(choice.current ? [{ key: "current" as const, label: "Diese Woche", flyer: choice.current }] : []),
-    ...(choice.next ? [{ key: "next" as const, label: "Nächste Woche", flyer: choice.next }] : []),
-  ].map((w) => ({ ...w, kw: w.flyer.kw, range: uploadWeek(w.flyer.week_start).range }));
+  const weeks: ViewerWeek[] | undefined = viewerTabs(choice)?.map(({ key, flyer }) => ({
+    key,
+    label: key === "current" ? "Diese Woche" : "Nächste Woche",
+    flyer,
+    kw: flyer.kw,
+    range: uploadWeek(flyer.week_start).range,
+  }));
   return (
     <>
       <PageHeader
@@ -57,7 +60,7 @@ export default async function AngebotePage() {
       />
 
       <section id="prospekt" aria-label="Aktueller Prospekt" className="wrap">
-        {weeks.length > 0 ? (
+        {weeks ? (
           <>
             <FlyerViewer weeks={weeks} defaultTab={choice.defaultTab} />
             <p className="mt-6 text-[0.9375rem] text-muted">

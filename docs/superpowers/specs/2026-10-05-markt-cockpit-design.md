@@ -94,10 +94,14 @@ keine Vercel-Bildoptimierung nötig.
 1. PDF wählen (auf dem Handy aus „Dateien“ oder einem Mail-Anhang); bis 60 MB und 80 Seiten.
 2. Woche bestimmen: zuerst aus dem Dateinamen (`KW41_2026…` → KW 41/2026); sonst Upload Do–So → nächste Woche, Mo–Mi → laufende
    Woche. Änderbar über eine Wochenauswahl („KW 42 · 12.–17.10.“). Gültigkeit rechnet `lib/flyer.ts` (Feiertags-Montag → ab Dienstag).
-3. Vorbereiten mit Fortschritt („Seite 12 von 34“): pdf.js (Apache 2.0, nur in dieser Ansicht geladen) zeichnet jede Seite, der
+3. Vorbereiten mit Fortschritt („Seite 12 von 34“): pdf.js (Apache 2.0, Legacy-Build für ältere Browser, nur in dieser Ansicht
+   geladen; Mindestanforderung iOS/Safari 17.4, sonst ein klarer Hinweis) zeichnet jede Seite, der
    Browser speichert sie als WebP – Safari kann kein WebP erzeugen, dort JPEG (`format` hält fest, welches). Große Seite 1800 px breit,
-   Vorschaubild 480 px. Seiten werden einzeln direkt nach Supabase hochgeladen; ein Abbruch lässt sich fortsetzen.
-4. Vorschau aller Seiten → „Veröffentlichen“. Ein Prospekt pro Woche; erneutes Hochladen ersetzt ihn.
+   Vorschaubild 480 px. Seiten werden einzeln direkt nach Supabase hochgeladen; ein Netzabbruch lässt sich fortsetzen. Passwort,
+   beschädigte Datei oder abgelaufene Anmeldung bekommen eine eigene Meldung statt „Erneut versuchen“.
+4. Vorschau aller Seiten → „Veröffentlichen“. Ein Prospekt pro Woche; erneutes Hochladen ersetzt ihn – in einer Transaktion
+   (`publish_flyer`), der alte bleibt online, bis der neue freigeschaltet ist. Danach sagt das Cockpit, ab wann die Website ihn
+   zeigt (sofort oder ab Samstag als „Nächste Woche“).
 
 Das PDF selbst wird nicht gespeichert (Druckdatei, für Besucher unnötig). Beim Veröffentlichen löscht das Cockpit Prospekte, deren
 Woche länger als vier Wochen vorbei ist, und Entwürfe von gestern und früher – samt Bildern (kein Cron, kein Secret Key nötig; der Markt
@@ -109,12 +113,14 @@ lädt ohnehin jede Woche hoch).
   Samstag die Reiter „Diese Woche · Nächste Woche“; sonntags ist „Nächste Woche“ vorausgewählt (wie die bisherige Sonntagslogik).
   Darunter das Raster der Seiten (Titelseite groß).
 - **Ansicht:** Antippen öffnet den Vollbild-Viewer – PhotoSwipe 5 (MIT, erst beim Öffnen geladen): Wischen, Doppeltippen und
-  Zwei-Finger-Zoom, Pfeiltasten, „7 / 34“, Teilen einer einzelnen Seite per Link (`?seite=7`).
+  Zwei-Finger-Zoom, Pfeiltasten, „7 / 34“, Teilen einer einzelnen Seite per Link (`?kw=41&seite=7` – die Woche gehört dazu,
+  sonst öffnete der Link am Wochenende den anderen Prospekt).
 - **Tempo:** Zuerst laden nur Vorschaubilder; große Seiten beim Öffnen, Nachbarseiten vorab.
 - **Barrierefreiheit:** Seitenbilder heißen „Prospektseite 7 von 34“; daneben der Link zur Textliste aller Angebote auf rewe.de.
 - **Startseite:** Das Ticket zeigt die echte Titelseite (leicht gedreht wie die Story) und „Prospekt ansehen“ führt auf `/angebote`.
 - **Alle „Prospekt“-Knöpfe** (Kopf, Schnellzugriff, Hero, Ticket) führen auf `/angebote#prospekt`, solange ein Prospekt online ist;
-  sonst wie bisher zu rewe.de. Sonntags gilt die neue Woche – fehlt deren Prospekt, zeigt die Startseite keine Titelseite.
+  sonst wie bisher zu rewe.de. Sonntags gilt die neue Woche – fehlt deren Prospekt, zeigen Startseite und `/angebote` keinen
+  Prospekt (der abgelaufene bleibt verborgen), sondern das Ticket mit Link zu rewe.de.
 - **Kein Prospekt für die Woche:** automatisch das bisherige Ticket mit Link zu rewe.de. Markt-Kalender und Teilen bleiben unverändert.
 
 ## 4. Feedback (`/feedback`, aus der eigenen QR-App)

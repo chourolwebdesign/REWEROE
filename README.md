@@ -75,7 +75,8 @@ ffmpeg -i quelle.mp4 -an -vf "scale=540:960:flags=lanczos" -c:v libx264 -profile
 | Konto anlegen | Supabase-Dashboard → Authentication → Add user (E-Mail, Passwort, „Auto Confirm“), dann im SQL-Editor `insert into public.editors (user_id, name) values ('<uuid>', '<Vorname>');` |
 | Registrierung sperren | Authentication → Sign In / Providers → „Allow new users to sign up“ aus (einmalig) |
 | Datenbank ändern | neue Datei in `supabase/migrations/`, per Supabase-MCP `apply_migration` oder SQL-Editor anwenden |
-| Tests | Server auf Port 3100 starten, dann `node --env-file=.env.local e2e/<skript>.mjs` (`rls-check`, `cockpit-login`, `cockpit-prospekt`, `prospekt-viewer`, `start-ticket`, `cockpit-axe`, `public-qa`); Test-Editor in `.env.local` (siehe `.env.example`) |
+| Tests | Server auf Port 3100 starten, dann `node --env-file=.env.local e2e/<skript>.mjs` (`rls-check`, `cockpit-login`, `cockpit-prospekt`, `cockpit-fehlerfaelle`, `prospekt-viewer`, `start-ticket`, `cockpit-axe`, `public-qa`); Test-Editor in `.env.local` (siehe `.env.example`). Die Cockpit-Skripte schreiben in das Supabase-Projekt (Testprospekt bzw. Testwoche 2031) und räumen danach auf |
+| Geräte | Hochladen braucht einen aktuellen Browser (iPhone ab iOS 17.4); pdf.js läuft als Legacy-Build |
 | Tarif | Für den Livegang Supabase Pro (pausiert nicht, tägliche Sicherung); Vercel-Tarif auf kommerzielle Nutzung prüfen |
 
 ## Grundsätze

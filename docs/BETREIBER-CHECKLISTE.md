@@ -23,6 +23,8 @@ Stand: 04.10.2026. Alles hier fehlt auf der Website oder ist als Lücke markiert
 - [ ] **Prospekt-PDF**: Bekommt der Markt den Wochenprospekt als PDF (z. B. „KW41_2026_final_proof.pdf“ aus dem REWE-Werbemittelportal)? Freigabe, ihn auf der eigenen Website zu zeigen?
 - [ ] **Cockpit-Konten**: E-Mail-Adressen von Ali Alamyaar und der Marktleitung.
 - [ ] **Passwort vergessen**: Mail-Versand in Supabase einrichten (gleicher Weg wie für Bewerbungen).
+- [ ] **Probe am Markt**: einmal einen echten Prospekt am Markt-iPhone (iOS 17.4 oder neuer) und am Büro-PC hochladen.
+- [ ] **Supabase-Sicherheit**: „Leaked password protection“ einschalten (Authentication → Passwords, ab Pro-Tarif).
 
 ## Bildrechte
 

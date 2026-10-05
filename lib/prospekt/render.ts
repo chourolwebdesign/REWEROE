@@ -18,9 +18,13 @@ export function pickFormat(): "webp" | "jpg" {
   return c.toDataURL("image/webp").startsWith("data:image/webp") ? "webp" : "jpg";
 }
 
+/**
+ * Legacy-Build von pdf.js: der Standard-Build ruft Funktionen auf, die nur die neuesten Browser kennen
+ * (Map#getOrInsertComputed, Math.sumPrecise) – auf älteren iPhones und Büro-PCs scheiterte sonst jedes PDF.
+ */
 async function loadPdf(file: File) {
-  const pdfjs = await import("pdfjs-dist");
-  pdfjs.GlobalWorkerOptions.workerSrc = new URL("pdfjs-dist/build/pdf.worker.min.mjs", import.meta.url).toString();
+  const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
+  pdfjs.GlobalWorkerOptions.workerSrc = new URL("pdfjs-dist/legacy/build/pdf.worker.min.mjs", import.meta.url).toString();
   return pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise;
 }
 

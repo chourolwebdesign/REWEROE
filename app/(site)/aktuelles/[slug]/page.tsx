@@ -13,8 +13,8 @@ import { media } from "@/lib/media";
 import { resolveImages } from "@/lib/resolve";
 import { pageMetadata } from "@/lib/site";
 
-export const dynamicParams = false;
-
+// Kein dynamicParams = false: nach revalidatePath("/", "layout") aus dem Cockpit lieferte `next start` den schon
+// vorgerenderten Beitrag sonst als 404 (NoFallbackError). Unbekannte Beiträge enden weiter in notFound().
 export function generateStaticParams() {
   return posts.map((p) => ({ slug: p.slug }));
 }

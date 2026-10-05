@@ -115,4 +115,15 @@ if (!process.env.KEEP) {
   await page.waitForFunction((id) => !document.querySelector(`[data-delete="${id}"]`), { timeout: 15000 }, liveId);
   check(((await sb.from("flyers").select("id").eq("week_start", weekStart)).data ?? []).length === 0, "Löschen entfernt den Prospekt");
 }
+
+// Veröffentlichen/Löschen erneuern alle Seiten (revalidatePath "/" layout) – keine darf danach verschwinden
+const sitemap = await (await fetch(`${BASE}/sitemap.xml`)).text();
+const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => `${BASE}${new URL(m[1]).pathname}`);
+const posts = urls.filter((u) => /\/aktuelles\/[^/]+$/.test(u)).map((u) => `${BASE}/og/beitrag-${u.split("/").pop()}.jpg`);
+const broken = [];
+for (const u of [...urls, ...posts]) {
+  const res = await fetch(u);
+  if (res.status !== 200) broken.push(`${new URL(u).pathname} ${res.status}`);
+}
+check(broken.length === 0, `nach dem Cockpit antworten alle ${urls.length + posts.length} Seiten und Beitragsbilder mit 200${broken.length ? ` (${broken.join(", ")})` : ""}`);
 await b.close();

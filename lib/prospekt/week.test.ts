@@ -56,6 +56,11 @@ describe("suggestUploadWeek", () => {
   it("Dateiname vor Wochentag", () => {
     expect(suggestUploadWeek("KW41_2026_final_proof.pdf", at("2026-10-09")).weekStart).toBe("2026-10-05");
     expect(suggestUploadWeek("prospekt.pdf", at("2026-10-09")).weekStart).toBe("2026-10-12");
+    expect(suggestUploadWeek("KW41_2026_final_proof.pdf", at("2026-10-09")).ignored).toBeUndefined();
+  });
+  it("Woche im Dateinamen außerhalb der Auswahl → Standardwoche und Hinweis (sonst lehnt der Server ab)", () => {
+    expect(suggestUploadWeek("KW14_2026.pdf", at("2026-10-09"))).toMatchObject({ weekStart: "2026-10-12", ignored: { kw: 14, year: 2026 } });
+    expect(suggestUploadWeek("KW41_2025_final_proof.pdf", at("2026-10-05"))).toMatchObject({ weekStart: "2026-10-05", ignored: { kw: 41, year: 2025 } });
   });
 });
 

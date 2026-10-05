@@ -55,9 +55,16 @@ export function defaultUploadWeekStart(now: Date): string {
   return wd === 0 || wd >= 4 ? addDays(monday, 7) : monday;
 }
 
-export function suggestUploadWeek(filename: string, now: Date): UploadWeek {
+/** Vorschlag für die Upload-Maske; `ignored`: KW aus dem Dateinamen, die nicht zur Auswahl passt (Hinweis anzeigen). */
+export type SuggestedWeek = UploadWeek & { ignored?: { kw: number; year: number } };
+
+export function suggestUploadWeek(filename: string, now: Date): SuggestedWeek {
   const fromName = weekFromFilename(filename, now);
-  return uploadWeek(fromName ? mondayOfIsoWeek(fromName.kw, fromName.year) : defaultUploadWeekStart(now));
+  const fallback = uploadWeek(defaultUploadWeekStart(now));
+  if (!fromName) return fallback;
+  const start = mondayOfIsoWeek(fromName.kw, fromName.year);
+  // nur Wochen aus der Auswahl – eine andere lehnt der Server ab, und die Maske hätte keinen Weg weiter
+  return uploadWeekChoices(now).some((w) => w.weekStart === start) ? uploadWeek(start) : { ...fallback, ignored: fromName };
 }
 
 export function uploadWeekChoices(now: Date): UploadWeek[] {

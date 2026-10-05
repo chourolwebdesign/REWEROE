@@ -1,25 +1,29 @@
 "use client";
 
 import { FileUp, RotateCcw } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createDraft, discardDraft, publishDraft } from "@/app/cockpit/(intern)/prospekt/actions";
 import { buttonClasses } from "@/components/ui/button";
 import { pdfPageCount, pickFormat, renderPdfPages } from "@/lib/prospekt/render";
+import { publishNotice } from "@/lib/prospekt/select";
+import { DraftError, uploadFailure, uploadSupported } from "@/lib/prospekt/upload-errors";
 import { flyerObjectPath } from "@/lib/prospekt/urls";
-import { suggestUploadWeek, uploadWeekChoices, type UploadWeek } from "@/lib/prospekt/week";
+import { suggestUploadWeek, uploadWeekChoices, type SuggestedWeek } from "@/lib/prospekt/week";
 import { supabaseBrowser } from "@/lib/supabase/browser";
 
 const MAX_BYTES = 60 * 1024 * 1024;
 const MAX_PAGES = 80;
 const PREVIEW = 8;
+const OFFLINE = "Keine Verbindung – bitte prüfe das Internet und versuche es noch einmal.";
+const noSubscribe = () => () => {};
 
 type Phase =
   | { name: "idle" }
-  | { name: "ready"; file: File; week: UploadWeek }
-  | { name: "working"; file: File; week: UploadWeek; done: number; total: number }
-  | { name: "review"; file: File; week: UploadWeek; total: number }
-  | { name: "failed"; file: File; week: UploadWeek; message: string; resumable: boolean }
-  | { name: "done"; kw: number };
+  | { name: "ready"; file: File; week: SuggestedWeek; message?: string }
+  | { name: "working"; file: File; week: SuggestedWeek; done: number; total: number }
+  | { name: "review"; file: File; week: SuggestedWeek; total: number; message?: string; pending?: boolean }
+  | { name: "failed"; file: File; week: SuggestedWeek; message: string; resumable: boolean }
+  | { name: "done"; weekStart: string };
 
 /** Stand des laufenden Uploads (nicht für die Anzeige – die nutzt State). */
 interface Progress {
@@ -38,6 +42,8 @@ export function FlyerUpload() {
   const [locked, setLocked] = useState(false);
   const progress = useRef<Progress>({ uploaded: 0, width: 0, height: 0, format: "webp" });
   const previewUrls = useRef<string[]>([]);
+  // auf dem Server immer „ja“, im Browser geprüft (ohne Abweichung beim Hydrieren)
+  const supported = useSyncExternalStore(noSubscribe, uploadSupported, () => true);
   const choices = uploadWeekChoices(new Date());
 
   // Vorschau-URLs freigeben, wenn die Komponente verschwindet
@@ -64,7 +70,7 @@ export function FlyerUpload() {
     setPhase({ name: "ready", file, week });
   }
 
-  async function run(file: File, week: UploadWeek) {
+  async function run(file: File, week: SuggestedWeek) {
     const p = progress.current;
     try {
       const total = await pdfPageCount(file);
@@ -72,7 +78,7 @@ export function FlyerUpload() {
       setPhase({ name: "working", file, week, done: p.uploaded, total });
       if (!p.id) {
         const res = await createDraft({ weekStart: week.weekStart, sourceName: file.name });
-        if ("error" in res) return setPhase({ name: "failed", file, week, message: res.error, resumable: false });
+        if ("error" in res) throw new DraftError(res.error);
         p.id = res.id;
         setLocked(true);
       }
@@ -84,7 +90,8 @@ export function FlyerUpload() {
           if (error) throw error;
         }
         if (page.n === 1) Object.assign(p, { width: page.width, height: page.height });
-        if (page.n <= PREVIEW) {
+        // beim erneuten Hochladen einzelner Seiten keine doppelte Vorschau
+        if (page.n <= PREVIEW && previewUrls.current.length < page.n) {
           const url = URL.createObjectURL(page.thumb);
           previewUrls.current.push(url);
           setPreviews((list) => [...list, url]);
@@ -94,40 +101,54 @@ export function FlyerUpload() {
       }
       setPhase({ name: "review", file, week, total: p.uploaded });
     } catch (e) {
-      const err = e as { statusCode?: string | number; status?: number; message?: string };
-      const code = String(err.statusCode ?? err.status ?? "");
-      const expired = code === "401" || code === "403" || /jwt|unauthor/i.test(err.message ?? "");
-      setPhase({
-        name: "failed",
-        file,
-        week,
-        resumable: !expired,
-        message: expired
-          ? "Deine Anmeldung ist abgelaufen. Bitte melde dich neu an – danach lädst du das PDF noch einmal hoch."
-          : `Die Verbindung ist abgebrochen. Erneut versuchen setzt bei Seite ${p.uploaded + 1} fort.`,
-      });
+      const failure = uploadFailure(e, p);
+      if (failure.action === "ready") return setPhase({ name: "ready", file, week, message: failure.message });
+      setPhase({ name: "failed", file, week, message: failure.message, resumable: failure.action === "retry" });
     }
   }
 
-  async function publish(file: File, week: UploadWeek) {
+  async function publish(file: File, week: SuggestedWeek, total: number) {
     const p = progress.current;
-    const res = await publishDraft({ id: p.id!, pageCount: p.uploaded, pageWidth: p.width, pageHeight: p.height, format: p.format });
-    if ("error" in res) return setPhase({ name: "failed", file, week, message: res.error, resumable: true });
-    reset();
-    setPhase({ name: "done", kw: res.kw });
+    setPhase({ name: "review", file, week, total, pending: true });
+    try {
+      const res = await publishDraft({ id: p.id!, pageCount: p.uploaded, pageWidth: p.width, pageHeight: p.height, format: p.format });
+      if ("error" in res) {
+        if (res.next === "review") return setPhase({ name: "review", file, week, total, message: res.error });
+        if (res.next === "upload") p.uploaded = (res.fromPage ?? 1) - 1;
+        return setPhase({ name: "failed", file, week, message: res.error, resumable: res.next === "upload" });
+      }
+      reset();
+      setPhase({ name: "done", weekStart: week.weekStart });
+    } catch {
+      setPhase({ name: "review", file, week, total, message: OFFLINE });
+    }
   }
 
-  async function discard() {
-    if (progress.current.id) await discardDraft(progress.current.id);
-    reset();
-    setPhase({ name: "idle" });
+  async function discard(file: File, week: SuggestedWeek, total: number) {
+    setPhase({ name: "review", file, week, total, pending: true });
+    try {
+      if (progress.current.id) await discardDraft(progress.current.id);
+      reset();
+      setPhase({ name: "idle" });
+    } catch {
+      setPhase({ name: "review", file, week, total, message: OFFLINE });
+    }
+  }
+
+  if (!supported) {
+    return (
+      <p role="alert" className="rounded-[1.75rem] bg-white p-6 font-semibold md:p-8">
+        Dein Browser ist zu alt für den Prospekt-Upload. Bitte aktualisiere ihn (iPhone: iOS 17.4 oder neuer) oder nimm einen anderen Browser.
+      </p>
+    );
   }
 
   if (phase.name === "done") {
+    const notice = publishNotice(phase.weekStart, new Date());
     return (
       <div data-upload-done className="rounded-[1.75rem] bg-white p-6 md:p-8">
-        <h2 className="text-h3">Fertig! KW {phase.kw} ist online.</h2>
-        <p className="mt-2 text-muted">Die Website zeigt den Prospekt in wenigen Sekunden.</p>
+        <h2 className="text-h3">{notice.title}</h2>
+        <p className="mt-2 text-muted">{notice.text}</p>
         <div className="cta-row mt-6">
           <a href="/angebote" target="_blank" rel="noopener" className={buttonClasses("ink")}>
             Auf der Website ansehen<span className="sr-only"> (öffnet in neuem Tab)</span>
@@ -141,9 +162,9 @@ export function FlyerUpload() {
   }
 
   if (phase.name === "review") {
-    const { file, week, total } = phase;
+    const { file, week, total, message, pending } = phase;
     return (
-      <div data-upload-review className="rounded-[1.75rem] bg-white p-6 md:p-8">
+      <div data-upload-review aria-busy={pending || undefined} className="rounded-[1.75rem] bg-white p-6 md:p-8">
         <h2 className="text-h3">Passt alles?</h2>
         <p className="mt-2 text-muted">
           KW {week.kw} · {week.range} · {total} Seiten. So sieht der Prospekt auf der Website aus{total > PREVIEW ? ` (erste ${PREVIEW} Seiten)` : ""}.
@@ -156,11 +177,16 @@ export function FlyerUpload() {
             </li>
           ))}
         </ul>
+        {message && (
+          <p role="alert" className="mt-6 rounded-2xl bg-red-tint px-4 py-3 font-semibold text-red-deep">
+            {message}
+          </p>
+        )}
         <div className="cta-row mt-6">
-          <button type="button" data-action="publish" onClick={() => publish(file, week)} className={buttonClasses("red", "lg")}>
-            Veröffentlichen
+          <button type="button" data-action="publish" disabled={pending} onClick={() => publish(file, week, total)} className={buttonClasses("red", "lg")}>
+            {pending ? "Einen Moment …" : "Veröffentlichen"}
           </button>
-          <button type="button" data-action="discard" onClick={discard} className={buttonClasses("soft", "lg")}>
+          <button type="button" data-action="discard" disabled={pending} onClick={() => discard(file, week, total)} className={buttonClasses("soft", "lg")}>
             Abbrechen
           </button>
         </div>
@@ -174,7 +200,17 @@ export function FlyerUpload() {
       <label className={`${buttonClasses("red", "lg")} cursor-pointer ${busy ? "pointer-events-none opacity-60" : ""}`}>
         <FileUp className="size-5" aria-hidden />
         PDF auswählen
-        <input type="file" accept="application/pdf,.pdf" className="sr-only" disabled={busy} onChange={(e) => choose(e.target.files?.[0])} />
+        <input
+          type="file"
+          accept="application/pdf,.pdf"
+          className="sr-only"
+          disabled={busy}
+          onChange={(e) => {
+            choose(e.target.files?.[0]);
+            // dieselbe Datei noch einmal wählen löst sonst kein change aus
+            e.target.value = "";
+          }}
+        />
       </label>
       <p className="mt-3 text-[0.9375rem] text-muted">Den Wochenprospekt als PDF – bis 60 MB, höchstens 80 Seiten.</p>
 
@@ -189,7 +225,7 @@ export function FlyerUpload() {
               value={phase.week.weekStart}
               onChange={(e) => {
                 const week = [phase.week, ...choices].find((w) => w.weekStart === e.target.value) ?? phase.week;
-                setPhase({ ...phase, week } as Phase);
+                setPhase({ ...phase, week: { ...week, ignored: undefined } } as Phase);
               }}
               className="mt-2 block h-13 w-full rounded-2xl bg-soft px-4 font-semibold"
             >
@@ -200,6 +236,11 @@ export function FlyerUpload() {
               ))}
             </select>
           </label>
+          {phase.week.ignored && (
+            <p data-upload-hint className="text-[0.9375rem] text-muted">
+              Im Dateinamen steht KW {phase.week.ignored.kw}/{phase.week.ignored.year} – das ist keine der nächsten Wochen. Bitte prüfe die Woche.
+            </p>
+          )}
         </div>
       )}
 
@@ -214,7 +255,7 @@ export function FlyerUpload() {
         </div>
       )}
 
-      {phase.name === "failed" && (
+      {(phase.name === "failed" || (phase.name === "ready" && phase.message)) && (
         <p role="alert" className="mt-6 rounded-2xl bg-red-tint px-4 py-3 font-semibold text-red-deep">
           {phase.message}
         </p>
