@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { StatusCard } from "@/components/cockpit/status-card";
+import { markt } from "@/content/markt";
 import { requireEditor } from "@/lib/cockpit/auth";
-import { berlinNow, weekdayOf } from "@/lib/hours";
+import { berlinNow, formatDayMonth, formatTime, upcomingSpecialDays, weekdayOf, type DayPlan } from "@/lib/hours";
 import { newFeedbackLine } from "@/lib/feedback/inbox";
+import { openSuggestions, rowToSpecialDay, type SpecialDayRow } from "@/lib/inhalte/rules";
 import { uploadWeekChoices, type UploadWeek } from "@/lib/prospekt/week";
 
 export const metadata: Metadata = { title: "Übersicht" };
@@ -17,7 +19,16 @@ export default async function UebersichtPage() {
     supabase.from("feedback").select("id", { count: "exact", head: true }).eq("status", "neu").lte("rating", 2),
   ]);
   const found = (w: UploadWeek) => data?.find((d) => d.week_start === w.weekStart);
-  const wd = weekdayOf(berlinNow(now).date);
+  const today = berlinNow(now).date;
+  const wd = weekdayOf(today);
+  const { data: dayRows, error: dayError } = await supabase.from("special_days").select("date,label,closed,opens,closes").gte("date", today).order("date");
+  if (dayError) throw new Error("Sondertage konnten nicht geladen werden.");
+  const hours = { regular: markt.hours.regular, specialDays: (dayRows as SpecialDayRow[]).map(rowToSpecialDay) };
+  // gesetzliche Grenztage (Heiligabend, Silvester, Gründonnerstag), deren Zeiten der Markt noch nicht festgelegt hat
+  const pendingDays = openSuggestions(hours, today, 45);
+  const nextDay = upcomingSpecialDays(today, 45, hours)[0];
+  const dayLine = (d: DayPlan) =>
+    `${d.label} (${formatDayMonth(d.date)}) · ${d.hours ? `${formatTime(d.hours[0]).replace(" Uhr", "")} – ${formatTime(d.hours[1])}` : "geschlossen"}`;
   // Rot, wenn diese Woche fehlt – oder ab Freitag (und sonntags) die nächste; der neue Prospekt kommt meist freitags.
   const alert = !found(thisWeek) || (!found(nextWeek) && (wd >= 5 || wd === 0));
   const line = (w: UploadWeek) => {
@@ -42,6 +53,17 @@ export default async function UebersichtPage() {
           lines={[newFeedbackLine(fresh ?? 0), ...(urgent ? [`davon ${urgent} mit 1–2 Sternen`] : [])]}
           alert={Boolean(urgent)}
           action={{ href: "/cockpit/feedback", label: "Rückmeldungen ansehen" }}
+        />
+        <StatusCard
+          name="sondertage"
+          title="Öffnungszeiten"
+          lines={
+            pendingDays.length
+              ? pendingDays.map((p) => `${p.label} (${formatDayMonth(p.date)}): Zeiten festlegen`)
+              : [nextDay ? `Als Nächstes: ${dayLine(nextDay)}` : "Keine Abweichungen in den nächsten 45 Tagen"]
+          }
+          alert={pendingDays.length > 0}
+          action={{ href: "/cockpit/inhalte/sondertage", label: pendingDays.length ? "Zeiten festlegen" : "Sondertage ansehen" }}
         />
       </div>
     </>
