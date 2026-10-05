@@ -8,6 +8,8 @@ export type FailureAction = "retry" | "ready" | "stop";
 export interface Failure {
   action: FailureAction;
   message: string;
+  /** abgelaufene Anmeldung: Link zum neuen Anmelden anbieten */
+  relogin?: true;
 }
 
 /** Der Server hat den Entwurf abgelehnt, bevor etwas angelegt war (z. B. Woche) → Woche ändern, neu starten. */
@@ -31,7 +33,7 @@ export function uploadFailure(e: unknown, ctx: { uploaded: number }): Failure {
 
   const code = String(err.statusCode ?? err.status ?? "");
   if (code === "401" || code === "403" || /jwt|unauthor/i.test(message)) {
-    return { action: "stop", message: "Deine Anmeldung ist abgelaufen. Bitte melde dich neu an – danach lädst du das PDF noch einmal hoch." };
+    return { action: "stop", relogin: true, message: "Deine Anmeldung ist abgelaufen. Bitte melde dich neu an – danach lädst du das PDF noch einmal hoch." };
   }
   if (name === "StorageApiError") {
     const status = Number(err.status);

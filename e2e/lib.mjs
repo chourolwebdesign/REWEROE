@@ -14,8 +14,10 @@ export async function login(page, email = process.env.E2E_EMAIL, password = proc
   // ohne weiches Scrollen: sonst klickt Puppeteer, bevor ein Knopf fertig ins Bild gescrollt ist
   await page.emulateMediaFeatures([{ name: "prefers-reduced-motion", value: "reduce" }]);
   await page.goto(`${BASE}/cockpit/anmelden`, { waitUntil: "networkidle0" });
-  await page.type('input[name="email"]', email);
-  await page.type('input[name="passwort"]', password);
+  for (const [name, value] of [["email", email], ["passwort", password]]) {
+    await page.$eval(`input[name="${name}"]`, (e) => (e.value = ""));
+    await page.type(`input[name="${name}"]`, value);
+  }
   await Promise.all([page.waitForNavigation({ waitUntil: "networkidle0" }).catch(() => {}), page.click('button[type="submit"]')]);
 }
 

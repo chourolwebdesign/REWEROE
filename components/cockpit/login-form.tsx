@@ -14,7 +14,7 @@ export function LoginForm({ next, notice }: { next: string; notice?: string }) {
       <input type="hidden" name="weiter" value={next} />
       <label className="font-semibold">
         E-Mail
-        <input name="email" type="email" autoComplete="username" required className={field} />
+        <input name="email" type="email" autoComplete="username" required defaultValue={state.email} className={field} />
       </label>
       <label className="font-semibold">
         Passwort

@@ -74,6 +74,8 @@ async function upload({ query = "", fault } = {}) {
     await page.setRequestInterception(false);
     if (fault === "expired") {
       check(msg.includes("neu an"), `abgelaufene Sitzung → Hinweis zum neuen Anmelden („${msg.slice(0, 60)}…“)`);
+      const relogin = await page.$eval('[data-relogin]', (a) => a.getAttribute("href")).catch(() => null);
+      check(relogin === "/cockpit/anmelden?weiter=%2Fcockpit%2Fprospekt", `… mit Link zur Anmeldung und zurück (${relogin})`);
       return;
     }
     check(msg.includes("Erneut versuchen"), "Abbruch → Hinweis zum Fortsetzen");

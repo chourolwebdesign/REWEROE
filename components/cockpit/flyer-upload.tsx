@@ -22,7 +22,7 @@ type Phase =
   | { name: "ready"; file: File; week: SuggestedWeek; message?: string }
   | { name: "working"; file: File; week: SuggestedWeek; done: number; total: number }
   | { name: "review"; file: File; week: SuggestedWeek; total: number; message?: string; pending?: boolean }
-  | { name: "failed"; file: File; week: SuggestedWeek; message: string; resumable: boolean }
+  | { name: "failed"; file: File; week: SuggestedWeek; message: string; resumable: boolean; relogin?: boolean }
   | { name: "done"; weekStart: string };
 
 /** Stand des laufenden Uploads (nicht für die Anzeige – die nutzt State). */
@@ -42,9 +42,15 @@ export function FlyerUpload() {
   const [locked, setLocked] = useState(false);
   const progress = useRef<Progress>({ uploaded: 0, width: 0, height: 0, format: "webp" });
   const previewUrls = useRef<string[]>([]);
+  // Vorschau und Erfolg bekommen den Fokus: Screenreader hören den Wechsel, auf dem Handy rückt er ins Bild
+  const heading = useRef<HTMLHeadingElement>(null);
   // auf dem Server immer „ja“, im Browser geprüft (ohne Abweichung beim Hydrieren)
   const supported = useSyncExternalStore(noSubscribe, uploadSupported, () => true);
   const choices = uploadWeekChoices(new Date());
+
+  useEffect(() => {
+    if (phase.name === "review" || phase.name === "done") heading.current?.focus();
+  }, [phase.name]);
 
   // Vorschau-URLs freigeben, wenn die Komponente verschwindet
   useEffect(() => {
@@ -103,7 +109,7 @@ export function FlyerUpload() {
     } catch (e) {
       const failure = uploadFailure(e, p);
       if (failure.action === "ready") return setPhase({ name: "ready", file, week, message: failure.message });
-      setPhase({ name: "failed", file, week, message: failure.message, resumable: failure.action === "retry" });
+      setPhase({ name: "failed", file, week, message: failure.message, resumable: failure.action === "retry", relogin: failure.relogin });
     }
   }
 
@@ -125,6 +131,7 @@ export function FlyerUpload() {
   }
 
   async function discard(file: File, week: SuggestedWeek, total: number) {
+    if (!confirm("Entwurf verwerfen? Die hochgeladenen Seiten werden gelöscht.")) return;
     setPhase({ name: "review", file, week, total, pending: true });
     try {
       if (progress.current.id) await discardDraft(progress.current.id);
@@ -147,7 +154,9 @@ export function FlyerUpload() {
     const notice = publishNotice(phase.weekStart, new Date());
     return (
       <div data-upload-done className="rounded-[1.75rem] bg-white p-6 md:p-8">
-        <h2 className="text-h3">{notice.title}</h2>
+        <h2 ref={heading} tabIndex={-1} className="text-h3 outline-none">
+          {notice.title}
+        </h2>
         <p className="mt-2 text-muted">{notice.text}</p>
         <div className="cta-row mt-6">
           <a href="/angebote" target="_blank" rel="noopener" className={buttonClasses("ink")}>
@@ -165,7 +174,9 @@ export function FlyerUpload() {
     const { file, week, total, message, pending } = phase;
     return (
       <div data-upload-review aria-busy={pending || undefined} className="rounded-[1.75rem] bg-white p-6 md:p-8">
-        <h2 className="text-h3">Passt alles?</h2>
+        <h2 ref={heading} tabIndex={-1} className="text-h3 outline-none">
+          Passt alles?
+        </h2>
         <p className="mt-2 text-muted">
           KW {week.kw} · {week.range} · {total} Seiten. So sieht der Prospekt auf der Website aus{total > PREVIEW ? ` (erste ${PREVIEW} Seiten)` : ""}.
         </p>
@@ -197,7 +208,10 @@ export function FlyerUpload() {
   const busy = phase.name === "working";
   return (
     <div className="rounded-[1.75rem] bg-white p-6 md:p-8">
-      <label className={`${buttonClasses("red", "lg")} cursor-pointer ${busy ? "pointer-events-none opacity-60" : ""}`}>
+      {/* das Dateifeld selbst ist unsichtbar – der Tastaturfokus erscheint am Knopf */}
+      <label
+        className={`${buttonClasses("red", "lg")} cursor-pointer has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-3 has-[:focus-visible]:outline-ink ${busy ? "pointer-events-none opacity-60" : ""}`}
+      >
         <FileUp className="size-5" aria-hidden />
         PDF auswählen
         <input
@@ -265,6 +279,11 @@ export function FlyerUpload() {
         <button type="button" data-action="upload" onClick={() => run(phase.file, phase.week)} className={`${buttonClasses("ink", "lg")} mt-6`}>
           Hochladen
         </button>
+      )}
+      {phase.name === "failed" && phase.relogin && (
+        <a data-relogin href={`/cockpit/anmelden?weiter=${encodeURIComponent("/cockpit/prospekt")}`} className={`${buttonClasses("ink", "lg")} mt-4`}>
+          Neu anmelden
+        </a>
       )}
       {phase.name === "failed" && phase.resumable && (
         <button type="button" data-action="retry" onClick={() => run(phase.file, phase.week)} className={`${buttonClasses("ink", "lg")} mt-4`}>

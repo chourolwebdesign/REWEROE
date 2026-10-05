@@ -18,11 +18,12 @@ describe("uploadFailure", () => {
     expect(uploadFailure(api(503, "Service Unavailable"), ctx).action).toBe("retry");
   });
   it("abgelaufene Anmeldung → neu anmelden, kein Fortsetzen", () => {
-    expect(uploadFailure(api(401, "jwt expired"), ctx)).toMatchObject({ action: "stop", message: expect.stringContaining("neu an") });
+    expect(uploadFailure(api(401, "jwt expired"), ctx)).toMatchObject({ action: "stop", message: expect.stringContaining("neu an"), relogin: true });
     expect(uploadFailure(Object.assign(api(400, "new row violates row-level security policy"), { statusCode: "403" }), ctx).action).toBe("stop");
   });
   it("PDF mit Passwort → klare Meldung, kein Fortsetzen", () => {
     expect(uploadFailure(named("PasswordException", "No password given"), ctx)).toMatchObject({ action: "stop", message: expect.stringContaining("Passwort") });
+    expect(uploadFailure(named("PasswordException", "No password given"), ctx).relogin).toBeUndefined();
   });
   it("beschädigte oder leere Datei → klare Meldung, kein Fortsetzen", () => {
     expect(uploadFailure(named("InvalidPDFException", "Invalid PDF structure."), ctx)).toMatchObject({ action: "stop", message: expect.stringContaining("beschädigt") });

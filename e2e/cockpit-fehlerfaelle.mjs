@@ -65,6 +65,17 @@ async function tap(page, selector) {
   await page.click(selector);
 }
 
+await scenario("Tastatur", async () => {
+  const page = await cockpitPage();
+  for (let i = 0; i < 25 && !(await page.evaluate(() => document.activeElement?.type === "file")); i++) await page.keyboard.press("Tab");
+  const ring = await page.evaluate(() => {
+    const label = document.activeElement?.closest("label");
+    return label ? getComputedStyle(label).outlineStyle : "kein Label";
+  });
+  check(ring !== "none" && ring !== "kein Label", `„PDF auswählen“ zeigt den Tastaturfokus (outline: ${ring})`);
+  await page.close();
+});
+
 await scenario("kaputte Datei", async () => {
   const page = await cockpitPage();
   await (await page.$('input[type="file"]')).uploadFile(brokenPdf);
@@ -96,6 +107,7 @@ await scenario("älterer Browser + Veröffentlichen ohne Netz", async () => {
   const msg = await alertText(page);
   check(page.workerPatched === true, "pdf.js-Worker ohne neue JS-Funktionen gestartet");
   check(!msg && (await page.$("[data-upload-review]")), `älterer Browser: Seiten erzeugt und hochgeladen${msg ? ` (statt: „${msg.slice(0, 60)}“)` : ""}`);
+  check(await page.evaluate(() => document.activeElement?.matches("[data-upload-review] h2")), "Fokus springt auf die Vorschau („Passt alles?“)");
 
   await page.setOfflineMode(true);
   await tap(page, '[data-action="publish"]');
@@ -105,8 +117,14 @@ await scenario("älterer Browser + Veröffentlichen ohne Netz", async () => {
   check(Boolean(await page.$('[data-action="publish"]')), "Veröffentlichen bleibt möglich");
   await page.setOfflineMode(false);
 
+  let asked = false;
+  page.once("dialog", (dlg) => {
+    asked = true;
+    dlg.accept();
+  });
   await tap(page, '[data-action="discard"]');
   await page.waitForFunction(() => !document.querySelector("[data-upload-review]"), { timeout: 15000 });
+  check(asked, "„Abbrechen“ fragt vor dem Verwerfen nach");
   const left = await sb.from("flyers").select("id").eq("status", "draft").eq("source_name", "TESTPROSPEKT_fehlerfall.pdf");
   check((left.data ?? []).length === 0, "wieder online: „Abbrechen“ verwirft den Entwurf");
   await page.close();
