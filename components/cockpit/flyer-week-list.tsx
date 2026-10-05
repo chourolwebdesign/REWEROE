@@ -45,7 +45,7 @@ export function FlyerWeekList({ rows }: { rows: WeekRow[] }) {
             </div>
             {r.flyer ? (
               <div className="flex items-center gap-3">
-                <span className="rounded-full bg-open/10 px-3 py-1 text-[0.875rem] font-semibold text-open">✓ online · {r.flyer.pageCount} Seiten</span>
+                <span className="rounded-full bg-open/10 px-3 py-1 text-[0.875rem] font-semibold text-open-deep">✓ online · {r.flyer.pageCount} Seiten</span>
                 <button
                   type="button"
                   data-delete={r.flyer.id}
