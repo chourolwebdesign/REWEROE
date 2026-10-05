@@ -12,13 +12,25 @@ await sb.auth.signInWithPassword({ email: process.env.E2E_EMAIL, password: proce
 
 /** Berliner Datum in `n` Tagen */
 const berlin = (n) => new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Berlin" }).format(new Date(Date.now() + n * 864e5));
-/** nächster Werktag (Mo–Sa) ab heute + n */
-function workday(n) {
-  for (let k = n; ; k++) if (new Date(`${berlin(k)}T12:00:00Z`).getUTCDay() !== 0) return berlin(k);
+/**
+ * erster Werktag (Mo–Sa) ab heute + n, an dem der Markt nichts eingetragen hat: Speichern ersetzt einen Sondertag mit demselben
+ * Datum, das Aufräumen löscht ihn danach – ein echter Eintrag darf nie getroffen werden
+ */
+async function freeWorkday(n) {
+  const { data, error } = await sb.from("special_days").select("date").gte("date", berlin(n));
+  if (error) throw error;
+  const taken = new Set(data.map((r) => r.date));
+  for (let k = n; ; k++) {
+    const d = berlin(k);
+    if (new Date(`${d}T12:00:00Z`).getUTCDay() !== 0 && !taken.has(d)) return d;
+  }
 }
-const dayDate = workday(20);
+const dayDate = await freeWorkday(20);
 const html = (p) => fetch(BASE + p).then((r) => r.text());
 const valueOf = (page, selector) => page.$eval(selector, (e) => e.value);
+/** Link „Auf der Website ansehen“ in der Erfolgsmeldung: Ziel|Fenster|Text */
+const viewLink = (page, form) =>
+  page.$eval(`${form} [role="status"] a`, (a) => `${a.getAttribute("href")}|${a.target}|${a.textContent.includes("Auf der Website ansehen")}`).catch(() => "fehlt");
 
 // erst mittig ins Bild holen: am unteren Rand läge der Knopf unter der festen Cockpit-Navigation
 async function tap(page, selector) {
@@ -76,6 +88,7 @@ try {
   await tap(page, `${sf} input[name="closed"]`);
   let msg = await submit(page, sf);
   check(msg.role === "status" && msg.text.includes("Gespeichert"), `Sondertag gespeichert („${msg.text}“)`);
+  check((await viewLink(page, sf)) === "/kontakt#zeiten-titel|_blank|true", "Meldung mit „Auf der Website ansehen“ (/kontakt, neuer Tab)");
   await page.waitForSelector(`[data-sondertag="${dayDate}"]`);
   check((await html("/kontakt")).includes("E2E-Inventur"), "/kontakt zeigt den Sondertag gleich");
   check((await html("/")).includes(`"validFrom":"${dayDate}","validThrough":"${dayDate}","opens":"00:00","closes":"00:00"`), "JSON-LD: geschlossen");
@@ -91,6 +104,8 @@ try {
   msg = await submit(page, sf);
   check(msg.role === "status", `Sondertag geändert („${msg.text}“)`);
   check((await html("/")).includes(`"validFrom":"${dayDate}","validThrough":"${dayDate}","opens":"10:00","closes":"14:00"`), "JSON-LD: 10–14 Uhr");
+  // sichtbar mit Beginn: „bis 14 Uhr“ allein schickte Kunden zur regulären Öffnungszeit (7 Uhr)
+  check(/E2E-Inventur<\/span><span[^>]*>10 – 14 Uhr<\/span>/.test(await html("/kontakt")), "/kontakt zeigt „10 – 14 Uhr“ unter „Besondere Tage“");
 
   // Fehler: Datum in der Vergangenheit – die Eingaben bleiben stehen
   await page.goto(`${BASE}/cockpit/inhalte/sondertage`, { waitUntil: "networkidle0" });
@@ -132,6 +147,7 @@ try {
   await fill(page, `${ef} textarea[name="text"]`, "E2E-Test am Stand.");
   msg = await submit(page, ef);
   check(msg.role === "status", `Termin gespeichert („${msg.text}“)`);
+  check((await viewLink(page, ef)) === "/#termine-titel|_blank|true", "Meldung mit „Auf der Website ansehen“ (Startseite, neuer Tab)");
   check((await html("/")).includes("E2E-Verkostung"), "Startseite zeigt den Termin");
   check((await html("/kalender.ics")).includes("REWE Rödelheim: E2E-Verkostung"), "Markt-Kalender: Termin");
   const eventId = (await sb.from("events").select("id").eq("title", "E2E-Verkostung").single()).data.id;
@@ -139,6 +155,18 @@ try {
   await fill(page, `${ef} input[name="title"]`, "E2E-Kürbis-Verkostung");
   msg = await submit(page, ef);
   check(msg.role === "status" && (await html("/")).includes("E2E-Kürbis-Verkostung"), "Termin bearbeitet → Startseite aktuell");
+  // offener Tab nach einem Update der Website (alte Server-Action-IDs): Hinweis zum Neuladen statt „Keine Verbindung“
+  const stale = (r) => (r.method() === "POST" && r.headers()["next-action"] ? r.continue({ headers: { ...r.headers(), "next-action": "7f".padEnd(42, "0") } }) : r.continue());
+  await page.setRequestInterception(true);
+  page.on("request", stale);
+  msg = await submit(page, ef);
+  check(msg.role === "alert" && msg.text.includes("neu"), `Tab nach einem Update → „${msg.text}“`);
+  page.once("dialog", (d) => d.accept());
+  await tap(page, `[data-termin="${eventId}"] [data-action="delete"]`);
+  const staleDelete = await page.waitForSelector(`[data-termin="${eventId}"] [role="alert"]`, { timeout: 15000 }).then((e) => e.evaluate((x) => x.textContent));
+  check(staleDelete.includes("neu"), `… auch beim Löschen („${staleDelete}“)`);
+  page.off("request", stale);
+  await page.setRequestInterception(false);
   page.once("dialog", (d) => d.accept());
   await tap(page, `[data-termin="${eventId}"] [data-action="delete"]`);
   await page.waitForFunction((id) => !document.querySelector(`[data-termin="${id}"]`), { timeout: 15000 }, eventId);
@@ -156,6 +184,7 @@ try {
   await fill(page, `${jf} textarea[name="text"]`, "E2E-Testtext: 20 Stunden, auch samstags.");
   msg = await submit(page, jf);
   check(msg.role === "status", `Stelle gespeichert („${msg.text}“)`);
+  check((await viewLink(page, jf)) === "/karriere#stellen-titel|_blank|true", "Meldung mit „Auf der Website ansehen“ (/karriere, neuer Tab)");
   const karriere = await html("/karriere");
   check(karriere.includes("E2E-Kassierer (m/w/d)") && karriere.includes('"@type":"JobPosting","title":"E2E-Kassierer (m/w/d)"'), "/karriere zeigt die Stelle mit JobPosting");
   const jobId = (await sb.from("jobs").select("id").eq("title", "E2E-Kassierer (m/w/d)").single()).data.id;

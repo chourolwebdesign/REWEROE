@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { StatusCard } from "@/components/cockpit/status-card";
 import { markt } from "@/content/markt";
 import { requireEditor } from "@/lib/cockpit/auth";
-import { berlinNow, formatDayMonth, formatTime, upcomingSpecialDays, weekdayOf, type DayPlan } from "@/lib/hours";
+import { berlinNow, formatDayMonth, specialDayHours, upcomingSpecialDays, weekdayOf, type DayPlan } from "@/lib/hours";
 import { newFeedbackLine } from "@/lib/feedback/inbox";
 import { openSuggestions, rowToSpecialDay, type SpecialDayRow } from "@/lib/inhalte/rules";
 import { uploadWeekChoices, type UploadWeek } from "@/lib/prospekt/week";
@@ -27,8 +27,7 @@ export default async function UebersichtPage() {
   // gesetzliche Grenztage (Heiligabend, Silvester, Gründonnerstag), deren Zeiten der Markt noch nicht festgelegt hat
   const pendingDays = openSuggestions(hours, today, 45);
   const nextDay = upcomingSpecialDays(today, 45, hours)[0];
-  const dayLine = (d: DayPlan) =>
-    `${d.label} (${formatDayMonth(d.date)}) · ${d.hours ? `${formatTime(d.hours[0]).replace(" Uhr", "")} – ${formatTime(d.hours[1])}` : "geschlossen"}`;
+  const dayLine = (d: DayPlan) => `${d.label} (${formatDayMonth(d.date)}) · ${specialDayHours(d)}`;
   // Rot, wenn diese Woche fehlt – oder ab Freitag (und sonntags) die nächste; der neue Prospekt kommt meist freitags.
   const alert = !found(thisWeek) || (!found(nextWeek) && (wd >= 5 || wd === 0));
   const line = (w: UploadWeek) => {

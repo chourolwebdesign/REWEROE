@@ -5,7 +5,7 @@ import { OpenStatus } from "@/components/live/open-status";
 import { ButtonLink } from "@/components/ui/button";
 import { markt } from "@/content/markt";
 import { hoursConfig } from "@/lib/data/inhalte";
-import { berlinNow, formatDayMonth, formatTime, upcomingSpecialDays, weekRows, WEEKDAYS_SHORT } from "@/lib/hours";
+import { berlinNow, formatDayMonth, specialDayHours, upcomingSpecialDays, weekRows, WEEKDAYS_SHORT } from "@/lib/hours";
 import { media } from "@/lib/media";
 import { absoluteUrl } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -47,9 +47,7 @@ export async function VisitSection({ className, headingLevel = "h3" }: { classNa
                   <span>
                     {WEEKDAYS_SHORT[d.weekday]} {formatDayMonth(d.date)} · {d.label}
                   </span>
-                  <span className="shrink-0 tabular-nums text-muted">
-                    {d.hours ? `bis ${formatTime(d.hours[1])}${d.provisional ? "*" : ""}` : "geschlossen"}
-                  </span>
+                  <span className="shrink-0 tabular-nums text-muted">{specialDayHours(d)}</span>
                 </li>
               ))}
             </ul>

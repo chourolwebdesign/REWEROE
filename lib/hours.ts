@@ -183,6 +183,12 @@ export function upcomingSpecialDays(from: string, days: number, cfg: HoursConfig
   return list;
 }
 
+/** Zeiten eines besonderen Tages für Listen: „10 – 14 Uhr“ (immer mit Beginn), aus dem Gesetz abgeleitete mit „*“, sonst „geschlossen“. */
+export function specialDayHours(d: DayPlan) {
+  if (!d.hours) return "geschlossen";
+  return `${formatTime(d.hours[0]).replace(" Uhr", "")} – ${formatTime(d.hours[1])}${d.provisional ? "*" : ""}`;
+}
+
 /** Wochentabelle Mo–So mit zusammengefassten Zeilen, z. B. „Montag – Samstag · 7 – 22 Uhr“. */
 export function weekRows(cfg: HoursConfig = markt.hours) {
   const order: Weekday[] = [1, 2, 3, 4, 5, 6, 0];

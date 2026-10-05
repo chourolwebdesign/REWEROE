@@ -11,22 +11,33 @@ await sb.auth.signInWithPassword({ email: process.env.E2E_EMAIL, password: proce
 
 /** Berliner Datum in `n` Tagen */
 const berlin = (n) => new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Berlin" }).format(new Date(Date.now() + n * 864e5));
-/** nächster Werktag (Mo–Sa) ab heute + n */
-function workday(n) {
-  for (let k = n; ; k++) if (new Date(`${berlin(k)}T12:00:00Z`).getUTCDay() !== 0) return berlin(k);
+/**
+ * erster Werktag (Mo–Sa) ab heute + n, an dem der Markt nichts eingetragen hat: Speichern ersetzt einen Sondertag mit demselben
+ * Datum, das Aufräumen löscht ihn danach – ein echter Eintrag darf nie getroffen werden
+ */
+async function freeWorkday(n) {
+  const { data, error } = await sb.from("special_days").select("date").gte("date", berlin(n));
+  if (error) throw error;
+  const taken = new Set(data.map((r) => r.date));
+  for (let k = n; ; k++) {
+    const d = berlin(k);
+    if (new Date(`${d}T12:00:00Z`).getUTCDay() !== 0 && !taken.has(d)) return d;
+  }
 }
-const dayDate = workday(20);
 
 const mode = process.argv[2];
 if (mode === "seed") {
+  const dayDate = await freeWorkday(20);
   const r = await Promise.all([
-    sb.from("special_days").upsert({ date: dayDate, label: "E2E-Inventur", closed: true }),
+    // insert statt upsert: ein schon vorhandener Eintrag ließe den Seed scheitern, statt ihn zu ersetzen
+    sb.from("special_days").insert({ date: dayDate, label: "E2E-Inventur", closed: true }),
     sb.from("events").insert({ date: berlin(10), time: "10–14 Uhr", title: "E2E-Verkostung", text: "E2E-Test" }),
     sb.from("jobs").insert({ title: "E2E-Kassierer (m/w/d)", employment: "Teilzeit", text: "E2E-Testtext" }),
   ]);
   for (const x of r) if (x.error) throw x.error;
   console.log(`✓ Testeinträge angelegt (Sondertag ${dayDate}) – jetzt bauen, starten und „check“`);
 } else if (mode === "check") {
+  const dayDate = (await sb.from("special_days").select("date").eq("label", "E2E-Inventur").single()).data?.date;
   const html = (p) => fetch(BASE + p).then((res) => res.text());
   check((await html("/kontakt")).includes("E2E-Inventur"), "/kontakt: Sondertag aus dem Cockpit");
   const home = await html("/");

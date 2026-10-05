@@ -50,7 +50,7 @@ export function JobForm({ defaults }: { defaults: JobDefaults }) {
         <input name="active" type="checkbox" defaultChecked={v ? v.active === "on" : defaults.active} className="size-5 accent-red" />
         Auf der Website zeigen
       </label>
-      <FormMessage state={state} />
+      <FormMessage state={state} view="/karriere#stellen-titel" />
       <SubmitButton>{defaults.id ? "Änderungen speichern" : "Stelle speichern"}</SubmitButton>
     </form>
   );

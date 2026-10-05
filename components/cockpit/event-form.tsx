@@ -35,7 +35,7 @@ export function EventForm({ defaults }: { defaults: EventDefaults }) {
         Text (freiwillig)
         <textarea name="text" maxLength={600} rows={3} defaultValue={v?.text ?? defaults.text} placeholder="Was erwartet die Kundschaft?" className={areaClass} />
       </label>
-      <FormMessage state={state} />
+      <FormMessage state={state} view="/#termine-titel" />
       <SubmitButton>{defaults.id ? "Änderungen speichern" : "Termin speichern"}</SubmitButton>
     </form>
   );

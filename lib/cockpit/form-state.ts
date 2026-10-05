@@ -9,6 +9,8 @@ export interface FormState {
 }
 
 export const OFFLINE = "Keine Verbindung – bitte prüfe das Internet und versuche es noch einmal.";
+/** offener Tab nach einem Update der Website: der Server kennt die Aktionen dieser Seite nicht mehr */
+export const STALE = "Das Cockpit wurde aktualisiert – bitte lade die Seite neu und versuche es noch einmal.";
 
 /** Texteingaben eines Formulars, ohne Dateien und ohne die internen Felder von React/Next (beginnen mit „$“) */
 export function formValues(fd: FormData): Record<string, string> {

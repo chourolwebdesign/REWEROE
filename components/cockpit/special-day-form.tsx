@@ -57,7 +57,7 @@ export function SpecialDayForm({ defaults, editing }: { defaults: SpecialDayDefa
           <input name="closes" type="time" required defaultValue={v?.closes ?? defaults.closes} className={fieldClass} />
         </label>
       </div>
-      <FormMessage state={state} />
+      <FormMessage state={state} view="/kontakt#zeiten-titel" />
       <SubmitButton>Speichern</SubmitButton>
     </form>
   );
