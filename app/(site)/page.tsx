@@ -5,7 +5,7 @@ import { MarqueeBand } from "@/components/home/marquee-band";
 import { NumbersBand } from "@/components/home/numbers-band";
 import { RegionalBand } from "@/components/home/regional-band";
 import { Services } from "@/components/home/services";
-import { hasUpcomingTermine, TermineList } from "@/components/home/termine";
+import { TermineList } from "@/components/home/termine";
 import { StoryHero } from "@/components/home/story-hero";
 import { OpenStatus } from "@/components/live/open-status";
 import { FlyerWeekText } from "@/components/live/flyer-week";
@@ -23,6 +23,7 @@ import { publishedFlyers } from "@/lib/data/flyers";
 import { flyerWeek } from "@/lib/flyer";
 import { flyerLink, pickFlyers, shownFlyer } from "@/lib/prospekt/select";
 import { flyerImage } from "@/lib/prospekt/urls";
+import { eventsFrom } from "@/lib/data/inhalte";
 import { berlinNow } from "@/lib/hours";
 import { absoluteUrl } from "@/lib/site";
 import { resolveGallery, resolveStory } from "@/lib/resolve";
@@ -31,6 +32,7 @@ export default async function HomePage() {
   const week = flyerWeek();
   const latest = posts[0];
   const today = berlinNow(new Date()).date;
+  const events = await eventsFrom(today);
   // Titelseite und Ziel der Prospekt-Knöpfe: der Prospekt, den /angebote gerade vorauswählt (sonntags die neue Woche)
   const shown = shownFlyer(pickFlyers(await publishedFlyers(), new Date()));
   const flyer = flyerLink(shown, markt.links.flyer);
@@ -127,11 +129,11 @@ export default async function HomePage() {
         <Services calendarUrl={absoluteUrl("/kalender.ics")} className="mt-10" />
       </section>
 
-      {hasUpcomingTermine(today) && (
+      {events.length > 0 && (
         <section aria-labelledby="termine-titel" className="wrap pt-24 md:pt-32">
           <SectionHeading id="termine-titel" eyebrow="Termine" title="Demnächst im Markt." />
           <div className="mt-10">
-            <TermineList today={today} />
+            <TermineList events={events} />
           </div>
         </section>
       )}

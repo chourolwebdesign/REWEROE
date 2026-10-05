@@ -1,13 +1,11 @@
-import { termine } from "@/content/termine";
 import { formatDayMonth, WEEKDAYS_SHORT, weekdayOf } from "@/lib/hours";
+import type { Termin } from "@/lib/inhalte/rules";
 
-/** Kommende Termine im Markt. Rendert nichts, solange keine echten Termine eingetragen sind. */
-export function TermineList({ today }: { today: string }) {
-  const upcoming = termine.filter((t) => t.date >= today).sort((a, b) => a.date.localeCompare(b.date));
-  if (!upcoming.length) return null;
+/** Kommende Termine im Markt (aus dem Cockpit). */
+export function TermineList({ events }: { events: readonly Termin[] }) {
   return (
     <ul className="grid gap-3 md:grid-cols-2 md:gap-4">
-      {upcoming.map((t) => (
+      {events.map((t) => (
         <li key={t.id} className="reveal flex gap-5 rounded-[1.75rem] bg-soft p-6">
           <p className="grid size-18 shrink-0 place-content-center rounded-2xl bg-white text-center">
             <span className="text-[0.8125rem] font-semibold text-red">{WEEKDAYS_SHORT[weekdayOf(t.date)]}</span>
@@ -16,12 +14,10 @@ export function TermineList({ today }: { today: string }) {
           <div>
             <h3 className="text-h3">{t.title}</h3>
             {t.time && <p className="mt-1 font-semibold">{t.time}</p>}
-            <p className="mt-2 text-muted">{t.text}</p>
+            {t.text && <p className="mt-2 text-muted">{t.text}</p>}
           </div>
         </li>
       ))}
     </ul>
   );
 }
-
-export const hasUpcomingTermine = (today: string) => termine.some((t) => t.date >= today);

@@ -1,22 +1,23 @@
 import { markt } from "@/content/markt";
 import type { Post } from "@/content/aktuelles";
-import type { Job } from "@/content/jobs";
+import type { Job } from "@/lib/inhalte/rules";
 import { berlinNow, upcomingSpecialDays } from "./hours";
 import { media } from "./media";
 import { absoluteUrl, SITE_URL } from "./site";
+import type { HoursConfig } from "./types";
 
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] as const;
 const STORE_ID = `${SITE_URL}/#markt`;
 
 /** GroceryStore mit regulären Zeiten und den Feiertagen/Sonderzeiten der nächsten 60 Tage. */
-export function storeJsonLd(now: Date = new Date()) {
+export function storeJsonLd(now: Date = new Date(), cfg: HoursConfig = markt.hours) {
   const regular = Object.entries(markt.hours.regular)
     .filter(([, h]) => h)
     .map(([d, h]) => ({ day: DAY_NAMES[Number(d)], opens: h![0], closes: h![1] }));
   const groups = new Map<string, string[]>();
   for (const r of regular) groups.set(`${r.opens}-${r.closes}`, [...(groups.get(`${r.opens}-${r.closes}`) ?? []), r.day]);
 
-  const special = upcomingSpecialDays(berlinNow(now).date, 60).map((d) => ({
+  const special = upcomingSpecialDays(berlinNow(now).date, 60, cfg).map((d) => ({
     "@type": "OpeningHoursSpecification",
     validFrom: d.date,
     validThrough: d.date,
