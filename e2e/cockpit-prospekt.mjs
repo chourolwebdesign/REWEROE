@@ -2,10 +2,12 @@
 // Ersetzen (WebP), abgelaufene Sitzung, öffentliches Bild, Löschen. KEEP=1 lässt den Prospekt am Ende stehen (Task 7).
 // Bricht ab, wenn für diese Woche schon ein echter Prospekt online ist.
 import { createClient } from "@supabase/supabase-js";
+import { createRequire } from "node:module";
 import { readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { BASE, browser, check, login } from "./lib.mjs";
+const { AxePuppeteer } = createRequire(import.meta.url)("@axe-core/puppeteer");
 
 const cfg = readFileSync(new URL("../lib/supabase/config.ts", import.meta.url), "utf8");
 const pick = (name) => process.env[`NEXT_PUBLIC_${name}`] || cfg.match(new RegExp(`${name} = [^"]*"([^"]+)"`))[1];
@@ -109,6 +111,11 @@ for (const dr of (await sb.from("flyers").select("id").eq("week_start", weekStar
   if (files?.length) await sb.storage.from("prospekte").remove(files.map((f) => `${dr.id}/${f.name}`));
   await sb.from("flyers").delete().eq("id", dr.id);
 }
+
+// Liste mit veröffentlichtem Prospekt (Abzeichen „online“) – cockpit-axe sieht ohne Prospekt nur die leere Liste
+await page.goto(`${BASE}/cockpit/prospekt`, { waitUntil: "networkidle0" });
+const axe = await new AxePuppeteer(page).withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"]).analyze();
+check(axe.violations.length === 0, `axe /cockpit/prospekt mit veröffentlichtem Prospekt: ${axe.violations.map((v) => v.id).join(",") || "0"}`);
 
 if (!process.env.KEEP) {
   await page.goto(`${BASE}/cockpit/prospekt`, { waitUntil: "networkidle0" });

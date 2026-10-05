@@ -4,7 +4,8 @@ import { CalendarSubscribe } from "@/components/live/calendar-subscribe";
 import { OpenStatus } from "@/components/live/open-status";
 import { ButtonLink } from "@/components/ui/button";
 import { markt } from "@/content/markt";
-import { berlinNow, formatDayMonth, formatTime, upcomingSpecialDays, weekRows, WEEKDAYS_SHORT } from "@/lib/hours";
+import { hoursConfig } from "@/lib/data/inhalte";
+import { berlinNow, formatDayMonth, specialDayHours, upcomingSpecialDays, weekRows, WEEKDAYS_SHORT } from "@/lib/hours";
 import { media } from "@/lib/media";
 import { absoluteUrl } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -14,9 +15,9 @@ import { cn } from "@/lib/utils";
  * Die Telefonnummer steht einmal – unten in der Zeiten-Karte; die Karte ist ab 1024 px flacher, damit beide
  * Karten etwa gleich hoch sind.
  */
-export function VisitSection({ className, headingLevel = "h3" }: { className?: string; headingLevel?: "h2" | "h3" }) {
+export async function VisitSection({ className, headingLevel = "h3" }: { className?: string; headingLevel?: "h2" | "h3" }) {
   const H = headingLevel;
-  const specials = upcomingSpecialDays(berlinNow(new Date()).date, 45);
+  const specials = upcomingSpecialDays(berlinNow(new Date()).date, 45, await hoursConfig());
   return (
     <div className={cn("grid gap-3 md:gap-4 lg:grid-cols-[0.9fr_1.1fr]", className)}>
       <section aria-labelledby="zeiten-titel" className="reveal relative z-10 flex flex-col rounded-[1.75rem] bg-soft p-6 md:p-9">
@@ -46,9 +47,7 @@ export function VisitSection({ className, headingLevel = "h3" }: { className?: s
                   <span>
                     {WEEKDAYS_SHORT[d.weekday]} {formatDayMonth(d.date)} · {d.label}
                   </span>
-                  <span className="shrink-0 tabular-nums text-muted">
-                    {d.hours ? `bis ${formatTime(d.hours[1])}${d.provisional ? "*" : ""}` : "geschlossen"}
-                  </span>
+                  <span className="shrink-0 tabular-nums text-muted">{specialDayHours(d)}</span>
                 </li>
               ))}
             </ul>

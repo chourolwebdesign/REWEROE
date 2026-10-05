@@ -1,4 +1,4 @@
-// node --env-file=.env.local e2e/cockpit-axe.mjs – axe für Anmeldung, Übersicht und Prospekt (Desktop + Mobil)
+// node --env-file=.env.local e2e/cockpit-axe.mjs – axe für Anmeldung und alle Cockpit-Bereiche (Desktop + Mobil)
 import { createRequire } from "node:module";
 import { BASE, browser, check, login } from "./lib.mjs";
 const require = createRequire(import.meta.url);
@@ -13,7 +13,7 @@ for (const vp of [{ width: 1280, height: 900 }, { width: 390, height: 844, isMob
   const first = await new AxePuppeteer(page).withTags(tags).analyze();
   check(first.violations.length === 0, `axe /cockpit/anmelden ${vp.width}px: ${first.violations.map((v) => v.id).join(",") || "0"}`);
   await login(page);
-  for (const path of ["/cockpit", "/cockpit/prospekt", "/cockpit/feedback"]) {
+  for (const path of ["/cockpit", "/cockpit/prospekt", "/cockpit/feedback", "/cockpit/inhalte", "/cockpit/inhalte/sondertage", "/cockpit/inhalte/termine", "/cockpit/inhalte/stellen"]) {
     await page.goto(`${BASE}${path}`, { waitUntil: "networkidle0" });
     const res = await new AxePuppeteer(page).withTags(tags).analyze();
     check(res.violations.length === 0, `axe ${path} ${vp.width}px: ${res.violations.map((v) => v.id).join(",") || "0"}`);

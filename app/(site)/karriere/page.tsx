@@ -3,8 +3,8 @@ import Image from "next/image";
 import { Apple, GraduationCap, Package, ScanBarcode } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { ButtonLink } from "@/components/ui/button";
-import { jobs } from "@/content/jobs";
 import { markt } from "@/content/markt";
+import { activeJobs } from "@/lib/data/inhalte";
 import { breadcrumbJsonLd, jobJsonLd, ldScript } from "@/lib/jsonld";
 import { media } from "@/lib/media";
 import { pageMetadata } from "@/lib/site";
@@ -24,7 +24,8 @@ const AREAS = [
   { icon: GraduationCap, title: "Ausbildung", text: "Mit einer Ausbildung im Einzelhandel lernst du den Markt von Grund auf kennen." },
 ] as const;
 
-export default function KarrierePage() {
+export default async function KarrierePage() {
+  const jobs = await activeJobs();
   return (
     <>
       <PageHeader

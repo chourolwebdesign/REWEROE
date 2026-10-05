@@ -3,6 +3,7 @@
 import { openStatus } from "@/lib/hours";
 import { useNow } from "@/lib/use-now";
 import { cn } from "@/lib/utils";
+import { useHoursConfig } from "./hours-provider";
 
 const STYLES = {
   light: "bg-white text-ink ring-1 ring-inset ring-line",
@@ -16,7 +17,8 @@ const STYLES = {
  */
 export function OpenStatus({ tone = "light", short = false, className }: { tone?: keyof typeof STYLES; short?: boolean; className?: string }) {
   const now = useNow();
-  const status = now ? openStatus(now) : null;
+  const cfg = useHoursConfig();
+  const status = now ? openStatus(now, cfg) : null;
   const open = status?.open ?? null;
   const dot = open === null ? "text-muted" : open ? (tone === "dark" ? "text-open-bright" : "text-open") : tone === "dark" ? "text-red-bright" : "text-red";
   const raw = status ? (short ? status.short : status.text) : short ? "Mo – Sa 7 – 22 Uhr" : "Montag – Samstag 7 – 22 Uhr";

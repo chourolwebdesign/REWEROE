@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { dayPlan, easterSunday, formatTime, hessenHolidays, openStatus, upcomingSpecialDays } from "./hours";
+import { dayPlan, easterSunday, formatTime, hessenHolidays, openStatus, specialDayHours, upcomingSpecialDays } from "./hours";
 import type { HoursConfig } from "./types";
 
 const cfg: HoursConfig = {
@@ -94,5 +94,18 @@ describe("upcomingSpecialDays", () => {
   it("listet Feiertage und Sonderschlusszeiten, aber keine Sonntage", () => {
     const list = upcomingSpecialDays("2026-12-20", 14, cfg);
     expect(list.map((d) => d.date)).toEqual(["2026-12-24", "2026-12-25", "2026-12-26", "2026-12-31", "2027-01-01"]);
+  });
+});
+
+describe("specialDayHours", () => {
+  const withDays = (specialDays: HoursConfig["specialDays"]) => ({ ...cfg, specialDays });
+  it("zeigt bei geänderten Zeiten auch den Beginn – „bis …“ allein schickte Kunden zur regulären Öffnungszeit", () => {
+    const plan = dayPlan("2026-10-12", withDays([{ date: "2026-10-12", label: "Betriebsversammlung", hours: ["10:00", "22:00"] }]));
+    expect(specialDayHours(plan)).toBe("10 – 22 Uhr");
+    expect(specialDayHours(dayPlan("2026-12-24", withDays([{ date: "2026-12-24", label: "Heiligabend", hours: ["07:30", "14:00"] }])))).toBe("7:30 – 14 Uhr");
+  });
+  it("vorläufige Zeiten aus dem Gesetz mit Sternchen, geschlossene Tage als „geschlossen“", () => {
+    expect(specialDayHours(dayPlan("2026-12-24", cfg))).toBe("7 – 14 Uhr*");
+    expect(specialDayHours(dayPlan("2026-12-25", cfg))).toBe("geschlossen");
   });
 });

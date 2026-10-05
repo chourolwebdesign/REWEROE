@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { markt } from "@/content/markt";
 import { buildCalendar, escapeText, foldLine } from "./ics";
 import { marketEvents } from "./market-calendar";
 
@@ -45,5 +46,15 @@ describe("Markt-Kalender", () => {
     expect(special.map((e) => e.date)).toEqual(["2026-12-24", "2026-12-25", "2026-12-26", "2026-12-31", "2027-01-01"]);
     expect(special[0].summary).toBe("REWE Rödelheim: Heiligabend – voraussichtlich bis 14 Uhr");
     expect(special[1].summary).toBe("REWE Rödelheim geschlossen – 1. Weihnachtsfeiertag");
+  });
+  it("enthält Sondertage und Termine aus dem Cockpit", () => {
+    const cfg = { ...markt.hours, specialDays: [{ date: "2026-12-07", label: "Inventur", hours: null }] };
+    const termin = { id: "k1", date: "2026-12-05", time: "10–14 Uhr", title: "Kürbis-Verkostung", text: "Am Stand." };
+    const events = marketEvents(new Date("2026-12-01T10:00:00Z"), { weeks: 1, days: 10, cfg, events: [termin] });
+    expect(events.find((e) => e.uid.startsWith("tag-2026-12-07"))).toMatchObject({
+      summary: "REWE Rödelheim geschlossen – Inventur",
+      description: "Der Markt bleibt an diesem Tag geschlossen.",
+    });
+    expect(events.find((e) => e.uid.startsWith("termin-k1"))).toMatchObject({ date: "2026-12-05", summary: "REWE Rödelheim: Kürbis-Verkostung", description: "10–14 Uhr\nAm Stand." });
   });
 });
