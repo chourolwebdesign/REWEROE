@@ -119,7 +119,8 @@ function holiday(iso: string) {
   return holidayCache.get(year)!.get(iso) ?? null;
 }
 
-function legalLimit(iso: string) {
+/** Gesetzliche Schlusszeit dieses Tages (Gründonnerstag 20 Uhr, 24.12. und 31.12. 14 Uhr) oder null. */
+export function legalLimit(iso: string) {
   const maundyThursday = addDays(easterSunday(Number(iso.slice(0, 4))), -3);
   return LEGAL_LIMITS.find((l) => (l.rule === "gruendonnerstag" ? iso === maundyThursday : iso.slice(5) === l.rule)) ?? null;
 }
