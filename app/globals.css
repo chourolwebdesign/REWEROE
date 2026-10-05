@@ -435,3 +435,11 @@ html.js .application-form .step + .step {
     padding: 0 !important;
   }
 }
+
+/* ───────────── Prospekt-Viewer (PhotoSwipe) in Markenfarben ───────────── */
+.pswp {
+  --pswp-bg: #0c0c0c;
+  --pswp-placeholder-bg: #2b2925;
+  --pswp-icon-color: #fff;
+  --pswp-icon-color-secondary: #0c0c0c;
+}

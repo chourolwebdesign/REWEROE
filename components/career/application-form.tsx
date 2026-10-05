@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Check, FileText, Loader2, Paperclip, PartyPopper, Phone, X } from "lucide-react";
 import { startTransition, useActionState, useEffect, useRef, useState, useSyncExternalStore, type FormEvent } from "react";
-import { submitApplication, type ApplicationState } from "@/app/karriere/bewerben/actions";
+import { submitApplication, type ApplicationState } from "@/app/(site)/karriere/bewerben/actions";
 import { AREAS, DAYPARTS, DAYS, EMPLOYMENT, UPLOAD } from "@/content/bewerbung";
 import { parseApplication, type FieldErrors, type FieldName } from "@/lib/application";
 import { cn } from "@/lib/utils";

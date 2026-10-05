@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
  * Kopfzeile, 72 px, sticky. Auf der Startseite liegt sie transparent über der Story und wird beim Scrollen weiß.
  * Mobil öffnet der Menüknopf ein Vollbild-Menü (natives <dialog>: Fokusfalle, Esc, inerter Hintergrund).
  */
-export function SiteHeader() {
+export function SiteHeader({ flyer = { href: markt.links.flyer, external: true } }: { flyer?: { href: string; external: boolean } }) {
   const pathname = usePathname();
   const [atTop, setAtTop] = useState(true);
   const overHero = pathname === "/" && atTop;
@@ -67,7 +67,7 @@ export function SiteHeader() {
                   aria-current={isActive(item.href) ? "page" : undefined}
                   className={cn(
                     "relative inline-flex h-11 items-center rounded-full px-4 text-[0.9375rem] font-medium transition-colors",
-                    overHero ? "text-white/85 hover:bg-white/12 hover:text-white" : "text-ink-2 hover:bg-soft",
+                    overHero ? "text-white hover:bg-white/12" : "text-ink-2 hover:bg-soft",
                     isActive(item.href) && (overHero ? "text-white" : "bg-soft text-ink"),
                   )}
                 >
@@ -79,7 +79,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2 lg:ml-0">
-          <ButtonLink href={markt.links.flyer} external size="sm" variant={overHero ? "white" : "red"} className="hidden sm:inline-flex">
+          <ButtonLink href={flyer.href} external={flyer.external} size="sm" variant={overHero ? "white" : "red"} className="hidden sm:inline-flex">
             Prospekt
           </ButtonLink>
           <button
@@ -134,7 +134,7 @@ export function SiteHeader() {
               {markt.address.street}, {markt.address.zip} {markt.address.city}
             </p>
             <div className="mt-2 flex flex-wrap gap-2">
-              <ButtonLink href={markt.links.flyer} external>
+              <ButtonLink href={flyer.href} external={flyer.external}>
                 Prospekt der Woche
               </ButtonLink>
               <a href={"tel:" + markt.phone.e164} className={buttonClasses("glass")}>

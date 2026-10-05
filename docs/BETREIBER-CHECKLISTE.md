@@ -4,10 +4,10 @@ Stand: 04.10.2026. Alles hier fehlt auf der Website oder ist als Lücke markiert
 
 ## Vor dem Livegang (Pflicht)
 
-- [ ] **Impressum** (`app/impressum/page.tsx`): Namen der persönlich haftenden Gesellschafter, Registergericht + HRA-Nummer, USt-IdNr., verantwortliche Person nach § 18 Abs. 2 MStV.
+- [ ] **Impressum** (`app/(site)/impressum/page.tsx`): Namen der persönlich haftenden Gesellschafter, Registergericht + HRA-Nummer, USt-IdNr., verantwortliche Person nach § 18 Abs. 2 MStV.
 - [ ] **E-Mail-Adresse** (Pflicht im Impressum) → `content/markt.ts → email`. Erscheint dann automatisch in Impressum, Datenschutz und JSON-LD.
 - [ ] **Verbraucherstreitbeilegung**: Ist der Markt zur Teilnahme bereit/verpflichtet? Text im Impressum ggf. anpassen.
-- [ ] **Datenschutzerklärung** prüfen lassen (`app/datenschutz/page.tsx`): Hosting-Vertrag/AVV mit Vercel (läuft über das Konto der Agentur), Aufbewahrungsdauer der Server-Logs.
+- [ ] **Datenschutzerklärung** prüfen lassen (`app/(site)/datenschutz/page.tsx`): Hosting-Vertrag/AVV mit Vercel (läuft über das Konto der Agentur), Aufbewahrungsdauer der Server-Logs.
 - [ ] **Domain** festlegen (z. B. rewe-roedelheim.de) → in Vercel verbinden, `SITE_URL` setzen, dann `SITE_INDEXABLE=true`.
 
 ## Online-Bewerbung freischalten
@@ -15,8 +15,16 @@ Stand: 04.10.2026. Alles hier fehlt auf der Website oder ist als Lücke markiert
 - [ ] **E-Mail-Adresse für Bewerbungen** (z. B. bewerbung@… oder das Postfach der Marktleitung) → `BEWERBUNG_TO`.
 - [ ] **Versandweg**: SMTP-Zugang des Markt-Postfachs (Server, Port, Benutzer, Passwort) **oder** Resend-Konto mit verifizierter Domain → Vercel-Umgebungsvariablen, dann neu deployen.
 - [ ] Eingangsbestätigung an Bewerber gewünscht? (`BEWERBUNG_CONFIRM=true`)
-- [ ] **Datenschutz**: Name des E-Mail-Dienstleisters eintragen (`app/datenschutz/page.tsx`, Abschnitt „Bewerbung“), AVV abschließen.
+- [ ] **Datenschutz**: Name des E-Mail-Dienstleisters eintragen (`app/(site)/datenschutz/page.tsx`, Abschnitt „Bewerbung“), AVV abschließen.
 - [ ] Wer liest die Bewerbungen und löscht sie nach 6 Monaten (Talentpool: 12 Monate)?
+
+## Markt-Cockpit und Prospekt
+
+- [ ] **Prospekt-PDF**: Bekommt der Markt den Wochenprospekt als PDF (z. B. „KW41_2026_final_proof.pdf“ aus dem REWE-Werbemittelportal)? Freigabe, ihn auf der eigenen Website zu zeigen?
+- [ ] **Cockpit-Konten**: E-Mail-Adressen von Ali Alamyaar und der Marktleitung.
+- [ ] **Passwort vergessen**: Mail-Versand in Supabase einrichten (gleicher Weg wie für Bewerbungen).
+- [ ] **Probe am Markt**: einmal einen echten Prospekt am Markt-iPhone (iOS 17.4 oder neuer) und am Büro-PC hochladen.
+- [ ] **Supabase-Sicherheit**: „Leaked password protection“ einschalten (Authentication → Passwords, ab Pro-Tarif).
 
 ## Bildrechte
 

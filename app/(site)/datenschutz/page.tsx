@@ -12,14 +12,15 @@ export const metadata: Metadata = pageMetadata({
 });
 
 /**
- * Beschreibt genau diese Website: Hosting bei Vercel, keine Cookies, kein Tracking, Schriften lokal,
+ * Beschreibt genau diese Website: Hosting bei Vercel, keine Cookies für Besucher (nur Sitzungs-Cookies im Markt-Cockpit),
+ * kein Tracking, Schriften lokal,
  * Karte als statisches Bild, Drittanbieter nur über Links. Ändert sich das (z. B. Kontaktformular,
  * eingebettete Karte), muss dieser Text angepasst werden.
  */
 export default function DatenschutzPage() {
   return (
     <>
-      <PageHeader crumbs={[{ href: "/datenschutz", label: "Datenschutz" }]} title="Datenschutz." lede="Kurz gesagt: Diese Website setzt keine Cookies, nutzt kein Tracking und lädt keine Inhalte von Drittanbietern." />
+      <PageHeader crumbs={[{ href: "/datenschutz", label: "Datenschutz" }]} title="Datenschutz." lede="Kurz gesagt: Beim Besuch dieser Website werden keine Cookies gesetzt, es gibt kein Tracking und keine Inhalte von Drittanbietern." />
       <div className="wrap pb-24 md:pb-32">
         <DraftNotice />
         <div className="prose-article mx-auto max-w-[68ch]">
@@ -48,7 +49,8 @@ export default function DatenschutzPage() {
 
           <h2>Keine Cookies, kein Tracking</h2>
           <p>
-            Wir setzen keine Cookies und verwenden keine Analyse-, Werbe- oder Tracking-Dienste. Deshalb gibt es auch keinen Cookie-Hinweis.
+            Beim Besuch dieser Website setzen wir keine Cookies und verwenden keine Analyse-, Werbe- oder Tracking-Dienste. Deshalb gibt es
+            auch keinen Cookie-Hinweis. Nur das Markt-Cockpit für Mitarbeitende setzt nach der Anmeldung Sitzungs-Cookies (siehe unten).
           </p>
 
           <h2>Schriften, Bilder und Karte</h2>
@@ -106,6 +108,14 @@ export default function DatenschutzPage() {
           <p>
             Über „Teilen“ nutzt du das Teilen-Menü deines Geräts oder öffnest WhatsApp (WhatsApp Ireland Ltd.). Daten werden erst übertragen, wenn du
             selbst teilst.
+          </p>
+
+          <h2>Markt-Cockpit</h2>
+          <p>
+            Mitarbeitende des Markts melden sich mit E-Mail-Adresse und Passwort an, um den Prospekt und Inhalte zu pflegen. Die Anmeldedaten,
+            Prospektseiten und Inhalte speichert die Supabase Inc. als Auftragsverarbeiter auf Servern in Frankfurt am Main (Art. 28 DSGVO).
+            Prospektseiten werden über diese Website ausgeliefert – dein Browser verbindet sich dabei nicht mit Supabase. Für die Anmeldung
+            speichert der Browser technisch notwendige Sitzungs-Cookies (§ 25 Abs. 2 Nr. 2 TDDDG); sie bleiben bis zur Abmeldung bestehen.
           </p>
 
           <h2>Kontakt per Telefon</h2>

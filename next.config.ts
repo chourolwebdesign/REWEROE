@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { SUPABASE_URL } from "./lib/supabase/config";
 
 /** Alte Routen der Online-Shop-Version → nächstliegende neue Seite. */
 const OLD_ROUTES: [string, string][] = [
@@ -44,6 +45,10 @@ const nextConfig: NextConfig = {
   async redirects() {
     return OLD_ROUTES.map(([source, destination]) => ({ source, destination, permanent: true }));
   },
+  async rewrites() {
+    // Prospektbilder über die eigene Domain: keine Anfrage der Besucher an Drittanbieter, Caching durch Vercel.
+    return [{ source: "/prospekt-bilder/:path*", destination: `${SUPABASE_URL}/storage/v1/object/public/prospekte/:path*` }];
+  },
   async headers() {
     return [
       {
@@ -65,6 +70,11 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/media/:file*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+      {
+        // unveränderlich: jeder Upload bekommt eine neue Prospekt-ID und damit neue Pfade
+        source: "/prospekt-bilder/:path*",
         headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
       },
     ];

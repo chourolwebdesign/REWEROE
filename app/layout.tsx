@@ -1,10 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { MobileBar } from "@/components/layout/mobile-bar";
-import { RevealObserver } from "@/components/motion/reveal-observer";
-import { ServiceWorker } from "@/components/pwa/service-worker";
-import { SiteFooter } from "@/components/layout/site-footer";
-import { SiteHeader } from "@/components/layout/site-header";
-import { ldScript, storeJsonLd } from "@/lib/jsonld";
 import { INDEXABLE, ogImagePath, SITE_NAME, SITE_URL } from "@/lib/site";
 import { display } from "./fonts";
 import "./globals.css";
@@ -40,24 +34,13 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-/** Stündlich neu bauen: Prospektwoche, Feiertage im JSON-LD und Jahreszahl bleiben aktuell. */
-export const revalidate = 3600;
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="de" className={display.variable} suppressHydrationWarning>
       <body>
         {/* Vor dem ersten Paint: Einblend-Animationen nur mit JS (siehe .reveal in globals.css) */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
-        <SiteHeader />
-        <main id="inhalt" tabIndex={-1} className="outline-none">
-          {children}
-        </main>
-        <SiteFooter />
-        <MobileBar />
-        <RevealObserver />
-        <ServiceWorker />
-        <script type="application/ld+json" dangerouslySetInnerHTML={ldScript(storeJsonLd())} />
+        {children}
       </body>
     </html>
   );
