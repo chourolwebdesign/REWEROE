@@ -45,6 +45,8 @@ export const markt: Markt = {
       "https://www.rewe.de/angebote/frankfurt-roedelheim/320168/rewe-thudichumstrasse-18-22/?icid=prod_nn_subnavi_standard_angebote&market-flyer=active",
     marktseite: "https://www.rewe.de/marktseite/frankfurt-roedelheim/320168/rewe-markt-thudichumstrasse-18-22/",
     instagram: "https://www.instagram.com/rewealialamyaar/",
+    // Google-Profil des Markts (aus der QR-Vorlage); der direkte „Bewertung schreiben“-Link (g.page/r/…/review) kommt vom Betreiber
+    googleReview: "https://share.google/akKSeJtd9xnEmGSwN",
     // Wie auf der REWE-Marktseite verlinkt
     jobs: "https://karriere.rewe.de/jobs/suche?location=60489&range=25&sort=date",
     ausbildung: "https://karriere.rewe.de/ausbildung",

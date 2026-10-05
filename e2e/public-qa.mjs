@@ -4,7 +4,7 @@ import { BASE, browser, check } from "./lib.mjs";
 const require = createRequire(import.meta.url);
 const { AxePuppeteer } = require("@axe-core/puppeteer");
 
-const paths = process.argv.slice(2).length ? process.argv.slice(2) : ["/", "/angebote", "/markt", "/aktuelles", "/karriere", "/karriere/bewerben", "/kontakt", "/impressum", "/datenschutz", "/gibts-nicht"];
+const paths = process.argv.slice(2).length ? process.argv.slice(2) : ["/", "/angebote", "/markt", "/aktuelles", "/karriere", "/karriere/bewerben", "/kontakt", "/impressum", "/datenschutz", "/feedback", "/gibts-nicht"];
 const local = new Set(["localhost", "127.0.0.1"]);
 const b = await browser();
 for (const path of paths) {

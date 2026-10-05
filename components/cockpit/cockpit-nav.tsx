@@ -10,7 +10,8 @@ export function CockpitNav() {
   const pathname = usePathname();
   return (
     <nav aria-label="Cockpit" className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-white pb-[env(safe-area-inset-bottom)] lg:static lg:border-0 lg:pb-0">
-      <ul className="grid grid-cols-2 lg:grid-cols-1 lg:gap-1">
+      {/* so viele gleich breite Spalten wie Einträge – die Leiste bleibt einreihig, wenn Stufen neue Bereiche ergänzen */}
+      <ul className="grid auto-cols-fr grid-flow-col lg:grid-flow-row lg:grid-cols-1 lg:gap-1">
         {COCKPIT_NAV.map(({ href, label, icon: Icon }) => {
           const active = href === "/cockpit" ? pathname === "/cockpit" : pathname.startsWith(href);
           return (
