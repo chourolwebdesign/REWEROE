@@ -8,22 +8,36 @@ import { cn } from "@/lib/utils";
 export const formatDate = (iso: string) =>
   new Intl.DateTimeFormat("de-DE", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(iso + "T12:00:00Z"));
 
-/** Beitragskarte; `wide` = Bild links, Text rechts (Startseite/erster Beitrag). */
-export function PostCard({ post, wide = false, headingLevel = "h3" }: { post: Post; wide?: boolean; headingLevel?: "h2" | "h3" }) {
+/**
+ * Beitragskarte; `wide` = Bild links, Text rechts (Startseite/erster Beitrag).
+ * `reveal={false}` für Karten im ersten Bildschirm – die sollen sofort stehen statt einzublenden.
+ */
+export function PostCard({
+  post,
+  wide = false,
+  headingLevel = "h3",
+  reveal = true,
+}: {
+  post: Post;
+  wide?: boolean;
+  headingLevel?: "h2" | "h3";
+  reveal?: boolean;
+}) {
   const H = headingLevel;
   return (
     <article
       className={cn(
-        "group reveal card-lift relative overflow-hidden rounded-[var(--radius-media)] bg-soft ring-1 ring-line/60",
-        wide && "md:grid md:grid-cols-[1.15fr_1fr]",
+        "group card-lift relative overflow-hidden rounded-[var(--radius-media)] bg-soft ring-1 ring-line/60",
+        reveal && "reveal",
+        wide && "lg:grid lg:grid-cols-[1.15fr_1fr]",
       )}
     >
-      <div className={cn("relative aspect-[3/2] overflow-hidden", wide && "md:aspect-auto md:min-h-[26rem]")}>
+      <div className={cn("relative aspect-[3/2] overflow-hidden", wide && "lg:aspect-auto lg:min-h-[26rem]")}>
         <Image
           src={media[post.cover].src}
           alt=""
           fill
-          sizes={wide ? "(min-width: 48rem) 55vw, 100vw" : "(min-width: 48rem) 50vw, 100vw"}
+          sizes={wide ? "(min-width: 64rem) 55vw, 100vw" : "(min-width: 48rem) 50vw, 100vw"}
           quality={70}
           className="object-cover transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.03]"
         />

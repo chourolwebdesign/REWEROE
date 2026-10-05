@@ -32,7 +32,6 @@ export const posts: Post[] = [
       "resilienzwoche-stand",
       "resilienzwoche-broschueren",
       "resilienzwoche-nina",
-      "resilienzwoche-obst",
     ],
     source: {
       title: "Pressemitteilung des Hessischen Ministeriums des Innern, für Sicherheit und Heimatschutz",

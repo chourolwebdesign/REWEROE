@@ -20,7 +20,7 @@ export function RegionalBand({ className }: { className?: string }) {
             <p className="mt-5 max-w-[46ch] text-lede text-white/75">
               Das gelbe Schild mit dem Traktor zeigt dir im Markt Produkte von Erzeugern aus der Region.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="cta-row mt-8">
               <ButtonLink href="/markt" variant="white" size="lg">
                 Unser Markt
               </ButtonLink>

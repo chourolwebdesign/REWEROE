@@ -9,7 +9,11 @@ import { media } from "@/lib/media";
 import { absoluteUrl } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
-/** Öffnungszeiten (mit Live-Status und kommenden Sondertagen) und Anfahrt (statische Karte, keine Drittanbieter). */
+/**
+ * Öffnungszeiten (mit Live-Status und kommenden Sondertagen) und Anfahrt (statische Karte, keine Drittanbieter).
+ * Die Telefonnummer steht einmal – unten in der Zeiten-Karte; die Karte ist ab 1024 px flacher, damit beide
+ * Karten etwa gleich hoch sind.
+ */
 export function VisitSection({ className, headingLevel = "h3" }: { className?: string; headingLevel?: "h2" | "h3" }) {
   const H = headingLevel;
   const specials = upcomingSpecialDays(berlinNow(new Date()).date, 45);
@@ -74,7 +78,7 @@ export function VisitSection({ className, headingLevel = "h3" }: { className?: s
       </section>
 
       <section aria-labelledby="anfahrt-titel" className="reveal overflow-hidden rounded-[1.75rem] bg-soft">
-        <div className="relative aspect-[5/3] bg-soft-2">
+        <div className="relative aspect-[5/3] bg-soft-2 lg:aspect-[2/1]">
           <Image src={media.karte.src} alt={media.karte.alt} fill sizes="(min-width: 64rem) 55vw, 100vw" quality={75} className="object-cover" />
           <span className="absolute right-2 bottom-2 rounded-md bg-white/85 px-2 py-0.5 text-[0.6875rem] text-ink-2">© OpenStreetMap-Mitwirkende</span>
         </div>
@@ -88,19 +92,16 @@ export function VisitSection({ className, headingLevel = "h3" }: { className?: s
               <span>
                 {markt.address.street}
                 <br />
-                {markt.address.zip} {markt.address.city}-{markt.address.district}
+                {markt.address.zip} {markt.address.city}
               </span>
             </p>
           </div>
-          <div className="flex flex-wrap gap-2.5">
+          <div className="cta-row">
             <ButtonLink href={markt.links.googleMaps} external variant="ink" icon={<Navigation className="size-[1.05em]" aria-hidden />}>
               Route planen
             </ButtonLink>
             <ButtonLink href={markt.links.appleMaps} external variant="white">
               Apple Karten
-            </ButtonLink>
-            <ButtonLink href={`tel:${markt.phone.e164}`} variant="white" icon={<Phone className="size-[1.05em]" aria-hidden />}>
-              {markt.phone.display}
             </ButtonLink>
           </div>
         </div>

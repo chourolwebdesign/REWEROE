@@ -7,12 +7,14 @@ import { jobs } from "@/content/jobs";
 import { markt } from "@/content/markt";
 import { breadcrumbJsonLd, jobJsonLd, ldScript } from "@/lib/jsonld";
 import { media } from "@/lib/media";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Karriere",
   description: "Arbeiten bei REWE in Frankfurt-Rödelheim: Bereiche im Markt, Ausbildung und aktuelle Stellen in der REWE-Stellensuche.",
-  alternates: { canonical: "/karriere" },
-};
+  path: "/karriere",
+  card: "karriere",
+});
 
 /** Typische Bereiche in einem Supermarkt – Beschreibung der Arbeit, keine Stellenzusage. */
 const AREAS = [
@@ -31,7 +33,7 @@ export default function KarrierePage() {
         title="Arbeiten im Supermarkt um die Ecke."
         lede="Kurze Wege, ein Markt mitten im Viertel und Arbeit, die man am Ende des Tages sieht. So kannst du bei uns einsteigen."
       >
-        <div className="mt-8 flex flex-wrap gap-3">
+        <div className="cta-row mt-8">
           <ButtonLink href="/karriere/bewerben" size="lg">
             In 60 Sekunden bewerben
           </ButtonLink>
@@ -41,9 +43,10 @@ export default function KarrierePage() {
         </div>
       </PageHeader>
 
+      {/* direkt unter dem Seitenkopf: ohne Einblenden, damit der erste Bildschirm sofort steht (LCP) */}
       <section aria-labelledby="stellen-titel" className="wrap">
         <div className="grid gap-3 md:grid-cols-[1.1fr_1fr] md:gap-4">
-          <div className="reveal on-dark rounded-[var(--radius-media)] bg-night p-7 text-white md:p-10">
+          <div className="on-dark rounded-[var(--radius-media)] bg-night p-7 text-white md:p-10">
             <h2 id="stellen-titel" className="text-h3">
               Offene Stellen
             </h2>
@@ -62,11 +65,14 @@ export default function KarrierePage() {
                 Aktuelle Stellen und Ausbildungsplätze von REWE in Rödelheim und Umgebung findest du in der REWE-Stellensuche.
               </p>
             )}
-            <div className="mt-8 flex flex-wrap gap-3">
-              <ButtonLink href="/karriere/bewerben" variant="white" size="lg">
-                Jetzt bewerben
-              </ButtonLink>
-              <ButtonLink href={markt.links.jobs} external variant="glass" size="lg">
+            {/* „Bewerben“ steht schon im Seitenkopf – hier nur, wenn es eigene Stellen gibt */}
+            <div className="cta-row mt-8">
+              {jobs.length > 0 && (
+                <ButtonLink href="/karriere/bewerben" variant="white" size="lg">
+                  Jetzt bewerben
+                </ButtonLink>
+              )}
+              <ButtonLink href={markt.links.jobs} external variant={jobs.length > 0 ? "glass" : "white"} size="lg">
                 Zur Stellensuche
               </ButtonLink>
               <ButtonLink href={markt.links.ausbildung} external variant="glass" size="lg">
@@ -74,15 +80,16 @@ export default function KarrierePage() {
               </ButtonLink>
             </div>
           </div>
-          <div className="reveal relative min-h-[18rem] overflow-hidden rounded-[var(--radius-media)] bg-soft">
+          <div className="relative min-h-[18rem] overflow-hidden rounded-[var(--radius-media)] bg-soft">
+            {/* Arbeit im Markt statt des Resilienzwoche-Banners („Notfälle kommen plötzlich“), das hier falsch klänge */}
             <Image
-              src={media["resilienzwoche-obst"].src}
-              alt={media["resilienzwoche-obst"].alt}
+              src={media["regional-lieferung"].src}
+              alt={media["regional-lieferung"].alt}
               fill
               sizes="(min-width: 48rem) 45vw, 100vw"
               quality={70}
               className="object-cover"
-              style={{ objectPosition: "75% 50%" }}
+              style={{ objectPosition: "60% 40%" }}
             />
           </div>
         </div>
@@ -119,9 +126,14 @@ export default function KarrierePage() {
               Ruf uns an oder sprich uns im Markt an – wir sagen dir gern, ob gerade jemand gesucht wird. Oder schick uns deine Kurzbewerbung online.
             </p>
           </div>
-          <ButtonLink href={`tel:${markt.phone.e164}`} variant="red" size="lg" className="mt-6 md:mt-0">
-            {markt.phone.display}
-          </ButtonLink>
+          <div className="cta-row mt-6 shrink-0 md:mt-0">
+            <ButtonLink href={`tel:${markt.phone.e164}`} variant="red" size="lg">
+              {markt.phone.display}
+            </ButtonLink>
+            <ButtonLink href="/karriere/bewerben" variant="white" size="lg">
+              Kurzbewerbung
+            </ButtonLink>
+          </div>
         </div>
       </section>
 

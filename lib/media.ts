@@ -134,13 +134,16 @@ export const media = {
 
 export type MediaKey = keyof typeof media;
 
-/** Video-Dateien liegen in public/media (keine Bildoptimierung nötig). */
+/**
+ * Video-Dateien liegen in public/media (ohne Ton, H.264 High@4.0, „faststart“). `src` hat 720 × 1280 für Tablet und
+ * Desktop, `srcSmall` 540 × 960 für Handys (ein Drittel weniger Daten). /media wird ein Jahr lang gecacht –
+ * geänderte Videos deshalb immer unter neuem Dateinamen ablegen.
+ */
 export const clips = {
   "markt-rundgang": {
-    src: "/media/markt-rundgang.mp4",
-    backdrop: "/media/markt-rundgang-bg.mp4",
+    src: "/media/markt-rundgang-720.mp4",
+    srcSmall: "/media/markt-rundgang-540.mp4",
     poster: "markt-rundgang-poster" as MediaKey,
-    posterUrl: "/media/markt-rundgang-poster.webp",
     label: "Rundgang durch den Markt",
     credit: instagram,
   },

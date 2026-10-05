@@ -32,7 +32,7 @@ export function storeJsonLd(now: Date = new Date()) {
     legalName: markt.legalName,
     brand: { "@type": "Brand", name: "REWE" },
     url: absoluteUrl("/"),
-    image: absoluteUrl("/og.jpg"),
+    image: absoluteUrl(media["markt-rundgang-poster"].src.src),
     telephone: markt.phone.e164,
     ...(markt.email ? { email: markt.email } : {}),
     address: {

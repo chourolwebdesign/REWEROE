@@ -46,13 +46,13 @@ Ohne Mail-Konfiguration zeigt das Formular einen Hinweis und die Telefonnummer u
 | Termine im Markt (Startseite + Markt-Kalender) | `content/termine.ts` |
 | Auswahl im Bewerbungsformular | `content/bewerbung.ts` |
 | Neue Fotos | Datei nach `assets/media/`, in `lib/media.ts` mit Alt-Text, Kurztitel und Bildnachweis eintragen |
-| Neue Clips | MP4 (H.264, stumm, `faststart`) nach `public/media/`, Posterbild nach `assets/media/`, Eintrag in `lib/media.ts → clips` |
+| Neue Clips | zwei MP4 (H.264, stumm, `faststart`: 720 px und 540 px breit) nach `public/media/`, Posterbild nach `assets/media/`, Eintrag in `lib/media.ts → clips`. Geänderte Videos immer unter neuem Namen (`/media` wird ein Jahr gecacht) |
 
-Clips komprimieren (so wurde der Rundgang erstellt):
+Clips komprimieren (so wurde der Rundgang erstellt – Handys bekommen automatisch die 540er-Datei, im Datensparmodus läuft gar kein Video):
 
 ```bash
-ffmpeg -i quelle.mp4 -an -c:v libx264 -profile:v high -preset veryslow -crf 31 -pix_fmt yuv420p -g 60 -movflags +faststart public/media/name.mp4
-ffmpeg -i quelle.mp4 -an -vf "scale=90:160,fps=15" -c:v libx264 -crf 30 -pix_fmt yuv420p -movflags +faststart public/media/name-bg.mp4
+ffmpeg -i quelle.mp4 -an -c:v libx264 -profile:v high -level:v 4.0 -preset veryslow -crf 31 -pix_fmt yuv420p -movflags +faststart public/media/name-720.mp4
+ffmpeg -i quelle.mp4 -an -vf "scale=540:960:flags=lanczos" -c:v libx264 -profile:v high -level:v 4.0 -preset veryslow -crf 31 -pix_fmt yuv420p -movflags +faststart public/media/name-540.mp4
 ```
 
 ## Service-Funktionen
@@ -64,6 +64,7 @@ ffmpeg -i quelle.mp4 -an -vf "scale=90:160,fps=15" -c:v libx264 -crf 30 -pix_fmt
 | Als App / offline | `app/manifest.ts`, `public/sw.js`, `/offline` | Seiten network-first mit Offline-Kopie; bei Änderungen an der Cache-Logik `VERSION` in `sw.js` erhöhen |
 | Teilen | Prospekt-Ticket | System-Teilen-Menü, sonst WhatsApp / Link kopieren |
 | Aushang mit QR-Codes | `/aushang` (noindex) | A4 drucken; nach dem Domainwechsel neu drucken |
+| Teilen-Vorschau | `/og/<karte>.jpg`, `lib/og.tsx` | eigene Karte je Seite und Beitrag (roter Hero-Look, beim Build erzeugt); neue Seite: Karte in `lib/og.tsx → PAGES`, Metadaten mit `pageMetadata()` aus `lib/site.ts` |
 
 ## Grundsätze
 

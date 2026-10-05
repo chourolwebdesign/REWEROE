@@ -13,12 +13,14 @@ import { markt } from "@/content/markt";
 import { breadcrumbJsonLd, ldScript } from "@/lib/jsonld";
 import { media } from "@/lib/media";
 import { resolveGallery } from "@/lib/resolve";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Unser Markt",
   description: "REWE in der Thudichumstraße 18–22, Frankfurt-Rödelheim: Bäckerei und Sushi im Markt, Produkte aus der Region, REWE Bio – Montag bis Samstag 7 bis 22 Uhr.",
-  alternates: { canonical: "/markt" },
-};
+  path: "/markt",
+  card: "markt",
+});
 
 export default function MarktPage() {
   return (

@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 /**
  * Domain und Indexierung kommen aus der Umgebung:
  * - SITE_URL: kanonische Adresse (z. B. https://rewe-roedelheim.de). Ohne Angabe die Vercel-Produktionsadresse.
@@ -17,3 +19,46 @@ export const NAV = [
 ] as const;
 
 export const absoluteUrl = (path = "/") => `${SITE_URL}${path === "/" ? "" : path}`;
+
+export const SITE_NAME = "REWE Rödelheim";
+
+/** Teilen-Bild einer Seite (erzeugt von app/og/[slug]/route.tsx), z. B. ogImagePath("karriere") → /og/karriere.jpg */
+export const ogImagePath = (card: string) => `/og/${card}.jpg`;
+
+/**
+ * Metadaten einer Seite mit eigener Teilen-Vorschau. Next.js ersetzt `openGraph` je Seite komplett (keine
+ * Vererbung einzelner Felder) – deshalb setzt jede Seite hier Titel, Beschreibung, Adresse und Bild selbst.
+ */
+export function pageMetadata({
+  title,
+  description,
+  path,
+  card,
+  socialTitle = `${title} · ${SITE_NAME}`,
+  publishedTime,
+}: {
+  title: string;
+  description: string;
+  path: string;
+  /** Name der Teilen-Karte in lib/og.tsx */
+  card: string;
+  /** Titel in der Vorschau (WhatsApp, Facebook …), Standard: „Seitentitel · REWE Rödelheim“ */
+  socialTitle?: string;
+  /** nur Beiträge: Erscheinungsdatum (macht die Vorschau zum Artikel) */
+  publishedTime?: string;
+}): Metadata {
+  const shared = {
+    locale: "de_DE",
+    siteName: SITE_NAME,
+    url: path,
+    title: socialTitle,
+    description,
+    images: [{ url: ogImagePath(card), width: 1200, height: 630, alt: socialTitle }],
+  };
+  return {
+    title,
+    description,
+    alternates: { canonical: path },
+    openGraph: publishedTime ? { ...shared, type: "article", publishedTime } : { ...shared, type: "website" },
+  };
+}

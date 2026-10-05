@@ -418,7 +418,8 @@ export function ApplicationForm({ ready, phone, phoneHref }: { ready: boolean; p
 
           <fieldset className="mt-8">
             <legend className="font-semibold">Wie möchtest du arbeiten?</legend>
-            <div className="mt-3 flex flex-wrap gap-2.5">
+            {/* mobil zwei gleich breite Spalten (ein letzter einzelner Eintrag über beide), ab 640 px fließend */}
+            <div className="mt-3 grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap [&>:last-child:nth-child(odd)]:col-span-2">
               {EMPLOYMENT.map((e) => (
                 <Choice
                   key={e.id}
@@ -452,7 +453,7 @@ export function ApplicationForm({ ready, phone, phoneHref }: { ready: boolean; p
           </h2>
           <fieldset className="mt-5">
             <legend className="font-semibold">Ab wann kannst du anfangen?</legend>
-            <div className="mt-3 flex flex-wrap gap-2.5">
+            <div className="mt-3 grid gap-2.5 sm:flex sm:flex-wrap">
               <Choice type="radio" name="start" value="sofort" checked={values.start === "sofort"} onChange={() => set("start", "sofort")}>
                 So schnell wie möglich
               </Choice>

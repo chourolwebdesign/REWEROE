@@ -11,6 +11,7 @@ import { articleJsonLd, breadcrumbJsonLd, ldScript } from "@/lib/jsonld";
 import { Markdown } from "@/lib/markdown";
 import { media } from "@/lib/media";
 import { resolveImages } from "@/lib/resolve";
+import { pageMetadata } from "@/lib/site";
 
 export const dynamicParams = false;
 
@@ -22,19 +23,14 @@ export async function generateMetadata({ params }: PageProps<"/aktuelles/[slug]"
   const { slug } = await params;
   const post = getPost(slug);
   if (!post) return {};
-  const cover = media[post.cover].src;
-  return {
+  return pageMetadata({
     title: post.title,
     description: post.excerpt,
-    alternates: { canonical: `/aktuelles/${post.slug}` },
-    openGraph: {
-      type: "article",
-      title: post.title,
-      description: post.excerpt,
-      publishedTime: post.date,
-      images: [{ url: cover.src, width: cover.width, height: cover.height, alt: media[post.cover].alt }],
-    },
-  };
+    path: `/aktuelles/${post.slug}`,
+    card: `beitrag-${post.slug}`,
+    socialTitle: post.title,
+    publishedTime: post.date,
+  });
 }
 
 export default async function PostPage({ params }: PageProps<"/aktuelles/[slug]">) {
@@ -67,18 +63,21 @@ export default async function PostPage({ params }: PageProps<"/aktuelles/[slug]"
       </figure>
 
       <div className="wrap pt-12 md:pt-16">
-        <Markdown source={post.body} className="prose-article mx-auto max-w-[68ch]" />
+        {/* eine Spalte für Text und Quelle: 68 Zeichen in Fließtextgröße, damit beide bündig stehen */}
+        <div className="mx-auto max-w-[68ch] text-[1.125rem]">
+          <Markdown source={post.body} className="prose-article" />
 
-        {post.source && (
-          <p className="mx-auto mt-12 max-w-[68ch] rounded-2xl bg-soft p-5 text-[0.9375rem]">
-            Quelle:{" "}
-            <a href={post.source.url} target="_blank" rel="noopener" className="font-semibold underline underline-offset-4 hover:text-red">
-              {post.source.title}
-              <ArrowUpRight className="ml-0.5 inline size-4 align-[-0.15em]" aria-hidden />
-              <span className="sr-only"> (öffnet in neuem Tab)</span>
-            </a>
-          </p>
-        )}
+          {post.source && (
+            <p className="mt-12 rounded-2xl bg-soft p-5 text-[0.9375rem]">
+              Quelle:{" "}
+              <a href={post.source.url} target="_blank" rel="noopener" className="font-semibold underline underline-offset-4 hover:text-red">
+                {post.source.title}
+                <ArrowUpRight className="ml-0.5 inline size-4 align-[-0.15em]" aria-hidden />
+                <span className="sr-only"> (öffnet in neuem Tab)</span>
+              </a>
+            </p>
+          )}
+        </div>
       </div>
 
       {post.gallery.length > 0 && (

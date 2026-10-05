@@ -6,12 +6,14 @@ import { InstagramIcon } from "@/components/ui/icons";
 import { posts } from "@/content/aktuelles";
 import { markt } from "@/content/markt";
 import { breadcrumbJsonLd, ldScript } from "@/lib/jsonld";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Aktuelles",
   description: "Neuigkeiten aus dem REWE-Markt in Frankfurt-Rödelheim.",
-  alternates: { canonical: "/aktuelles" },
-};
+  path: "/aktuelles",
+  card: "aktuelles",
+});
 
 export default function AktuellesPage() {
   const [first, ...rest] = posts;
@@ -24,7 +26,7 @@ export default function AktuellesPage() {
         lede="Was bei uns im Markt passiert – Aktionen, Besuche und Neuigkeiten."
       />
       <section aria-label="Beiträge" className="wrap grid gap-4 pb-12">
-        {first && <PostCard post={first} wide headingLevel="h2" />}
+        {first && <PostCard post={first} wide headingLevel="h2" reveal={false} />}
         {rest.length > 0 && (
           <div className="grid gap-4 md:grid-cols-2">
             {rest.map((p) => (

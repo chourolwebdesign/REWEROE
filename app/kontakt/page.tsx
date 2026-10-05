@@ -6,12 +6,14 @@ import { InstagramIcon } from "@/components/ui/icons";
 import { VisitSection } from "@/components/visit/visit-section";
 import { markt } from "@/content/markt";
 import { breadcrumbJsonLd, ldScript } from "@/lib/jsonld";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Kontakt & Anfahrt",
   description: "REWE Rödelheim, Thudichumstraße 18–22, 60489 Frankfurt am Main. Telefon 069 945158650. Montag bis Samstag 7 bis 22 Uhr.",
-  alternates: { canonical: "/kontakt" },
-};
+  path: "/kontakt",
+  card: "kontakt",
+});
 
 export default function KontaktPage() {
   const cards = [
@@ -24,7 +26,7 @@ export default function KontaktPage() {
     {
       icon: MapPin,
       title: "Vorbeikommen",
-      text: `${markt.address.street}, ${markt.address.zip} ${markt.address.city}-${markt.address.district}`,
+      text: `${markt.address.street}, ${markt.address.zip} ${markt.address.city}`,
       action: (
         <ButtonLink href={markt.links.googleMaps} external variant="ink">
           Route planen
@@ -62,12 +64,13 @@ export default function KontaktPage() {
         lede="Am schnellsten per Telefon oder direkt im Markt – Montag bis Samstag von 7 bis 22 Uhr."
       />
 
+      {/* erster Bildschirm: ohne Einblenden */}
       <section aria-label="Kontaktwege" className="wrap">
         <ul className="grid gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-4">
           {cards.map(({ icon: Icon, title, text, action }) => (
             <li
               key={title}
-              className="reveal card-lift flex flex-col rounded-[var(--radius-media)] bg-soft p-6 ring-1 ring-line/60 md:p-7"
+              className="card-lift flex flex-col rounded-[var(--radius-media)] bg-soft p-6 ring-1 ring-line/60 md:p-7"
             >
               <span className="grid size-14 place-items-center rounded-2xl bg-ink text-white ring-1 ring-inset ring-white/10">
                 <Icon className="size-7" strokeWidth={1.7} aria-hidden />

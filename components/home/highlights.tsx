@@ -9,21 +9,22 @@ const ICONS = { baeckerei: Croissant, sushi: Fish } as const;
 /**
  * „Bei uns im Markt“: die REWE-Marken für Regionales und Bio sowie die belegten Services (rewe.de).
  * Alle Karten haben denselben Aufbau – Bild- oder Symbolfeld oben, Text unten – damit das Raster ruhig bleibt.
+ * Vier Spalten erst ab 1280 px; darunter stehen Regional und Bio nebeneinander und die Service-Karte darunter.
  */
 export function Highlights({ className }: { className?: string }) {
   const card = "reveal flex flex-col overflow-hidden rounded-[var(--radius-media)] bg-soft";
   const body = "flex flex-1 flex-col p-6 md:p-7";
 
   return (
-    <div className={cn("grid gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-4", className)}>
+    <div className={cn("grid gap-3 sm:grid-cols-2 md:gap-4 xl:grid-cols-4", className)}>
       {/* REWE Regional */}
       <article className={card}>
-        <div className="relative aspect-[5/4] bg-soft-2">
+        <div className="relative aspect-[16/10] bg-soft-2 xl:aspect-[5/4]">
           <Image
             src={media["regional-label"].src}
             alt={media["regional-label"].alt}
             fill
-            sizes="(min-width: 64rem) 25vw, (min-width: 40rem) 50vw, 100vw"
+            sizes="(min-width: 80rem) 320px, (min-width: 40rem) 50vw, 100vw"
             quality={72}
             className="object-cover"
           />
@@ -36,12 +37,12 @@ export function Highlights({ className }: { className?: string }) {
 
       {/* REWE Bio */}
       <article className={card}>
-        <div className="relative aspect-[5/4] bg-soft-2">
+        <div className="relative aspect-[16/10] bg-soft-2 xl:aspect-[5/4]">
           <Image
             src={media["bio-produkte"].src}
             alt={media["bio-produkte"].alt}
             fill
-            sizes="(min-width: 64rem) 25vw, (min-width: 40rem) 50vw, 100vw"
+            sizes="(min-width: 80rem) 320px, (min-width: 40rem) 50vw, 100vw"
             quality={72}
             className="object-cover"
           />

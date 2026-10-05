@@ -10,7 +10,8 @@ import { cn } from "@/lib/utils";
 export type { StoryMedia };
 
 const HANDLE = "rewealialamyaar";
-const NAV_BTN = "grid size-11 place-items-center rounded-full bg-white/12 text-white ring-1 ring-white/25 transition hover:bg-white/22";
+const NAV_BTN =
+  "grid size-11 place-items-center rounded-full bg-white/12 text-white ring-1 ring-white/25 transition-[background-color,transform] duration-150 hover:bg-white/22 active:scale-95";
 const IMG_SIZES = "(min-width: 64rem) 430px, 90vw";
 
 /** Roter Hero: große Headline links, Story (Clip + Fotos) im Hochkant-Rahmen rechts. */
@@ -106,7 +107,7 @@ export function StoryHero({ items, intro, side }: { items: StoryMedia[]; intro: 
                 <button
                   type="button"
                   onClick={() => setUserPaused((p) => !p)}
-                  className="relative z-10 ml-auto grid size-11 shrink-0 place-items-center rounded-full text-white transition hover:bg-white/15"
+                  className="relative z-10 ml-auto grid size-11 shrink-0 place-items-center rounded-full text-white transition-[background-color,transform] duration-150 hover:bg-white/15 active:scale-95"
                   aria-label={userPaused || !ready ? "Story abspielen" : "Story anhalten"}
                   aria-pressed={userPaused}
                 >

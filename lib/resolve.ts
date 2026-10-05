@@ -10,7 +10,7 @@ export function resolveStory(items: StoryItem[]): StoryMedia[] {
     if (it.type === "clip") {
       const c = clips[it.clip];
       const p = media[c.poster];
-      return { type: "clip", src: c.src, backdrop: c.backdrop, posterUrl: c.posterUrl, poster: p.src, alt: p.alt, caption: it.caption };
+      return { type: "clip", src: c.src, srcSmall: c.srcSmall, poster: p.src, alt: p.alt, caption: it.caption };
     }
     const m = media[it.media];
     return { type: "image", image: m.src, alt: m.alt, caption: it.caption, seconds: it.seconds, position: it.position };
@@ -22,7 +22,7 @@ export function resolveGallery(items: GalleryItem[]): GalleryMedia[] {
     if ("clip" in it) {
       const c = clips[it.clip];
       const p = media[c.poster];
-      return { type: "clip", src: c.src, poster: p.src, alt: p.alt, caption: it.caption, credit: c.credit };
+      return { type: "clip", src: c.src, srcSmall: c.srcSmall, poster: p.src, alt: p.alt, caption: it.caption, credit: c.credit };
     }
     const m = media[it.media];
     return { type: "image", image: m.src, alt: m.alt, caption: it.caption, credit: m.credit };

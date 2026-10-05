@@ -36,7 +36,7 @@ export const markt: Markt = {
   },
   services: [
     { id: "baeckerei", name: "Bäckerei", text: "Brot, Brötchen und Gebäck direkt bei uns im Markt." },
-    { id: "sushi", name: "Sushi", text: "Sushi gibt es bei uns frisch im Markt." },
+    { id: "sushi", name: "Sushi", text: "Frisch zum Mitnehmen – direkt bei uns im Markt." },
   ],
   instagramHandle: "rewealialamyaar",
   links: {

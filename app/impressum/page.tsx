@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { PageHeader } from "@/components/layout/page-header";
 import { DraftNotice, Missing } from "@/components/legal/missing";
 import { markt } from "@/content/markt";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Impressum",
   description: "Impressum der Website von REWE Rödelheim (REWE Ali Alamyaar oHG).",
-  alternates: { canonical: "/impressum" },
-};
+  path: "/impressum",
+  card: "start",
+});
 
 export default function ImpressumPage() {
   return (

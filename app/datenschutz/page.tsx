@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { PageHeader } from "@/components/layout/page-header";
 import { DraftNotice, Missing } from "@/components/legal/missing";
 import { markt } from "@/content/markt";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Datenschutz",
   description: "Datenschutzerklärung der Website von REWE Rödelheim: keine Cookies, kein Tracking.",
-  alternates: { canonical: "/datenschutz" },
-};
+  path: "/datenschutz",
+  card: "start",
+});
 
 /**
  * Beschreibt genau diese Website: Hosting bei Vercel, keine Cookies, kein Tracking, Schriften lokal,
