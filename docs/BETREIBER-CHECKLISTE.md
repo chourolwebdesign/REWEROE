@@ -18,7 +18,7 @@ Stand: 04.10.2026. Alles hier fehlt auf der Website oder ist als Lücke markiert
 - [ ] **Datenschutz**: Name des E-Mail-Dienstleisters eintragen (`app/(site)/datenschutz/page.tsx`, Abschnitt „Bewerbung“), AVV abschließen.
 - [ ] Wer liest die Bewerbungen und löscht sie nach 6 Monaten (Talentpool: 12 Monate)?
 
-## Markt-Cockpit, Prospekt und Feedback
+## Markt-Cockpit, Prospekt, Feedback und Inhalte
 
 - [ ] **Prospekt-PDF**: Bekommt der Markt den Wochenprospekt als PDF (z. B. „KW41_2026_final_proof.pdf“ aus dem REWE-Werbemittelportal)? Freigabe, ihn auf der eigenen Website zu zeigen?
 - [ ] **Cockpit-Konten**: E-Mail-Adressen von Ali Alamyaar und der Marktleitung.
@@ -42,12 +42,12 @@ Stand: 04.10.2026. Alles hier fehlt auf der Website oder ist als Lücke markiert
 - [ ] **Weitere Clips und Fotos** aus dem Markt (Bäckerei, Sushi, Obst & Gemüse, Team) – am besten hochkant für die Story, quer für die Galerie.
 - [ ] **Weitere Services** bestätigen: Pfandautomat, Parkplätze, barrierefreier Zugang, Bezahlarten, REWE Bonus, Abhol-/Lieferservice. Auf rewe.de sind nur „Bäckerei“ und „Sushi“ gelistet – mehr steht deshalb nicht auf der Seite.
 - [ ] **Sortimentsgröße** (z. B. „rund 8.000 Artikel“) – nur mit Bestätigung.
-- [ ] **Sonderöffnungszeiten** für Heiligabend, Silvester und Gründonnerstag (aktuell: gesetzliche Grenze nach § 3 HLöG, als „vorläufig“ markiert).
-- [ ] **Offene Stellen** des Markts → `content/jobs.ts` (erzeugt automatisch Google-Jobdaten).
+- [ ] **Sonderöffnungszeiten** für Heiligabend, Silvester und Gründonnerstag im Cockpit unter Inhalte → Sondertage festlegen (bis dahin: gesetzliche Grenze nach § 3 HLöG, als „vorläufig“ markiert; die Cockpit-Übersicht erinnert 45 Tage vorher).
+- [ ] **Offene Stellen** des Markts im Cockpit unter Inhalte → Stellen (erzeugt automatisch Google-Jobdaten) – nur echte, freigegebene Stellen.
 - [ ] **Team**: Namen/Fotos, falls gewünscht (Freigaben der Personen nötig).
 - [ ] **Feedback**: die QR-App ist jetzt Teil der Website (`/feedback`); ältere Plakate mit einer anderen Adresse (Projekt rewe-feedback) durch das neue Plakat ersetzen.
 - [ ] Neue **Aktuelles-Beiträge** (Aktionen, Feste, Spenden) mit Datum und Fotos.
-- [ ] **Termine im Markt** (Verkostung, Aktionstag, Kinderaktion) → `content/termine.ts`; erscheinen auf der Startseite und im Markt-Kalender.
+- [ ] **Termine im Markt** (Verkostung, Aktionstag, Kinderaktion) im Cockpit unter Inhalte → Termine; erscheinen auf der Startseite und im Markt-Kalender.
 - [ ] **Aushang** (`/aushang`) ausdrucken und im Markt aufhängen – nach dem Domainwechsel neu drucken.
 
 ## Ideen für später (nur mit echten Zahlen)

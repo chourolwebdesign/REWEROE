@@ -38,12 +38,12 @@ Ohne Mail-Konfiguration zeigt das Formular einen Hinweis und die Telefonnummer u
 | Was | Wo |
 |---|---|
 | Adresse, Telefon, E-Mail, Öffnungszeiten, Services, Links (Prospekt, Instagram, Stellensuche) | `content/markt.ts` |
-| Sonderöffnungszeiten (z. B. Heiligabend) | `content/markt.ts → hours.specialDays` – Feiertage in Hessen und § 3 HLöG rechnet `lib/hours.ts` selbst |
+| Sonderöffnungszeiten (z. B. Heiligabend) | Markt-Cockpit → Inhalte → Sondertage – Feiertage in Hessen und § 3 HLöG rechnet `lib/hours.ts` selbst |
 | Story im ersten Screen (Clip/Fotos, Reihenfolge, Dauer) | `content/story.ts` |
 | Galerie „Aus dem Markt“ | `content/galerie.ts` |
 | Beiträge unter /aktuelles (Markdown) | `content/aktuelles.ts` |
-| Offene Stellen (erzeugen automatisch JobPosting-Daten) | `content/jobs.ts` |
-| Termine im Markt (Startseite + Markt-Kalender) | `content/termine.ts` |
+| Offene Stellen (erzeugen automatisch JobPosting-Daten) | Markt-Cockpit → Inhalte → Stellen |
+| Termine im Markt (Startseite + Markt-Kalender) | Markt-Cockpit → Inhalte → Termine |
 | Auswahl im Bewerbungsformular | `content/bewerbung.ts` |
 | Neue Fotos | Datei nach `assets/media/`, in `lib/media.ts` mit Alt-Text, Kurztitel und Bildnachweis eintragen |
 | Neue Clips | zwei MP4 (H.264, stumm, `faststart`: 720 px und 540 px breit) nach `public/media/`, Posterbild nach `assets/media/`, Eintrag in `lib/media.ts → clips`. Geänderte Videos immer unter neuem Namen (`/media` wird ein Jahr gecacht) |
@@ -75,9 +75,10 @@ ffmpeg -i quelle.mp4 -an -vf "scale=540:960:flags=lanczos" -c:v libx264 -profile
 | Konto anlegen | Supabase-Dashboard → Authentication → Add user (E-Mail, Passwort, „Auto Confirm“), dann im SQL-Editor `insert into public.editors (user_id, name) values ('<uuid>', '<Vorname>');` |
 | Registrierung sperren | Authentication → Sign In / Providers → „Allow new users to sign up“ aus (einmalig) |
 | Datenbank ändern | neue Datei in `supabase/migrations/`, per Supabase-MCP `apply_migration` oder SQL-Editor anwenden |
-| Tests | Server auf Port 3100 starten, dann `node --env-file=.env.local e2e/<skript>.mjs` (`rls-check`, `cockpit-login`, `cockpit-prospekt`, `cockpit-fehlerfaelle`, `prospekt-viewer`, `start-ticket`, `feedback`, `cockpit-feedback`, `cockpit-axe`, `public-qa`); Test-Editor in `.env.local` (siehe `.env.example`). Die Cockpit-Skripte schreiben in das Supabase-Projekt (Testprospekt bzw. Testwoche 2031) und räumen danach auf |
+| Tests | Server auf Port 3100 starten, dann `node --env-file=.env.local e2e/<skript>.mjs` (`rls-check`, `cockpit-login`, `cockpit-prospekt`, `cockpit-fehlerfaelle`, `prospekt-viewer`, `start-ticket`, `feedback`, `cockpit-feedback`, `inhalte-website`, `cockpit-inhalte`, `cockpit-axe`, `public-qa`); Test-Editor in `.env.local` (siehe `.env.example`). Die Cockpit-Skripte schreiben in das Supabase-Projekt (Testprospekt bzw. Testwoche 2031) und räumen danach auf |
 | Geräte | Hochladen braucht einen aktuellen Browser (iPhone ab iOS 17.4); pdf.js läuft als Legacy-Build |
 | Feedback | `/feedback` (QR-Plakat unter `/aushang`, Seite 2). Schreiben nur mit `FEEDBACK_KEY` (Server; in Supabase steht nur der SHA-256 in `private.settings`). Neuer Schlüssel: Befehl aus Plan 2026-10-05-feedback, Task 1 Step 3, dann Hash per SQL ersetzen und `FEEDBACK_KEY` in Vercel tauschen. Alarm bei 1–2 Sternen: `FEEDBACK_ALARM_AN` + Mail-Einrichtung |
+| Inhalte | `/cockpit/inhalte`: Sondertage (Vorrang vor Feiertagen; die gesetzlichen Grenzen – Heiligabend und Silvester 14 Uhr, Gründonnerstag 20 Uhr – werden geprüft), Termine (Startseite, Markt-Kalender) und Stellen (/karriere mit JobPosting). Die Website liest sie aus Supabase (`lib/data/inhalte.ts`); jedes Speichern erneuert die Seiten |
 | Tarif | Für den Livegang Supabase Pro (pausiert nicht, tägliche Sicherung); Vercel-Tarif auf kommerzielle Nutzung prüfen |
 
 ## Grundsätze

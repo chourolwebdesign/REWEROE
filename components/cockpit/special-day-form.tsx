@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { saveSpecialDay } from "@/app/cockpit/(intern)/inhalte/actions";
 import { formatDayMonth, WEEKDAYS, weekdayOf } from "@/lib/hours";
 import { fieldClass, FormMessage, SubmitButton, useCockpitForm } from "./form";
@@ -16,13 +15,14 @@ export interface SpecialDayDefaults {
 /**
  * Sondertag festlegen: ganztägig geschlossen oder geänderte Zeiten. Ein Eintrag mit demselben Datum wird ersetzt.
  * Beim Bearbeiten steht das Datum fest – das Datum ist der Schlüssel, ein anderer Tag ist ein neuer Eintrag.
+ * „Geschlossen“ ist ein ungesteuertes Feld und blendet die Zeiten per CSS aus: React setzt das Formular nach jeder Aktion
+ * zurück, ein React-Zustand liefe danach auseinander mit dem Häkchen.
  */
 export function SpecialDayForm({ defaults, editing }: { defaults: SpecialDayDefaults; editing: boolean }) {
   const [state, action] = useCockpitForm(saveSpecialDay);
-  const [closed, setClosed] = useState(defaults.closed);
   const v = state.values;
   return (
-    <form action={action} noValidate data-form="sondertag" className="grid gap-5 rounded-[1.75rem] bg-white p-6 md:p-8">
+    <form action={action} noValidate data-form="sondertag" className="group grid gap-5 rounded-[1.75rem] bg-white p-6 md:p-8">
       <h2 className="text-h3">{editing ? "Sondertag bearbeiten" : "Sondertag festlegen"}</h2>
       {editing ? (
         <div>
@@ -44,21 +44,19 @@ export function SpecialDayForm({ defaults, editing }: { defaults: SpecialDayDefa
         <input name="label" required maxLength={60} defaultValue={v?.label ?? defaults.label} placeholder="z. B. Heiligabend oder Inventur" className={fieldClass} />
       </label>
       <label className="flex min-h-11 items-center gap-3 font-semibold">
-        <input name="closed" type="checkbox" checked={closed} onChange={(e) => setClosed(e.target.checked)} className="size-5 accent-red" />
+        <input name="closed" type="checkbox" defaultChecked={v ? v.closed === "on" : defaults.closed} className="size-5 accent-red" />
         Ganztägig geschlossen
       </label>
-      {!closed && (
-        <div className="grid grid-cols-2 gap-3">
-          <label className="font-semibold">
-            von
-            <input name="opens" type="time" required defaultValue={v?.opens ?? defaults.opens} className={fieldClass} />
-          </label>
-          <label className="font-semibold">
-            bis
-            <input name="closes" type="time" required defaultValue={v?.closes ?? defaults.closes} className={fieldClass} />
-          </label>
-        </div>
-      )}
+      <div className="grid grid-cols-2 gap-3 group-has-[[name=closed]:checked]:hidden">
+        <label className="font-semibold">
+          von
+          <input name="opens" type="time" required defaultValue={v?.opens ?? defaults.opens} className={fieldClass} />
+        </label>
+        <label className="font-semibold">
+          bis
+          <input name="closes" type="time" required defaultValue={v?.closes ?? defaults.closes} className={fieldClass} />
+        </label>
+      </div>
       <FormMessage state={state} />
       <SubmitButton>Speichern</SubmitButton>
     </form>

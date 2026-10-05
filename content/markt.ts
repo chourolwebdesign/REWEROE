@@ -30,7 +30,7 @@ export const markt: Markt = {
       5: ["07:00", "22:00"],
       6: ["07:00", "22:00"],
     },
-    // Vom Markt bestätigte Ausnahmen, z. B. { date: "2026-12-24", label: "Heiligabend", hours: ["07:00", "14:00"] }.
+    // Sondertage pflegt der Markt im Cockpit (Tabelle special_days, lib/data/inhalte.ts); hier nur der Rückfall ohne Datenbank.
     // Feiertage in Hessen und die Schlusszeiten nach § 3 HLöG rechnet lib/hours.ts selbst.
     specialDays: [],
   },

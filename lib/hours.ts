@@ -4,7 +4,7 @@
  *
  * Reihenfolge: bestätigte Sonderzeiten > Feiertage Hessen > reguläre Zeiten, begrenzt durch die
  * gesetzlichen Schlusszeiten nach § 3 Abs. 2 HLöG (Gründonnerstag 20 Uhr, 24.12. und 31.12. 14 Uhr).
- * Aus dem Gesetz abgeleitete Zeiten sind „vorläufig“, bis der Markt sie in content/markt.ts bestätigt.
+ * Aus dem Gesetz abgeleitete Zeiten sind „vorläufig“, bis der Markt sie im Cockpit (Inhalte → Sondertage) festlegt.
  */
 import { markt } from "@/content/markt";
 import type { HoursConfig, TimeRange, Weekday } from "./types";

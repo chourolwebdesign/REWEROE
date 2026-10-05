@@ -1,5 +1,6 @@
 // node --env-file=.env.local e2e/cockpit-inhalte.mjs – Inhalte im Cockpit: Sondertag (geschlossen → Zeiten → Fehler → ohne Netz →
-// löschen) mit Blick auf die Website (/kontakt, JSON-LD, /kalender.ics); Termine und Stellen folgen in Task 5. Räumt alle Testeinträge auf.
+// löschen), Termin (anlegen → bearbeiten → löschen) und Stelle (Fehler → anlegen → ausblenden → löschen) mit Blick auf die Website
+// (/kontakt, Startseite, /karriere, JSON-LD, /kalender.ics). Räumt alle Testeinträge auf.
 import { createClient } from "@supabase/supabase-js";
 import { readFileSync } from "node:fs";
 import { BASE, browser, check, login } from "./lib.mjs";
@@ -84,7 +85,7 @@ try {
   await page.goto(`${BASE}/cockpit/inhalte/sondertage?datum=${dayDate}`, { waitUntil: "networkidle0" });
   check(!(await page.$(`${sf} input[name="date"][type="date"]`)), "Bearbeiten: Datum steht fest");
   await tap(page, `${sf} input[name="closed"]`);
-  await page.waitForSelector(`${sf} input[name="opens"]`);
+  await page.waitForSelector(`${sf} input[name="opens"]`, { visible: true });
   await setValue(page, `${sf} input[name="opens"]`, "10:00");
   await setValue(page, `${sf} input[name="closes"]`, "14:00");
   msg = await submit(page, sf);
@@ -99,6 +100,11 @@ try {
   msg = await submit(page, sf);
   check(msg.role === "alert" && msg.text.includes("Vergangenheit"), `Vergangenheit → „${msg.text}“`);
   check((await valueOf(page, `${sf} input[name="label"]`)) === "E2E-Vergangen", "nach dem Fehler bleiben die Eingaben stehen");
+  const closedState = await page.$eval(sf, (f) => ({
+    checked: f.querySelector('input[name="closed"]').checked,
+    times: Boolean(f.querySelector('input[name="opens"]')?.offsetParent),
+  }));
+  check(closedState.checked && !closedState.times, `nach dem Fehler bleibt „geschlossen“ angehakt, ohne Zeitfelder (${JSON.stringify(closedState)})`);
 
   // ohne Netz: Meldung statt Fehlerseite, die Eingaben bleiben stehen
   await page.setOfflineMode(true);
@@ -117,7 +123,49 @@ try {
   await page.waitForFunction((d) => !document.querySelector(`[data-sondertag="${d}"]`), { timeout: 15000 }, dayDate);
   check(asked && !(await html("/kontakt")).includes("E2E-Inventur"), "Löschen fragt nach; /kontakt ohne den Sondertag");
 
-  // TERMINE UND STELLEN (Task 5)
+  // Termin: anlegen, Startseite und Kalender, bearbeiten, löschen
+  await page.goto(`${BASE}/cockpit/inhalte/termine`, { waitUntil: "networkidle0" });
+  const ef = '[data-form="termin"]';
+  await setValue(page, `${ef} input[name="date"]`, berlin(10));
+  await fill(page, `${ef} input[name="time"]`, "10–14 Uhr");
+  await fill(page, `${ef} input[name="title"]`, "E2E-Verkostung");
+  await fill(page, `${ef} textarea[name="text"]`, "E2E-Test am Stand.");
+  msg = await submit(page, ef);
+  check(msg.role === "status", `Termin gespeichert („${msg.text}“)`);
+  check((await html("/")).includes("E2E-Verkostung"), "Startseite zeigt den Termin");
+  check((await html("/kalender.ics")).includes("REWE Rödelheim: E2E-Verkostung"), "Markt-Kalender: Termin");
+  const eventId = (await sb.from("events").select("id").eq("title", "E2E-Verkostung").single()).data.id;
+  await page.goto(`${BASE}/cockpit/inhalte/termine?id=${eventId}`, { waitUntil: "networkidle0" });
+  await fill(page, `${ef} input[name="title"]`, "E2E-Kürbis-Verkostung");
+  msg = await submit(page, ef);
+  check(msg.role === "status" && (await html("/")).includes("E2E-Kürbis-Verkostung"), "Termin bearbeitet → Startseite aktuell");
+  page.once("dialog", (d) => d.accept());
+  await tap(page, `[data-termin="${eventId}"] [data-action="delete"]`);
+  await page.waitForFunction((id) => !document.querySelector(`[data-termin="${id}"]`), { timeout: 15000 }, eventId);
+  check(!(await html("/")).includes("E2E-Kürbis-Verkostung"), "Termin gelöscht → Startseite ohne");
+
+  // Stelle: Fehler (Eingaben bleiben), anlegen mit JobPosting, ausblenden, löschen
+  await page.goto(`${BASE}/cockpit/inhalte/stellen`, { waitUntil: "networkidle0" });
+  const jf = '[data-form="stelle"]';
+  await fill(page, `${jf} input[name="title"]`, "E2E-Kassierer (m/w/d)");
+  await page.select(`${jf} select[name="employment"]`, "Minijob");
+  msg = await submit(page, jf);
+  check(msg.role === "alert" && msg.text.includes("Beschreibung"), `Stelle ohne Beschreibung → „${msg.text}“`);
+  const kept = [await valueOf(page, `${jf} input[name="title"]`), await valueOf(page, `${jf} select[name="employment"]`)];
+  check(kept.join("|") === "E2E-Kassierer (m/w/d)|Minijob", `nach dem Fehler bleiben Titel und Anstellung stehen (${kept.join(", ")})`);
+  await fill(page, `${jf} textarea[name="text"]`, "E2E-Testtext: 20 Stunden, auch samstags.");
+  msg = await submit(page, jf);
+  check(msg.role === "status", `Stelle gespeichert („${msg.text}“)`);
+  const karriere = await html("/karriere");
+  check(karriere.includes("E2E-Kassierer (m/w/d)") && karriere.includes('"@type":"JobPosting","title":"E2E-Kassierer (m/w/d)"'), "/karriere zeigt die Stelle mit JobPosting");
+  const jobId = (await sb.from("jobs").select("id").eq("title", "E2E-Kassierer (m/w/d)").single()).data.id;
+  await tap(page, `[data-stelle="${jobId}"] [data-action="toggle"]`);
+  await page.waitForFunction((id) => document.querySelector(`[data-stelle="${id}"]`)?.textContent.includes("ausgeblendet"), { timeout: 15000 }, jobId);
+  check(!(await html("/karriere")).includes("E2E-Kassierer"), "ausgeblendet → nicht mehr auf /karriere (auch kein JobPosting)");
+  page.once("dialog", (d) => d.accept());
+  await tap(page, `[data-stelle="${jobId}"] [data-action="delete"]`);
+  await page.waitForFunction((id) => !document.querySelector(`[data-stelle="${id}"]`), { timeout: 15000 }, jobId);
+  check(!(await sb.from("jobs").select("id").eq("id", jobId).maybeSingle()).data, "Stelle gelöscht");
 
   await page.goto(`${BASE}/cockpit`, { waitUntil: "networkidle0" });
   check(Boolean(await page.$('[data-card="sondertage"]')), "Übersicht: Karte „Öffnungszeiten“");
