@@ -18,6 +18,12 @@ Stand: 04.10.2026. Alles hier fehlt auf der Website oder ist als Lücke markiert
 - [ ] **Datenschutz**: Name des E-Mail-Dienstleisters eintragen (`app/(site)/datenschutz/page.tsx`, Abschnitt „Bewerbung“), AVV abschließen.
 - [ ] Wer liest die Bewerbungen und löscht sie nach 6 Monaten (Talentpool: 12 Monate)?
 
+## Markt-Cockpit und Prospekt
+
+- [ ] **Prospekt-PDF**: Bekommt der Markt den Wochenprospekt als PDF (z. B. „KW41_2026_final_proof.pdf“ aus dem REWE-Werbemittelportal)? Freigabe, ihn auf der eigenen Website zu zeigen?
+- [ ] **Cockpit-Konten**: E-Mail-Adressen von Ali Alamyaar und der Marktleitung.
+- [ ] **Passwort vergessen**: Mail-Versand in Supabase einrichten (gleicher Weg wie für Bewerbungen).
+
 ## Bildrechte
 
 - [ ] **Instagram-Fotos und Clip** (@rewealialamyaar): Freigabe des Markts für die Website (Fotograf/Urheber klären).

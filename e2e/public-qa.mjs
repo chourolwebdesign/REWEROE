@@ -15,8 +15,10 @@ for (const path of paths) {
     await p.setViewport(vp);
     await p.goto(BASE + path, { waitUntil: "load" });
     // einmal durchscrollen (Einblendungen auslösen), dann zurück nach oben: axe bewertet Ziele unter fest stehenden Leisten
-    // je nach Scrollstand als verdeckt – geprüft wird der Seitenanfang wie beim ersten Aufruf
-    await p.evaluate(async () => { for (let y = 0; y < document.body.scrollHeight; y += 350) { scrollTo(0, y); await new Promise((r) => setTimeout(r, 60)); } await new Promise((r) => setTimeout(r, 900)); scrollTo(0, 0); await new Promise((r) => setTimeout(r, 300)); });
+    // je nach Scrollstand als verdeckt – geprüft wird der Seitenanfang wie beim ersten Aufruf. Ohne Animation scrollen
+    // (html hat scroll-behavior: smooth): sonst lief axe noch am Seitenende, und das nachlaufende Scrollen verschob die
+    // Fokus-Prüfung unten zufällig um einige hundert Pixel.
+    await p.evaluate(async () => { for (let y = 0; y < document.body.scrollHeight; y += 350) { scrollTo({ top: y, behavior: "instant" }); await new Promise((r) => setTimeout(r, 60)); } await new Promise((r) => setTimeout(r, 900)); scrollTo({ top: 0, behavior: "instant" }); await new Promise((r) => setTimeout(r, 300)); });
     const res = await new AxePuppeteer(p).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"]).analyze();
     check(res.violations.length === 0, `${path} ${vp.width}px axe ${res.violations.map((v) => `${v.id}(${v.nodes.length})`).join(" ") || "0"}`);
     check(third.size === 0, `${path} ${vp.width}px Drittanbieter ${[...third].join(",") || "keine"}`);

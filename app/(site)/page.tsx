@@ -19,15 +19,22 @@ import { posts } from "@/content/aktuelles";
 import { galerie } from "@/content/galerie";
 import { markt } from "@/content/markt";
 import { story } from "@/content/story";
+import { publishedFlyers } from "@/lib/data/flyers";
 import { flyerWeek } from "@/lib/flyer";
+import { flyerLink, pickFlyers, shownFlyer } from "@/lib/prospekt/select";
+import { flyerImage } from "@/lib/prospekt/urls";
 import { berlinNow } from "@/lib/hours";
 import { absoluteUrl } from "@/lib/site";
 import { resolveGallery, resolveStory } from "@/lib/resolve";
 
-export default function HomePage() {
+export default async function HomePage() {
   const week = flyerWeek();
   const latest = posts[0];
   const today = berlinNow(new Date()).date;
+  // Titelseite und Ziel der Prospekt-Knöpfe: der Prospekt, den /angebote gerade vorauswählt (sonntags die neue Woche)
+  const shown = shownFlyer(pickFlyers(await publishedFlyers(), new Date()));
+  const flyer = flyerLink(shown, markt.links.flyer);
+  const cover = shown ? { src: flyerImage(shown, 1, "thumb"), width: 480, height: Math.round((shown.page_height / shown.page_width) * 480) } : undefined;
 
   return (
     <>
@@ -54,7 +61,7 @@ export default function HomePage() {
             {/* mobil nebeneinander und kompakter, damit die Story schon im ersten Bildschirm zu sehen ist.
                 Solange diese Knöpfe sichtbar sind, bleibt die Schnellzugriff-Leiste unten verborgen (globals.css). */}
             <div id="hero-aktionen" className="flex flex-wrap gap-2.5 sm:gap-3">
-              <ButtonLink href={markt.links.flyer} external variant="white" size="lg" className="h-12 px-5 text-base sm:h-14 sm:px-7 sm:text-[1.0625rem]">
+              <ButtonLink href={flyer.href} external={flyer.external} variant="white" size="lg" className="h-12 px-5 text-base sm:h-14 sm:px-7 sm:text-[1.0625rem]">
                 Prospekt KW <FlyerWeekText initial={week} field="kw" />
               </ButtonLink>
               <ButtonLink href={markt.links.googleMaps} external variant="glass" size="lg" className="h-12 px-5 text-base sm:h-14 sm:px-7 sm:text-[1.0625rem]">
@@ -74,7 +81,7 @@ export default function HomePage() {
       <MarqueeBand />
 
       <section aria-label="Prospekt der Woche" className="wrap pt-16 md:pt-24">
-        <FlyerTicket />
+        <FlyerTicket cover={cover} />
       </section>
 
       <NumbersBand className="pt-24 md:pt-32" />

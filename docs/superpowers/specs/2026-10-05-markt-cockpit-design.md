@@ -64,8 +64,11 @@ keine Vercel-Bildoptimierung nötig.
 
 ### Lesen auf der Website
 
-- Datenzugriff gebündelt in `lib/data/*` (server-only): `fetch` mit Cache-Tags je Inhaltsart (`prospekte`, `beitraege`, …).
-- Nach dem Speichern ruft die Server Action `updateTag(…)` auf; Seiten mit diesen Daten werden beim nächsten Aufruf frisch erzeugt.
+- Datenzugriff gebündelt in `lib/data/*` (server-only): HTTPS-Abruf ohne Next-Daten-Cache (`node:https`, je Seitenaufbau per React
+  `cache()` einmal) – Next legt `fetch` unter `revalidate = 3600` in einen Daten-Cache, der Builds überlebte und schon gelöschte
+  Prospekte lieferte (Umsetzung Stufe 2). Die Seiten bleiben statisch.
+- Nach dem Speichern ruft die Server Action `revalidatePath("/", "layout")` auf; alle öffentlichen Seiten werden beim nächsten Aufruf
+  frisch erzeugt (geprüft: Prospekt im Cockpit gelöscht → Startseite ohne Neubau aktualisiert).
   Das stündliche `revalidate` bleibt für den automatischen Wochenwechsel.
 - Fehlerfälle: Ist Supabase beim Build nicht erreichbar, bricht der Build ab – der letzte gute Stand bleibt online, eine leere Seite
   geht nie live. Zur Laufzeit liefert ISR bei einem Fehler weiter den letzten guten Stand.
@@ -96,8 +99,9 @@ keine Vercel-Bildoptimierung nötig.
    Vorschaubild 480 px. Seiten werden einzeln direkt nach Supabase hochgeladen; ein Abbruch lässt sich fortsetzen.
 4. Vorschau aller Seiten → „Veröffentlichen“. Ein Prospekt pro Woche; erneutes Hochladen ersetzt ihn.
 
-Das PDF selbst wird nicht gespeichert (Druckdatei, für Besucher unnötig). Prospekte älter als vier Wochen löscht ein täglicher
-Aufräum-Job (Vercel Cron, Abschnitt 10) samt Bildern.
+Das PDF selbst wird nicht gespeichert (Druckdatei, für Besucher unnötig). Beim Veröffentlichen löscht das Cockpit Prospekte, deren
+Woche länger als vier Wochen vorbei ist, und Entwürfe von gestern und früher – samt Bildern (kein Cron, kein Secret Key nötig; der Markt
+lädt ohnehin jede Woche hoch).
 
 ### Auf der Website
 
@@ -109,6 +113,8 @@ Aufräum-Job (Vercel Cron, Abschnitt 10) samt Bildern.
 - **Tempo:** Zuerst laden nur Vorschaubilder; große Seiten beim Öffnen, Nachbarseiten vorab.
 - **Barrierefreiheit:** Seitenbilder heißen „Prospektseite 7 von 34“; daneben der Link zur Textliste aller Angebote auf rewe.de.
 - **Startseite:** Das Ticket zeigt die echte Titelseite (leicht gedreht wie die Story) und „Prospekt ansehen“ führt auf `/angebote`.
+- **Alle „Prospekt“-Knöpfe** (Kopf, Schnellzugriff, Hero, Ticket) führen auf `/angebote#prospekt`, solange ein Prospekt online ist;
+  sonst wie bisher zu rewe.de. Sonntags gilt die neue Woche – fehlt deren Prospekt, zeigt die Startseite keine Titelseite.
 - **Kein Prospekt für die Woche:** automatisch das bisherige Ticket mit Link zu rewe.de. Markt-Kalender und Teilen bleiben unverändert.
 
 ## 4. Feedback (`/feedback`, aus der eigenen QR-App)
@@ -123,7 +129,7 @@ Aufräum-Job (Vercel Cron, Abschnitt 10) samt Bildern.
   - Der Google-Link ist für alle sichtbar – keine selektive Einholung von Bewertungen (Google-Richtlinie; sonst droht die Löschung
     aller Bewertungen).
 - Speicherung: Server Action prüft die Eingaben, lässt höchstens 10 Rückmeldungen je Stunde und IP zu (Zähler nur im Arbeitsspeicher)
-  und schreibt in `feedback` (Frankfurt). Keine Cookies, keine IP-Speicherung. Kontaktangaben werden nach 90 Tagen gelöscht, Kommentare nach 12 Monaten (Aufräum-Job).
+  und schreibt in `feedback` (Frankfurt). Keine Cookies, keine IP-Speicherung. Kontaktangaben werden nach 90 Tagen gelöscht, Kommentare nach 12 Monaten (`pg_cron` in der Datenbank).
 - Bei 1–2 Sternen geht eine Mail an die Marktleitung, sobald Mail eingerichtet ist.
 - **Cockpit → Feedback:** Eingang mit Filter (neu/erledigt, Sterne), Kontakt mit einem Tipp anrufen oder mailen, „Erledigt“,
   Kennzahlen (Durchschnitt der letzten 30 Tage, häufigste Bereiche), Export als CSV. Google Sheets wird nicht mehr gebraucht.
@@ -159,8 +165,8 @@ Aufräum-Job (Vercel Cron, Abschnitt 10) samt Bildern.
 
 Jede Stufe ein eigener Pull Request mit Vercel-Vorschau; nach `main` nur mit Freigabe der Agentur.
 
-1. Infrastruktur und Cockpit-Gerüst: Supabase-Projekt, Migrationen, Anmeldung, Übersicht, Datenzugriff mit Cache-Tags.
-2. Prospekt: Hochladen, Viewer, Startseiten-Ticket, Aufräum-Job.
+1. Infrastruktur und Cockpit-Gerüst: Supabase-Projekt, Migrationen, Anmeldung, Übersicht, Datenzugriff.
+2. Prospekt: Hochladen, Viewer, Startseiten-Ticket, Aufräumen beim Veröffentlichen.
 3. Feedback: Seite, Speicherung, Cockpit-Eingang, Plakat.
 4. Weitere Inhalte: Beiträge, Sondertage, Termine, Stellen, Galerie; Seed und Entfernen der Inhaltsdateien.
 5. Abschließende Design- und Qualitätsrunde.
@@ -177,8 +183,8 @@ Jede Stufe ein eigener Pull Request mit Vercel-Vorschau; nach `main` nur mit Fre
 
 - Supabase: Entwicklung kostenlos; Pro (rund 25 $ im Monat) vor dem Livegang. Das freie Projekt der Agentur ruht derzeit
   (Inaktivitätspause) – genau das soll beim Kunden nicht passieren.
-- Vercel: Hobby ist nur für nicht-kommerzielle Projekte – vor dem Livegang Tarif prüfen. Aufräum-Job als täglicher Vercel Cron
-  (`/api/cron/aufraeumen`, mit `CRON_SECRET` geschützt).
+- Vercel: Hobby ist nur für nicht-kommerzielle Projekte – vor dem Livegang Tarif prüfen. Prospekte räumt das Cockpit beim
+  Veröffentlichen auf (Abschnitt 3); Löschfristen für Feedback ab Stufe 3 per `pg_cron` in der Datenbank.
 - Mail (Resend/SMTP) wird für Passwort-Reset, Feedback-Alarm und Bewerbungen gebraucht.
 
 ## 11. Offene Punkte beim Betreiber

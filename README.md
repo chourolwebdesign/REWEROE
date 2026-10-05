@@ -66,6 +66,18 @@ ffmpeg -i quelle.mp4 -an -vf "scale=540:960:flags=lanczos" -c:v libx264 -profile
 | Aushang mit QR-Codes | `/aushang` (noindex) | A4 drucken; nach dem Domainwechsel neu drucken |
 | Teilen-Vorschau | `/og/<karte>.jpg`, `lib/og.tsx` | eigene Karte je Seite und Beitrag (roter Hero-Look, beim Build erzeugt); neue Seite: Karte in `lib/og.tsx → PAGES`, Metadaten mit `pageMetadata()` aus `lib/site.ts` |
 
+## Markt-Cockpit
+
+`/cockpit` – Anmeldung mit E-Mail und Passwort (Supabase, Projekt `rewe-roedelheim`, Frankfurt). Der Markt lädt hier den Wochenprospekt als PDF hoch; die Seiten werden im Browser in Bilder umgewandelt, nach einer Vorschau veröffentlicht und auf `/angebote` sowie im Startseiten-Ticket gezeigt – alle „Prospekt“-Knöpfe führen dann auf die eigene Seite statt zu rewe.de. Ab Samstag erscheint ein schon hochgeladener Prospekt als „Nächste Woche“; Prospekte, deren Woche länger als vier Wochen vorbei ist, löscht das nächste Veröffentlichen.
+
+| Aufgabe | So geht's |
+|---|---|
+| Konto anlegen | Supabase-Dashboard → Authentication → Add user (E-Mail, Passwort, „Auto Confirm“), dann im SQL-Editor `insert into public.editors (user_id, name) values ('<uuid>', '<Vorname>');` |
+| Registrierung sperren | Authentication → Sign In / Providers → „Allow new users to sign up“ aus (einmalig) |
+| Datenbank ändern | neue Datei in `supabase/migrations/`, per Supabase-MCP `apply_migration` oder SQL-Editor anwenden |
+| Tests | Server auf Port 3100 starten, dann `node --env-file=.env.local e2e/<skript>.mjs` (`rls-check`, `cockpit-login`, `cockpit-prospekt`, `prospekt-viewer`, `start-ticket`, `cockpit-axe`, `public-qa`); Test-Editor in `.env.local` (siehe `.env.example`) |
+| Tarif | Für den Livegang Supabase Pro (pausiert nicht, tägliche Sicherung); Vercel-Tarif auf kommerzielle Nutzung prüfen |
+
 ## Grundsätze
 
 - **Nur Belegtes.** Keine Preise, Bewertungen, Zitate oder Stellen erfinden. Angebote kommen ausschließlich aus dem offiziellen REWE-Prospekt (Link in `content/markt.ts`).

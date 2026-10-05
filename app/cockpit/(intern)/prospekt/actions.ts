@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath, updateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { requireEditor } from "@/lib/cockpit/auth";
 import { addDays, berlinNow, weekdayOf } from "@/lib/hours";
 import { uploadWeek } from "@/lib/prospekt/week";
@@ -14,8 +14,8 @@ async function removeFlyer(supabase: Supa, id: string) {
   await supabase.from("flyers").delete().eq("id", id);
 }
 
+/** Alle öffentlichen Seiten neu erzeugen (Prospekt-Knöpfe im Kopf, Startseite, /angebote). */
 function refresh() {
-  updateTag("prospekte");
   revalidatePath("/", "layout");
 }
 

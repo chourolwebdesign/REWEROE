@@ -31,5 +31,16 @@ export function pickFlyers(flyers: FlyerRecord[], now: Date): FlyerChoice {
   const current = flyers.find((f) => f.week_start === monday) ?? null;
   const upcoming = flyers.find((f) => f.week_start === addDays(monday, 7)) ?? null;
   const next = wd === 6 || wd === 0 ? upcoming : null;
-  return { current, next, defaultTab: wd === 0 && next ? "next" : "current" };
+  // sonntags gilt die neue Woche (wie das Ticket „gültig ab morgen“) – fehlt ihr Prospekt, zeigt die Website keinen Titel
+  return { current, next, defaultTab: wd === 0 ? "next" : "current" };
+}
+
+/** Der Prospekt, den die Website gerade zeigt (Startseiten-Ticket, „Prospekt“-Knöpfe): der vorausgewählte Reiter. */
+export function shownFlyer(choice: FlyerChoice): FlyerRecord | null {
+  return choice.defaultTab === "next" ? choice.next : choice.current;
+}
+
+/** Ziel der „Prospekt“-Knöpfe: der eigene Viewer, wenn ein Prospekt online ist – sonst der REWE-Prospekt. */
+export function flyerLink(shown: FlyerRecord | null, rewePdf: string): { href: string; external: boolean } {
+  return shown ? { href: "/angebote#prospekt", external: false } : { href: rewePdf, external: true };
 }

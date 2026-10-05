@@ -12,7 +12,7 @@ const WITHOUT_BAR = ["/karriere/bewerben"];
  * Feste Aktionsleiste auf dem Handy: die drei häufigsten Gründe, die Seite zu öffnen.
  * Auf der Startseite erscheint sie erst, wenn die gleichen Knöpfe im Hero aus dem Bild sind (CSS in globals.css).
  */
-export function MobileBar() {
+export function MobileBar({ flyer = { href: markt.links.flyer, external: true } }: { flyer?: { href: string; external: boolean } }) {
   const pathname = usePathname();
   const ref = useRef<HTMLElement>(null);
 
@@ -39,9 +39,9 @@ export function MobileBar() {
       aria-label="Schnellzugriff"
       className="mobile-bar fixed inset-x-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-30 flex gap-1.5 rounded-full bg-night/90 p-1.5 text-white shadow-[0_10px_40px_rgb(0_0_0/.35)] ring-1 ring-white/10 backdrop-blur-xl lg:hidden"
     >
-      <a href={markt.links.flyer} target="_blank" rel="noopener" className={`${item} bg-red`}>
+      <a href={flyer.href} {...(flyer.external ? { target: "_blank", rel: "noopener" } : {})} className={`${item} bg-red`}>
         <Tag className="size-[1.05em]" aria-hidden />
-        Prospekt<span className="sr-only"> (öffnet in neuem Tab)</span>
+        Prospekt{flyer.external && <span className="sr-only"> (öffnet in neuem Tab)</span>}
       </a>
       <a href={markt.links.googleMaps} target="_blank" rel="noopener" className={item}>
         <Navigation className="size-[1.05em]" aria-hidden />

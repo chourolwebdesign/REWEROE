@@ -108,6 +108,13 @@ export default function DatenschutzPage() {
             selbst teilst.
           </p>
 
+          <h2>Markt-Cockpit</h2>
+          <p>
+            Mitarbeitende des Markts melden sich mit E-Mail-Adresse und Passwort an, um den Prospekt und Inhalte zu pflegen. Die Anmeldedaten,
+            Prospektseiten und Inhalte speichert die Supabase Inc. als Auftragsverarbeiter auf Servern in Frankfurt am Main (Art. 28 DSGVO).
+            Prospektseiten werden über diese Website ausgeliefert – dein Browser verbindet sich dabei nicht mit Supabase.
+          </p>
+
           <h2>Kontakt per Telefon</h2>
           <p>
             Wenn du uns anrufst, verarbeiten wir deine Angaben nur, um dein Anliegen zu bearbeiten (Art. 6 Abs. 1 lit. b bzw. f DSGVO).

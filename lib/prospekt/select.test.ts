@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { pickFlyers, type FlyerRecord } from "./select";
+import { flyerLink, pickFlyers, shownFlyer, type FlyerRecord } from "./select";
 import { flyerImage, flyerObjectPath } from "./urls";
 
 const flyer = (week_start: string): FlyerRecord => ({
@@ -35,5 +35,17 @@ describe("Bildpfade", () => {
     expect(flyerImage({ id: "abc", format: "jpg" }, 3, "thumb")).toBe("/prospekt-bilder/abc/thumb-3.jpg");
     expect(flyerImage({ id: "abc", format: "webp" }, 1, "full")).toBe("/prospekt-bilder/abc/1.webp");
     expect(flyerObjectPath("abc", 12, "full", "webp")).toBe("abc/12.webp");
+  });
+});
+
+describe("shownFlyer und flyerLink", () => {
+  it("zeigt den Prospekt des vorausgewählten Reiters", () => {
+    expect(shownFlyer(pickFlyers(all, at("2026-10-07")))).toEqual(all[1]);
+    expect(shownFlyer(pickFlyers(all, at("2026-10-11")))).toEqual(all[2]); // sonntags die neue Woche
+    expect(shownFlyer(pickFlyers([flyer("2026-10-05")], at("2026-10-11")))).toBeNull(); // sonntags ohne neue Woche: keiner
+  });
+  it("„Prospekt“-Knöpfe führen zum eigenen Viewer, sonst zu rewe.de", () => {
+    expect(flyerLink(all[1], "https://rewe.example/prospekt")).toEqual({ href: "/angebote#prospekt", external: false });
+    expect(flyerLink(null, "https://rewe.example/prospekt")).toEqual({ href: "https://rewe.example/prospekt", external: true });
   });
 });
