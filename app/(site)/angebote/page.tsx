@@ -1,14 +1,18 @@
 import type { Metadata } from "next";
 import { CalendarDays, Info, ShoppingBasket } from "lucide-react";
 import { FlyerTicket } from "@/components/home/flyer-ticket";
+import { FlyerViewer, type ViewerWeek } from "@/components/prospekt/flyer-viewer";
 import { PageHeader } from "@/components/layout/page-header";
 import { CalendarSubscribe } from "@/components/live/calendar-subscribe";
 import { OpenStatus } from "@/components/live/open-status";
 import { ButtonLink } from "@/components/ui/button";
 import { InstagramIcon } from "@/components/ui/icons";
 import { markt } from "@/content/markt";
+import { publishedFlyers } from "@/lib/data/flyers";
 import { weekRows } from "@/lib/hours";
 import { breadcrumbJsonLd, ldScript } from "@/lib/jsonld";
+import { pickFlyers } from "@/lib/prospekt/select";
+import { uploadWeek } from "@/lib/prospekt/week";
 import { absoluteUrl, pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
@@ -36,8 +40,13 @@ const HINTS = [
   },
 ] as const;
 
-export default function AngebotePage() {
+export default async function AngebotePage() {
   const open = weekRows().find((r) => r.hours) ?? weekRows()[0];
+  const choice = pickFlyers(await publishedFlyers(), new Date());
+  const weeks: ViewerWeek[] = [
+    ...(choice.current ? [{ key: "current" as const, label: "Diese Woche", flyer: choice.current }] : []),
+    ...(choice.next ? [{ key: "next" as const, label: "Nächste Woche", flyer: choice.next }] : []),
+  ].map((w) => ({ ...w, kw: w.flyer.kw, range: uploadWeek(w.flyer.week_start).range }));
   return (
     <>
       <PageHeader
@@ -47,8 +56,20 @@ export default function AngebotePage() {
         lede="Alle Angebote deines REWE in der Thudichumstraße – immer aktuell im offiziellen REWE-Prospekt."
       />
 
-      <section aria-label="Aktueller Prospekt" className="wrap">
-        <FlyerTicket />
+      <section id="prospekt" aria-label="Aktueller Prospekt" className="wrap">
+        {weeks.length > 0 ? (
+          <>
+            <FlyerViewer weeks={weeks} defaultTab={choice.defaultTab} />
+            <p className="mt-6 text-[0.9375rem] text-muted">
+              Alle Angebote auch als Text:{" "}
+              <a href={markt.links.flyer} target="_blank" rel="noopener" className="font-semibold text-ink underline underline-offset-4">
+                Liste auf rewe.de<span className="sr-only"> (öffnet in neuem Tab)</span>
+              </a>
+            </p>
+          </>
+        ) : (
+          <FlyerTicket />
+        )}
       </section>
 
       <section id="kalender" aria-labelledby="kalender-titel" className="wrap pt-20 md:pt-28">
