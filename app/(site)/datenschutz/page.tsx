@@ -118,6 +118,25 @@ export default function DatenschutzPage() {
             speichert der Browser technisch notwendige Sitzungs-Cookies (§ 25 Abs. 2 Nr. 2 TDDDG); sie bleiben bis zur Abmeldung bestehen.
           </p>
 
+          <h2 id="feedback">Feedback im Markt</h2>
+          <p>
+            Über den QR-Code im Markt oder den Link „Feedback zum Einkauf“ kannst du uns eine Rückmeldung geben. Wir speichern die
+            Bewertung (1–5), die gewählten Bereiche, deinen freiwilligen Kommentar, die Sprache und den Zeitpunkt. Bei 1–3 Sternen kannst du
+            freiwillig eine E-Mail-Adresse oder Telefonnummer angeben, damit sich die Marktleitung bei dir meldet. Dabei setzen wir keine
+            Cookies und speichern keine IP-Adresse; zum Schutz vor Missbrauch zählt der Server nur kurz im Arbeitsspeicher mit, wie viele
+            Rückmeldungen von einem Anschluss kommen.
+          </p>
+          <p>
+            Zweck ist, unseren Markt besser zu machen (berechtigtes Interesse, Art. 6 Abs. 1 lit. f DSGVO); Kontaktangaben nutzen wir nur für
+            die Antwort (Art. 6 Abs. 1 lit. a DSGVO, Einwilligung durch die Angabe). Kontaktangaben löschen wir nach 90 Tagen, alles andere
+            nach 12 Monaten. Gespeichert wird bei der Supabase Inc. in Frankfurt am Main (Auftragsverarbeitung, Art. 28 DSGVO); lesen können
+            nur die Marktleitung und von ihr berechtigte Mitarbeitende. Bei 1–2 Sternen bekommt die Marktleitung eine E-Mail.
+          </p>
+          <p>
+            „Auf Google bewerten“ ist ein Link zu Google; erst mit dem Antippen verlässt du unsere Seite. Ob du ihn antippst, vermerken wir
+            bei deiner Rückmeldung.
+          </p>
+
           <h2>Kontakt per Telefon</h2>
           <p>
             Wenn du uns anrufst, verarbeiten wir deine Angaben nur, um dein Anliegen zu bearbeiten (Art. 6 Abs. 1 lit. b bzw. f DSGVO).

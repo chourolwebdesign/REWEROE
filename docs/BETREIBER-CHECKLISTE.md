@@ -18,13 +18,17 @@ Stand: 04.10.2026. Alles hier fehlt auf der Website oder ist als Lücke markiert
 - [ ] **Datenschutz**: Name des E-Mail-Dienstleisters eintragen (`app/(site)/datenschutz/page.tsx`, Abschnitt „Bewerbung“), AVV abschließen.
 - [ ] Wer liest die Bewerbungen und löscht sie nach 6 Monaten (Talentpool: 12 Monate)?
 
-## Markt-Cockpit und Prospekt
+## Markt-Cockpit, Prospekt und Feedback
 
 - [ ] **Prospekt-PDF**: Bekommt der Markt den Wochenprospekt als PDF (z. B. „KW41_2026_final_proof.pdf“ aus dem REWE-Werbemittelportal)? Freigabe, ihn auf der eigenen Website zu zeigen?
 - [ ] **Cockpit-Konten**: E-Mail-Adressen von Ali Alamyaar und der Marktleitung.
 - [ ] **Passwort vergessen**: Mail-Versand in Supabase einrichten (gleicher Weg wie für Bewerbungen).
 - [ ] **Probe am Markt**: einmal einen echten Prospekt am Markt-iPhone (iOS 17.4 oder neuer) und am Büro-PC hochladen.
 - [ ] **Supabase-Sicherheit**: „Leaked password protection“ einschalten (Authentication → Passwords, ab Pro-Tarif).
+- [ ] **Google-Bewertungslink**: im Google-Unternehmensprofil „Nach Bewertungen fragen“ → `g.page/r/…/review` (bis dahin öffnet der Knopf das Profil).
+- [ ] **Feedback-Alarm**: E-Mail-Adresse(n) der Marktleitung für 1–2 Sterne (`FEEDBACK_ALARM_AN`), Mail-Versand einrichten.
+- [ ] **Vercel**: `FEEDBACK_KEY` für Preview und Production eintragen (Wert aus `.env.local`), sonst meldet `/feedback` „Senden hat nicht geklappt“.
+- [ ] **Plakat**: `/aushang` Seite 2 in A4 oder A3 drucken; an Kasse und Ausgang auf Augenhöhe aufhängen.
 
 ## Bildrechte
 
@@ -41,7 +45,7 @@ Stand: 04.10.2026. Alles hier fehlt auf der Website oder ist als Lücke markiert
 - [ ] **Sonderöffnungszeiten** für Heiligabend, Silvester und Gründonnerstag (aktuell: gesetzliche Grenze nach § 3 HLöG, als „vorläufig“ markiert).
 - [ ] **Offene Stellen** des Markts → `content/jobs.ts` (erzeugt automatisch Google-Jobdaten).
 - [ ] **Team**: Namen/Fotos, falls gewünscht (Freigaben der Personen nötig).
-- [ ] **Google-Unternehmensprofil**-Link (Bewertungen) und Feedback-Seite (Projekt rewe-feedback), sobald live.
+- [ ] **Feedback**: die QR-App ist jetzt Teil der Website (`/feedback`); ältere Plakate mit einer anderen Adresse (Projekt rewe-feedback) durch das neue Plakat ersetzen.
 - [ ] Neue **Aktuelles-Beiträge** (Aktionen, Feste, Spenden) mit Datum und Fotos.
 - [ ] **Termine im Markt** (Verkostung, Aktionstag, Kinderaktion) → `content/termine.ts`; erscheinen auf der Startseite und im Markt-Kalender.
 - [ ] **Aushang** (`/aushang`) ausdrucken und im Markt aufhängen – nach dem Domainwechsel neu drucken.
