@@ -11,6 +11,8 @@ export function browser() {
 }
 
 export async function login(page, email = process.env.E2E_EMAIL, password = process.env.E2E_PASSWORD) {
+  // ohne weiches Scrollen: sonst klickt Puppeteer, bevor ein Knopf fertig ins Bild gescrollt ist
+  await page.emulateMediaFeatures([{ name: "prefers-reduced-motion", value: "reduce" }]);
   await page.goto(`${BASE}/cockpit/anmelden`, { waitUntil: "networkidle0" });
   await page.type('input[name="email"]', email);
   await page.type('input[name="passwort"]', password);
