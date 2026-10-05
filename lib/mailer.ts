@@ -47,6 +47,15 @@ export const applicationRecipients = () =>
 
 export const applicationsReady = () => mailTransport() !== "none" && (mailTransport() === "dry-run" || applicationRecipients().length > 0);
 
+/** Empfänger des Feedback-Alarms bei 1–2 Sternen (kommagetrennt in FEEDBACK_ALARM_AN). */
+export const feedbackRecipients = () =>
+  (process.env.FEEDBACK_ALARM_AN ?? "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+export const feedbackAlarmReady = () => mailTransport() === "dry-run" || (mailTransport() !== "none" && feedbackRecipients().length > 0);
+
 export async function sendMail(mail: Mail): Promise<void> {
   const transport = mailTransport();
   if (transport === "none") throw new MailNotConfiguredError();
