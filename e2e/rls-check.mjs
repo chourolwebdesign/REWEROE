@@ -51,6 +51,42 @@ try {
   assert.ifError((await editor.from("feedback").delete().in("id", [fbBad.data, fbGood.data])).error);
 }
 
+// Inhalte (Stufe 4a): Sondertage und Termine öffentlich, Stellen nur aktiv und nicht abgelaufen; schreiben nur Editoren.
+// Testeinträge: Sondertage im Februar 2031, Titel „RLS…“ – das Aufräumen greift auch, wenn ein Schritt vorher abbricht.
+const sdTest = { date: "2031-02-03", label: "RLS-Test", closed: true };
+assert.ok((await guest.from("special_days").insert(sdTest)).error, "Gast legt keinen Sondertag an");
+assert.ok((await guest.from("events").insert({ date: "2031-02-03", title: "RLS" })).error, "Gast legt keinen Termin an");
+assert.ok((await guest.from("jobs").insert({ title: "RLS", employment: "Minijob", text: "x" })).error, "Gast legt keine Stelle an");
+try {
+  assert.ifError((await editor.from("special_days").insert(sdTest)).error);
+  const evTest = await editor.from("events").insert({ date: "2031-02-03", title: "RLS-Termin" }).select("id").single();
+  assert.ifError(evTest.error);
+  const jobs = await editor
+    .from("jobs")
+    .insert(
+      [
+        { title: "RLS-aktiv", employment: "Minijob", text: "x" },
+        { title: "RLS-inaktiv", employment: "Minijob", text: "x", active: false },
+        { title: "RLS-abgelaufen", employment: "Minijob", text: "x", valid_through: "2020-01-01" },
+      ],
+      // fehlende Felder bekommen den Spalten-Standard (supabase-js setzt bei Mehrfach-Inserts sonst null)
+      { defaultToNull: false },
+    )
+    .select("id,title");
+  assert.ifError(jobs.error);
+  assert.equal((await guest.from("special_days").select("label").eq("date", sdTest.date).single()).data?.label, "RLS-Test", "Sondertage öffentlich");
+  assert.equal((await guest.from("events").select("title").eq("id", evTest.data.id).single()).data?.title, "RLS-Termin", "Termine öffentlich");
+  const visible = (await guest.from("jobs").select("title").in("id", jobs.data.map((j) => j.id))).data?.map((j) => j.title);
+  assert.deepEqual(visible, ["RLS-aktiv"], "Gast sieht nur aktive, nicht abgelaufene Stellen");
+  assert.equal((await editor.from("jobs").select("id").in("id", jobs.data.map((j) => j.id))).data?.length, 3, "Editor sieht alle Stellen");
+  assert.ok((await editor.from("special_days").insert({ date: "2031-02-04", label: "kaputt", closed: false })).error, "geöffnet ohne Zeiten → abgelehnt");
+  console.log("✓ Inhalte: öffentlich lesbar (Stellen nur aktiv), schreiben nur Editoren.");
+} finally {
+  await editor.from("special_days").delete().gte("date", "2031-02-01").lte("date", "2031-02-28");
+  await editor.from("events").delete().like("title", "RLS%");
+  await editor.from("jobs").delete().like("title", "RLS%");
+}
+
 // publish_flyer: Ersetzen und Freischalten in einer Transaktion – scheitert sie, bleibt der alte Prospekt online.
 const w2 = "2031-01-13";
 const row2 = { week_start: w2, kw: 3, year: 2031, valid_from: w2, valid_to: "2031-01-18" };
