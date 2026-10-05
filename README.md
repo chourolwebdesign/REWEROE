@@ -75,7 +75,9 @@ ffmpeg -i quelle.mp4 -an -vf "scale=540:960:flags=lanczos" -c:v libx264 -profile
 ## Struktur
 
 ```
-app/            Seiten (/, /angebote, /markt, /aktuelles, /karriere, /kontakt, /impressum, /datenschutz), Layout, robots, sitemap
+app/(site)/     öffentliche Seiten (/, /angebote, /markt, /aktuelles, /karriere, /kontakt, /impressum, /datenschutz) mit Kopf und Footer
+app/            Root-Layout, 404, robots, sitemap, Manifest, /kalender.ics, /og (Teilen-Bilder)
+e2e/            Browser-Tests (puppeteer-core): node e2e/public-qa.mjs bei laufendem Server auf Port 3100
 components/     home/ (Story, Prospekt-Ticket, Highlights, Karriere), layout/, live/ (Öffnungsstatus, KW), media/ (Galerie), visit/, ui/
 content/        Inhalte (siehe oben)
 lib/            hours.ts, flyer.ts (+ Tests), media.ts, jsonld.ts, site.ts

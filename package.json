@@ -20,6 +20,7 @@
     "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {
+    "@axe-core/puppeteer": "^4.13.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^24.19.1",
     "@types/nodemailer": "^8.0.2",
@@ -28,6 +29,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.8",
+    "puppeteer-core": "^25.12.0",
     "sharp": "^0.35.5",
     "tailwindcss": "^4",
     "typescript": "^5",
