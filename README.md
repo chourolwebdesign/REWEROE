@@ -46,13 +46,17 @@ Ohne Mail-Konfiguration zeigt das Formular einen Hinweis und die Telefonnummer u
 | Termine im Markt (Startseite + Markt-Kalender) | Markt-Cockpit → Inhalte → Termine |
 | Auswahl im Bewerbungsformular | `content/bewerbung.ts` |
 | Neue Fotos | Datei nach `assets/media/`, in `lib/media.ts` mit Alt-Text, Kurztitel und Bildnachweis eintragen |
-| Neue Clips | Quelle (am besten das Original vom Handy, nicht aus Instagram) dreimal kodieren, ohne Ton, `faststart`: AV1 `-c:v libsvtav1 -preset 4 -crf 46 -g 150`, HEVC `-c:v libx265 -preset slow -crf 31 -tag:v hvc1`, H.264 `-c:v libx264 -preset slow -crf 28 -profile:v high -level 4.0`, jeweils `-pix_fmt yuv420p -an -movflags +faststart`; Ziel SSIM ≥ 0,97 gegen die Quelle. Dateien nach `public/media/` unter neuem Namen, Posterbild nach `assets/media/`, Eintrag in `lib/media.ts → clips` (`sources` in dieser Reihenfolge) |
+| Neue Clips | Quelle (am besten das Original vom Handy, nicht aus Instagram) auf 1080 × 1920 verkleinern und dreimal kodieren, ohne Ton, `faststart` – Befehle unten. Ziel SSIM ≥ 0,97 gegen die verkleinerte Quelle; beim Messen die Bilder über ihre Nummer paaren (`settb=1/24,setpts=N` auf beide Eingänge), sonst verschieben gerundete Zeitstempel die Paare. `codecs` aus ffprobe ablesen (1080p: `av01.0.08M.08`, `hvc1.1.6.L120.B0`, `avc1.640028`). Dateien nach `public/media/` unter neuem Namen, Posterbild (erstes Bild, gleiche Auflösung) nach `assets/media/` und in `lib/og.tsx → MEDIA_FILES`, Eintrag in `lib/media.ts → clips` (`sources` in dieser Reihenfolge) |
 
-Clips komprimieren (so wurde der Rundgang erstellt – Handys bekommen automatisch die 540er-Datei, im Datensparmodus läuft gar kein Video):
+Clips komprimieren – so wurde der Rundgang erstellt (Quelle: KI-Hochrechnung des Instagram-Clips, 2160 × 3840, 24 fps; Ergebnis
+AV1 3,9 MB, HEVC 5,7 MB, H.264 7,1 MB, SSIM 0,977–0,978). Alle Geräte bekommen 1080 × 1920, der Browser nimmt die erste Fassung, die
+er abspielen kann; im Datensparmodus bleibt das Standbild. `-g` = 5 Sekunden in Bildern:
 
 ```bash
-ffmpeg -i quelle.mp4 -an -c:v libx264 -profile:v high -level:v 4.0 -preset veryslow -crf 31 -pix_fmt yuv420p -movflags +faststart public/media/name-720.mp4
-ffmpeg -i quelle.mp4 -an -vf "scale=540:960:flags=lanczos" -c:v libx264 -profile:v high -level:v 4.0 -preset veryslow -crf 31 -pix_fmt yuv420p -movflags +faststart public/media/name-540.mp4
+ffmpeg -i quelle.mp4 -an -vf scale=1080:1920:flags=lanczos -c:v libsvtav1 -preset 4 -crf 46 -g 120 -pix_fmt yuv420p -movflags +faststart public/media/name-1080-av1.mp4
+ffmpeg -i quelle.mp4 -an -vf scale=1080:1920:flags=lanczos -c:v libx265 -preset slow -crf 31 -tag:v hvc1 -x265-params log-level=error -pix_fmt yuv420p -movflags +faststart public/media/name-1080-hevc.mp4
+ffmpeg -i quelle.mp4 -an -vf scale=1080:1920:flags=lanczos -c:v libx264 -preset slow -crf 28 -profile:v high -level 4.0 -pix_fmt yuv420p -movflags +faststart public/media/name-1080-h264.mp4
+ffmpeg -i quelle.mp4 -vf "select=eq(n\,0),scale=1080:1920:flags=lanczos" -frames:v 1 -q:v 2 assets/media/name-poster-1080.jpg
 ```
 
 ## Service-Funktionen

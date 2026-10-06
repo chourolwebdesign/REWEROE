@@ -15,7 +15,7 @@ import rundgang1 from "@/assets/media/resilienzwoche-rundgang-1.jpg";
 import rundgang2 from "@/assets/media/resilienzwoche-rundgang-2.jpg";
 import stand from "@/assets/media/resilienzwoche-stand.jpg";
 import wagen from "@/assets/media/resilienzwoche-wagen.jpg";
-import poster from "@/assets/media/markt-rundgang-poster.jpg";
+import poster from "@/assets/media/markt-rundgang-poster-1080.jpg";
 import regionalLieferung from "@/assets/media/regional-lieferung.jpg";
 import regionalBauer from "@/assets/media/regional-bauer.jpg";
 import regionalLabel from "@/assets/media/regional-label.jpg";
@@ -135,16 +135,16 @@ export const media = {
 export type MediaKey = keyof typeof media;
 
 /**
- * Video-Dateien liegen in public/media: ohne Ton, 720 × 1280 wie die Quelle, „faststart“ – AV1 (Chrome, Firefox, neue iPhones),
- * HEVC (Safari), H.264 als Rückfall. Der Browser nimmt die erste Fassung, die er abspielen kann (lib/video.ts). Kodieren: README
+ * Video-Dateien liegen in public/media: ohne Ton, 1080 × 1920, 24 fps, „faststart“ – AV1 (Chrome, Firefox, neue iPhones),
+ * HEVC (Safari), H.264 als Rückfall. Quelle des Rundgangs: KI-Hochrechnung (4K) des Instagram-Clips; das Poster ist sein erstes Bild. Der Browser nimmt die erste Fassung, die er abspielen kann (lib/video.ts). Kodieren: README
  * „Neue Clips“. /media wird ein Jahr lang gecacht – geänderte Videos immer unter neuem Dateinamen ablegen.
  */
 export const clips = {
   "markt-rundgang": {
     sources: [
-      { src: "/media/markt-rundgang-av1.mp4", type: 'video/mp4; codecs="av01.0.05M.08"' },
-      { src: "/media/markt-rundgang-hevc.mp4", type: 'video/mp4; codecs="hvc1.1.6.L93.B0"' },
-      { src: "/media/markt-rundgang-h264.mp4", type: 'video/mp4; codecs="avc1.640028"' },
+      { src: "/media/markt-rundgang-1080-av1.mp4", type: 'video/mp4; codecs="av01.0.08M.08"' },
+      { src: "/media/markt-rundgang-1080-hevc.mp4", type: 'video/mp4; codecs="hvc1.1.6.L120.B0"' },
+      { src: "/media/markt-rundgang-1080-h264.mp4", type: 'video/mp4; codecs="avc1.640028"' },
     ],
     poster: "markt-rundgang-poster" as MediaKey,
     label: "Rundgang durch den Markt",

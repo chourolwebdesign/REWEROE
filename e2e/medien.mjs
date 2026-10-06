@@ -1,5 +1,5 @@
-// node e2e/medien.mjs – Video: Fassung nach Browser (AV1 → HEVC → H.264), 720 × 1280 auch auf dem Handy, im Datensparmodus nur
-// das Standbild; Fotos: Qualität der Bildoptimierung (Story 85, große Fotos 85, Galerie-Kacheln 75).
+// node e2e/medien.mjs – Video: Fassung nach Browser (AV1 → HEVC → H.264), 1080 × 1920 auf allen Geräten, Poster in derselben
+// Auflösung, im Datensparmodus nur das Standbild; Fotos: Qualität der Bildoptimierung (Story 85, große Fotos 85, Galerie-Kacheln 75).
 import { BASE, browser, check } from "./lib.mjs";
 
 const b = await browser();
@@ -32,11 +32,11 @@ async function storyVideo(vp, { noAv1 = false, saveData = false } = {}) {
 const mobile = { width: 390, height: 844, isMobile: true, hasTouch: true };
 const desktop = { width: 1280, height: 900 };
 let v = await storyVideo(desktop);
-check(v.playing && v.src.endsWith("-av1.mp4") && v.w === 720 && v.h === 1280, `Desktop: AV1 720 × 1280 (${v.src.split("/").pop()} ${v.w}×${v.h})`);
+check(v.playing && v.src.endsWith("-1080-av1.mp4") && v.w === 1080 && v.h === 1920, `Desktop: AV1 1080 × 1920 (${v.src.split("/").pop()} ${v.w}×${v.h})`);
 v = await storyVideo(mobile);
-check(v.playing && v.src.endsWith("-av1.mp4") && v.w === 720, `Handy: AV1 in 720 statt 540 (${v.src.split("/").pop()} ${v.w}×${v.h})`);
+check(v.playing && v.src.endsWith("-1080-av1.mp4") && v.w === 1080, `Handy: AV1 in 1080 (${v.src.split("/").pop()} ${v.w}×${v.h})`);
 v = await storyVideo(mobile, { noAv1: true });
-check(v.playing && /-(hevc|h264)\.mp4$/.test(v.src) && v.w === 720, `ohne AV1: HEVC oder H.264 (${v.src.split("/").pop()})`);
+check(v.playing && /-1080-(hevc|h264)\.mp4$/.test(v.src) && v.w === 1080, `ohne AV1: HEVC oder H.264 in 1080 (${v.src.split("/").pop()})`);
 v = await storyVideo(mobile, { saveData: true });
 check(!v.playing && !v.src, "Datensparmodus: kein Video, nur das Standbild");
 
@@ -56,6 +56,9 @@ check((await param(MARKT_IMG, "q")) === "85", "/markt: großes Foto Qualität 85
 await photos.setViewport({ ...mobile, deviceScaleFactor: 3 });
 await photos.goto(`${BASE}/`, { waitUntil: "load" });
 check(Number(await param(STORY_IMG, "w")) >= 1080, `Story auf Retina-Handy ≥ 1080 px (${await param(STORY_IMG, "w")})`);
+// echte Pixel des Posters (die Bildoptimierung vergrößert nie über die Quelle hinaus)
+const posterPx = await photos.$eval(STORY_IMG, (i) => new Promise((ok) => { const im = new Image(); im.onload = () => ok(im.naturalWidth + "×" + im.naturalHeight); im.onerror = () => ok("–"); im.src = i.currentSrc; }));
+check(posterPx === "1080×1920", `Poster in Videoauflösung 1080 × 1920 (${posterPx})`);
 check(Number(await param(TILE_IMG, "w")) >= 384, `Galerie-Kachel auf Retina-Handy ≥ 384 px (${await param(TILE_IMG, "w")})`);
 await photos.goto(`${BASE}/markt`, { waitUntil: "load" });
 check(Number(await param(MARKT_IMG, "w")) >= 1080, `/markt-Foto auf Retina-Handy ≥ 1080 px (${await param(MARKT_IMG, "w")})`);

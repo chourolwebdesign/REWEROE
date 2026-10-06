@@ -37,7 +37,8 @@ Stand: 04.10.2026. Alles hier fehlt auf der Website oder ist als Lücke markiert
 - [ ] **Resilienzwoche 2026**: Auf Gruppen- und Rundgangsfotos sind Minister, Gäste und Feuerwehrleute zu sehen. Personenfotos stehen nur im Beitrag unter Aktuelles. Freigabe/Bildnachweis bestätigen (Gruppenfoto laut Pressemitteilung: © Jörg Halisch).
 - [ ] **REWE-Bilder** (REWE Regional, REWE Bio, „Aus deiner Region“, Landwirt-/Lieferfotos): Nutzung über das REWE-Partnerportal bestätigen bzw. offizielle Dateien von dort verwenden.
 - [ ] **Offizielles REWE-Logo** als Datei (aktuell als SVG nachgebaut).
-- [ ] **Originaldateien**: Video und Fotos in Originalqualität – direkt vom Handy oder der Kamera, nicht aus Instagram (z. B. per AirDrop, USB-Stick oder Cloud-Link). Unser Instagram-Download des Rundgangs hat nur 720 × 1280; mit dem Original wird er in 1080p kodiert.
+- [ ] **Originaldateien**: Video und Fotos in Originalqualität – direkt vom Handy oder der Kamera, nicht aus Instagram (z. B. per AirDrop, USB-Stick oder Cloud-Link). Der Rundgang läuft jetzt in 1080 × 1920 aus einer KI-Hochrechnung unseres Instagram-Downloads (720 × 1280): in Webgröße schärfer, aber kein Original – bei voller Größe wirken Flächen gemalt, und Schrift auf Schildern ist verschmiert. Mit dem Original vom Handy wird er neu kodiert.
+- [ ] **Neuer Rundgang ohne Saisonware**: Der Clip ist jetzt das Hauptmotiv der Startseite und zeigt Weihnachtssterne, Schoko-Nikoläuse und das Schild „Festlich sparen“ – ab Januar wirkt er alt. Neu drehen: Handy, 4K, hochkant, ruhig gehen, 15–20 Sekunden; das Original per AirDrop oder Drive schicken, nicht über WhatsApp oder Instagram (beide komprimieren neu).
 
 ## Inhalte, die die Website besser machen
 
