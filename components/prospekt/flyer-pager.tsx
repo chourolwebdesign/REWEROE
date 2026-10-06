@@ -29,7 +29,11 @@ export function FlyerPager({ flyer, onOpen, ref }: { flyer: FlyerRecord; onOpen:
   const track = useRef<HTMLUListElement>(null);
   const strip = useRef<HTMLUListElement>(null);
   const [visible, setVisible] = useState<number[]>([1]);
-  const [loaded, setLoaded] = useState<number[]>(() => nearPages([1], total));
+  // bis zum Laden der Seite nur die Titelseite (der LCP teilt sich die Leitung nicht), danach auch die Nachbarn und die Vorschau-Leiste
+  const [loaded, setLoaded] = useState<number[]>([1]);
+  const [stripReady, setStripReady] = useState(false);
+  const ready = useRef(false);
+  const visibleRef = useRef<number[]>([1]);
 
   const scrollToPage = useCallback(
     (page: number, smooth: boolean) => {
@@ -50,6 +54,23 @@ export function FlyerPager({ flyer, onOpen, ref }: { flyer: FlyerRecord; onOpen:
     [scrollToPage],
   );
 
+  useEffect(() => {
+    let idle = 0;
+    const start = () => {
+      idle = window.setTimeout(() => {
+        ready.current = true;
+        setStripReady(true);
+        setLoaded((prev) => [...new Set([...prev, ...nearPages(visibleRef.current, total)])]);
+      }, 200);
+    };
+    if (document.readyState === "complete") start();
+    else window.addEventListener("load", start, { once: true });
+    return () => {
+      window.clearTimeout(idle);
+      window.removeEventListener("load", start);
+    };
+  }, [total]);
+
   // sichtbare Seiten (≥ 60 % in der Leiste) → Anzeige, Pfeile, Vorschau-Leiste und nachzuladende Bilder
   useEffect(() => {
     const t = track.current;
@@ -64,8 +85,9 @@ export function FlyerPager({ flyer, onOpen, ref }: { flyer: FlyerRecord; onOpen:
         }
         if (!shown.size) return;
         const now = [...shown].sort((a, b) => a - b);
+        visibleRef.current = now;
         setVisible(now);
-        setLoaded((prev) => [...new Set([...prev, ...nearPages(now, total)])]);
+        setLoaded((prev) => [...new Set([...prev, ...(ready.current ? nearPages(now, total) : now)])]);
       },
       { root: t, threshold: 0.6 },
     );
@@ -155,7 +177,11 @@ export function FlyerPager({ flyer, onOpen, ref }: { flyer: FlyerRecord; onOpen:
                 aria-label={`Seite ${p}`}
                 className={cn("block w-12 overflow-hidden rounded-md ring-2 sm:w-14", visible.includes(p) ? "ring-red" : "ring-transparent")}
               >
-                <FlyerImage flyer={flyer} page={p} size="thumb" sizes="56px" alt="" className="h-auto w-full" />
+                {stripReady ? (
+                  <FlyerImage flyer={flyer} page={p} size="thumb" sizes="56px" alt="" className="h-auto w-full" />
+                ) : (
+                  <span aria-hidden className="block w-full bg-soft" style={{ aspectRatio: `${flyer.page_width} / ${flyer.page_height}` }} />
+                )}
               </button>
             </li>
           ))}

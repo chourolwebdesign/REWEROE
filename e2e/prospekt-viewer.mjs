@@ -36,6 +36,15 @@ check((await page.$eval("[data-flyer-page] img", (i) => i.currentSrc)).includes(
 const imageKb = Math.round([...imageBytes.values()].reduce((a, c) => a + c, 0) / 1024);
 check(imageKb <= 700, `Bilder beim Laden ${imageKb} KB (≤ 700)`);
 
+// Vor dem Laden der Seite nur die Titelseite: Seiten 2–3 und die Vorschau-Leiste folgen danach (der LCP teilt sich die Leitung nicht)
+const early = await page.evaluate(() => {
+  const load = performance.getEntriesByType("navigation")[0].loadEventStart;
+  return performance
+    .getEntriesByType("resource")
+    .filter((e) => e.name.includes("prospekt-bilder") && e.startTime < load && !/%2F1\.(jpg|webp)/.test(e.name))
+    .map((e) => decodeURIComponent(e.name).split("/").pop().split("&")[0]);
+});
+check(early.length === 0, `vor dem Laden nur die Titelseite (${early.length ? early.slice(0, 4).join(", ") : "ok"})`);
 const total = Number((await label(page)).match(/von (\d+)/)?.[1]);
 check((await label(page)) === `Seite 1 von ${total}`, `Blätter-Ansicht startet bei Seite 1 (${total} Seiten)`);
 check((await page.$eval("[data-flyer-page] img", (i) => i.getAttribute("alt"))).startsWith("Prospektseite 1 von"), "Alt-Text „Prospektseite 1 von …“");

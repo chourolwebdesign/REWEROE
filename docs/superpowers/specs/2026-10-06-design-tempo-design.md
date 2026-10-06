@@ -100,3 +100,27 @@ Befunde:
 
 - Stufe 4b (Beiträge und Galerie im Cockpit).
 - Neue Inhalte oder Abschnitte; Umbau von Schrift oder JavaScript.
+
+## Ergebnis (gemessen 2026-10-06, gleiche Messung wie oben)
+
+| Seite | Perf vorher → nachher | LCP vorher → nachher | Übertragung vorher → nachher |
+|---|---|---|---|
+| `/` | 93 → 91 | 3,2 → 3,4 s | 2 053 → 2 425 KB (ohne Video 603 → 530 KB) |
+| `/angebote` | 81 → 91 | 5,2 → 3,5 s | 3 309 → 440 KB |
+| `/markt` | 92 → 92 | 3,4 → 3,4 s | 773 → 661 KB |
+| `/kontakt` | 96 → 96 | 2,8 → 2,8 s | 535 → 352 KB |
+| `/karriere` | 96 → 96 | 2,8 → 2,8 s | 540 → 369 KB |
+| `/aktuelles` | 96 → 97 | 2,8 → 2,7 s | 551 → 383 KB |
+| Beitrag | 94 → 94 | 3,1 → 3,1 s | 586 → 406 KB |
+
+Erreicht: `/angebote` ≤ 1 MB (440 KB), Startseite ohne Video ≤ 700 KB (530 KB), CLS 0 überall, axe ohne Befund, keine
+Drittanbieter, Video SSIM ≥ 0,97 (AV1 0,978, HEVC 0,975, H.264 0,977; vorher 0,967 bzw. auf Handys 0,943).
+
+Nicht erreicht: Leistung ≥ 95 auf den vier Seiten, deren größtes Element ein Bild ist (`/`, `/angebote`, `/markt`, Beitrag: 91–94).
+Ursache laut Berichten: Vor dem LCP laden auf jeder Seite das Next/React-JavaScript (~170 KB) und die Überschriftenschrift (76 KB);
+unter der simulierten langsamen 4G-Verbindung über lokales HTTP/1.1 teilen sie sich die Leitung mit dem LCP-Bild. Behoben, wo es
+ging: `/angebote` lädt vor dem `load`-Ereignis nur noch die Titelseite (87 → 91). Versucht und zurückgenommen: die Schrift nicht
+vorladen (schlechter: `/markt` 90, `/kontakt` 95). Die Startseite verliert 2 Punkte, weil das Story-Standbild jetzt mit Qualität 85
+lädt – hier ging die Bildqualität vor. Weitere Hebel (Schrift ohne optische Größe, weniger JavaScript) ändern Schrift oder Aufbau
+und sind in dieser Stufe ausgeschlossen. In früheren Messungen dieses Projekts lag der LCP lokal rund 0,7 s über dem auf Vercel
+(HTTP/2, CDN) – nach dem Merge dort nachmessen.
