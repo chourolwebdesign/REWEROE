@@ -116,7 +116,8 @@ Befunde:
 Erreicht: `/angebote` ≤ 1 MB (440 KB), Startseite ohne Video ≤ 700 KB (530 KB), CLS 0 überall, axe ohne Befund, keine
 Drittanbieter, Video SSIM ≥ 0,97 (AV1 0,978, HEVC 0,975, H.264 0,977; vorher 0,967 bzw. auf Handys 0,943).
 
-Nicht erreicht: Leistung ≥ 95 auf den vier Seiten, deren größtes Element ein Bild ist (`/`, `/angebote`, `/markt`, Beitrag: 91–94).
+Nicht erreicht: Leistung ≥ 95 auf den vier Seiten, deren größtes Element ein Bild ist (`/`, `/angebote`, `/markt`, Beitrag: 91–94),
+und der LCP von `/angebote` (Ziel ≤ 2,5 s, gemessen 3,5 s).
 Ursache laut Berichten: Vor dem LCP laden auf jeder Seite das Next/React-JavaScript (~170 KB) und die Überschriftenschrift (76 KB);
 unter der simulierten langsamen 4G-Verbindung über lokales HTTP/1.1 teilen sie sich die Leitung mit dem LCP-Bild. Behoben, wo es
 ging: `/angebote` lädt vor dem `load`-Ereignis nur noch die Titelseite (87 → 91). Versucht und zurückgenommen: die Schrift nicht

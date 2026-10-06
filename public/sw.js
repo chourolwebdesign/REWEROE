@@ -1,9 +1,10 @@
 /* REWE Rödelheim – Service Worker
  * Seiten: erst Netz, bei Ausfall die zuletzt gesehene Kopie oder /offline.
  * Statische Dateien und Bilder: aus dem Cache (Dateinamen ändern sich bei jedem Build).
- * Nicht angefasst: Videos (Range-Anfragen), Kalender, Formulare, Daten für Seitenwechsel, Cockpit, API, Prospektbilder.
+ * Nicht angefasst: Videos (Range-Anfragen), Kalender, Formulare, Daten für Seitenwechsel, Cockpit, API, Prospektbilder –
+ * auch über die Bildoptimierung (/_next/image?url=/prospekt-bilder/…).
  */
-const VERSION = "rr-2";
+const VERSION = "rr-3";
 const PAGES = `${VERSION}-pages`;
 const ASSETS = `${VERSION}-assets`;
 const OFFLINE_URL = "/offline";
@@ -56,6 +57,7 @@ self.addEventListener("fetch", (event) => {
   if (url.origin !== self.location.origin) return;
   // Angemeldete Cockpit-Seiten nie zwischenspeichern; Prospektbilder sind groß und wechseln wöchentlich.
   if (/^\/(cockpit|api|prospekt-bilder)(\/|$)/.test(url.pathname)) return;
+  if (url.pathname === "/_next/image" && (url.searchParams.get("url") ?? "").startsWith("/prospekt-bilder/")) return;
 
   if (req.mode === "navigate") {
     event.respondWith(

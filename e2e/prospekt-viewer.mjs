@@ -60,6 +60,27 @@ check(await waitLabel(page, "Seite 3 von"), "Wischen → Seite 3");
 await page.focus('[data-pager-page="3"] button');
 await page.keyboard.press("ArrowLeft");
 check(await waitLabel(page, "Seite 2 von"), "Pfeiltaste ← auf einer Seite → Seite 2");
+check(
+  await page.evaluate(() => document.activeElement?.closest("[data-pager-page]")?.getAttribute("data-pager-page") === "2"),
+  "… der Fokus wandert mit (Enter vergrößert die Seite, die man sieht)",
+);
+check((await page.$$eval("[data-pager-page] button", (bs) => bs.filter((x) => x.tabIndex >= 0).length)) === 1, "nur die sichtbare Seite ist ein Tab-Stopp");
+// sichtbarer Fokus: der Fokusrahmen liegt innerhalb der scrollenden Leisten, nichts wird abgeschnitten
+const clipped = await page.evaluate(() => {
+  const out = [];
+  for (const sel of ['[data-pager-page="2"] button', '[data-strip-page="2"] button']) {
+    const el = document.querySelector(sel);
+    el.focus({ preventScroll: true });
+    const cs = getComputedStyle(el);
+    const grow = parseFloat(cs.outlineWidth) + parseFloat(cs.outlineOffset);
+    const r = el.getBoundingClientRect();
+    const box = el.closest("ul").getBoundingClientRect();
+    if (r.top - grow < box.top - 0.5 || r.bottom + grow > box.bottom + 0.5) out.push(`${sel} oben/unten`);
+    if (sel.includes("pager") && (r.left - grow < box.left - 0.5 || r.right + grow > box.right + 0.5)) out.push(`${sel} seitlich`);
+  }
+  return out;
+});
+check(clipped.length === 0, `Fokusrahmen nicht abgeschnitten (${clipped.join(", ") || "ok"})`);
 // Vorschau-Leiste springt
 await page.$eval('[data-strip-page="5"] button', (x) => x.click());
 check(await waitLabel(page, "Seite 5 von"), "Vorschau-Leiste: Seite 5");
@@ -85,6 +106,20 @@ check(
 // alle Seiten zum Aufklappen
 await page.$eval("#prospekt details summary", (s) => s.click());
 check((await page.$$("[data-flyer-grid-page]")).length === total, `„Alle Seiten“ zeigt ${total} Seiten`);
+// Vergrößerung aus „Alle Seiten“: nach Esc steht der Fokus wieder auf derselben Seite der Übersicht
+await page.$eval('[data-flyer-grid-page="20"]', (x) => x.click());
+await page.waitForSelector(".pswp--open", { timeout: 10000 });
+await page.keyboard.press("Escape");
+await page.waitForFunction(() => !document.querySelector(".pswp--open"));
+check(await page.evaluate(() => document.activeElement?.getAttribute("data-flyer-grid-page") === "20"), "Esc nach „Alle Seiten“ → Fokus zurück auf Seite 20 der Übersicht");
+// am Ende bleibt der Fokus auf „Weiter“ (nicht auf dem Seitenanfang)
+await page.$eval(`[data-strip-page="${total - 1}"] button`, (x) => x.click());
+await waitLabel(page, `Seite ${total - 1} von`);
+await page.evaluate(() => [...document.querySelectorAll('[aria-label="Prospektseiten"] button')].find((x) => x.textContent.includes("Weiter"))?.focus());
+await page.keyboard.press("Enter");
+check(await waitLabel(page, `Seite ${total} von ${total}`), `„Weiter“ bis zum Ende → Seite ${total}`);
+await new Promise((r) => setTimeout(r, 500)); // der Browser räumt den Fokus eines gesperrten Knopfs erst beim nächsten Zeichnen weg
+check(await page.evaluate(() => document.activeElement?.textContent.includes("Weiter")), "… der Fokus bleibt auf „Weiter“");
 
 // geteilte Links
 await page.goto(`${BASE}/angebote?seite=2`, { waitUntil: "load" });
@@ -102,6 +137,16 @@ await page.waitForSelector("[data-flyer-page]");
 await new Promise((r) => setTimeout(r, 2000)); // Zeit zum Hydrieren und für den Effekt, der Links öffnet
 check(!(await page.$(".pswp--open")), "Link einer Woche, die nicht mehr online ist, öffnet keine fremde Seite");
 
+// Service Worker: Prospektbilder – auch über /_next/image – nie im Cache (sie wechseln wöchentlich und verdrängten sonst /offline)
+await page.goto(`${BASE}/angebote`, { waitUntil: "load" });
+await new Promise((r) => setTimeout(r, 2500));
+const swCached = await page.evaluate(async () => {
+  let n = 0;
+  for (const name of await caches.keys()) for (const req of await (await caches.open(name)).keys()) if (decodeURIComponent(req.url).includes("prospekt-bilder")) n++;
+  return n;
+});
+check(swCached === 0, `Service Worker speichert keine Prospektbilder (${swCached})`);
+
 // Desktop: Titelseite allein, danach Doppelseiten
 const desk = await b.newPage();
 watchThird(desk);
@@ -115,6 +160,41 @@ await pressButton(desk, "Weiter");
 check(await waitLabel(desk, `Seite 2–3 von ${total}`), "Desktop: „Weiter“ → Doppelseite 2–3");
 await pressButton(desk, "Weiter");
 check(await waitLabel(desk, `Seite 4–5 von ${total}`), "Desktop: „Weiter“ → Doppelseite 4–5");
+// Ende: gerade Seitenzahl → letzte Seite allein links an der Mitte, ohne Lücke; „Zurück“ → die Doppelseite davor
+await desk.$eval(`[data-strip-page="${total}"] button`, (x) => x.click());
+if (total % 2 === 0) {
+  check(await waitLabel(desk, `Seite ${total} von ${total}`), `Desktop: letzte Seite ${total} allein`);
+  const spine = await desk.$eval(`[data-pager-page="${total}"] button`, (x) => {
+    const r = x.getBoundingClientRect();
+    const box = x.closest("ul").getBoundingClientRect();
+    return Math.round(Math.abs(r.right - (box.left + box.width / 2)));
+  });
+  check(spine <= 12, `… sitzt links an der Mitte (Abstand ${spine} px)`);
+  await pressButton(desk, "Zurück");
+  check(await waitLabel(desk, `Seite ${total - 2}–${total - 1} von ${total}`), `Desktop: „Zurück“ → Doppelseite ${total - 2}–${total - 1}`);
+} else {
+  check(await waitLabel(desk, `Seite ${total - 1}–${total} von ${total}`), `Desktop: letzte Doppelseite ${total - 1}–${total}`);
+}
+// weiches Blättern (ohne reduzierte Bewegung): die Seitenanzeige nennt nur echte Doppelseiten
+const smooth = await b.newPage();
+await smooth.setViewport({ width: 1280, height: 900 });
+await smooth.goto(`${BASE}/angebote`, { waitUntil: "load" });
+await smooth.waitForSelector(LABEL);
+await smooth.evaluate((sel) => {
+  window.__labels = [];
+  const el = document.querySelector(sel);
+  new MutationObserver(() => window.__labels.push(el.textContent.trim())).observe(el, { childList: true, characterData: true, subtree: true });
+}, LABEL);
+for (const want of ["2–3", "4–5", "6–7"]) {
+  await pressButton(smooth, "Weiter");
+  await waitLabel(smooth, `Seite ${want} von`);
+}
+const labels = await smooth.evaluate(() => window.__labels);
+const badLabels = labels.filter((l) => {
+  const m = l.match(/Seite (\d+)–(\d+)/);
+  return m && (Number(m[1]) % 2 !== 0 || Number(m[2]) !== Number(m[1]) + 1);
+});
+check(badLabels.length === 0 && labels.length <= 3, `Ansage beim Blättern nur echte Doppelseiten (${labels.join(" | ")})`);
 
 check(third.size === 0, `keine Drittanbieter-Anfragen (${[...third].join(",") || "keine"})`);
 await b.close();
