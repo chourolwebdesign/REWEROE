@@ -6,7 +6,7 @@ import { NumbersBand } from "@/components/home/numbers-band";
 import { RegionalBand } from "@/components/home/regional-band";
 import { Services } from "@/components/home/services";
 import { TermineList } from "@/components/home/termine";
-import { StoryHero } from "@/components/home/story-hero";
+import { RundgangHero } from "@/components/home/rundgang-hero";
 import { OpenStatus } from "@/components/live/open-status";
 import { FlyerWeekText } from "@/components/live/flyer-week";
 import { Gallery } from "@/components/media/gallery";
@@ -18,7 +18,6 @@ import { VisitSection } from "@/components/visit/visit-section";
 import { posts } from "@/content/aktuelles";
 import { galerie } from "@/content/galerie";
 import { markt } from "@/content/markt";
-import { story } from "@/content/story";
 import { currentFlyerLink, publishedFlyers } from "@/lib/data/flyers";
 import { flyerWeek } from "@/lib/flyer";
 import { pickFlyers, shownFlyer } from "@/lib/prospekt/select";
@@ -26,7 +25,7 @@ import { flyerImage } from "@/lib/prospekt/urls";
 import { eventsFrom } from "@/lib/data/inhalte";
 import { berlinNow } from "@/lib/hours";
 import { absoluteUrl } from "@/lib/site";
-import { resolveGallery, resolveStory } from "@/lib/resolve";
+import { resolveClip, resolveGallery } from "@/lib/resolve";
 
 export default async function HomePage() {
   const week = flyerWeek();
@@ -40,19 +39,20 @@ export default async function HomePage() {
 
   return (
     <>
-      <StoryHero
-        items={resolveStory(story)}
+      <RundgangHero
+        clip={resolveClip("markt-rundgang", "Rundgang durch unseren Markt")}
         intro={
           <>
             <p className="text-eyebrow mb-6 flex items-center gap-2.5 text-white">
               <span aria-hidden className="h-px w-6 shrink-0 bg-white/60" />
               REWE in Frankfurt-Rödelheim
             </p>
-            <h1 className="text-hero lg:text-[clamp(4.5rem,1rem+5.6vw,7.5rem)]">
+            <h1 id="hero-titel" className="text-hero lg:text-[clamp(4.5rem,1rem+5.6vw,7.5rem)]">
               Willkommen in deinem{" "}
               <span className="rounded-[0.16em] bg-white px-[0.12em] text-red [box-decoration-break:clone]">Markt.</span>
             </h1>
-            <p className="mt-7 max-w-[34ch] text-lede text-white">
+            {/* unter 1024 px liegt der Text auf dem Video – dort nur Überschrift, Status und Knöpfe */}
+            <p className="mt-7 hidden max-w-[34ch] text-lede text-white lg:block">
               Frisch einkaufen mitten in Rödelheim – mit Bäckerei und Sushi im Markt, Montag bis Samstag von 7 bis 22 Uhr.
             </p>
           </>
@@ -60,7 +60,7 @@ export default async function HomePage() {
         side={
           <div className="grid gap-5">
             <OpenStatus tone="dark" className="justify-self-start" />
-            {/* mobil nebeneinander und kompakter, damit die Story schon im ersten Bildschirm zu sehen ist.
+            {/* mobil nebeneinander und kompakt – sie liegen unten auf dem Video.
                 Solange diese Knöpfe sichtbar sind, bleibt die Schnellzugriff-Leiste unten verborgen (globals.css). */}
             <div id="hero-aktionen" className="flex flex-wrap gap-2.5 sm:gap-3">
               <ButtonLink href={flyer.href} external={flyer.external} variant="white" size="lg" className="h-12 px-5 text-base sm:h-14 sm:px-7 sm:text-[1.0625rem]">

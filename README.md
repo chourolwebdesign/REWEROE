@@ -39,7 +39,7 @@ Ohne Mail-Konfiguration zeigt das Formular einen Hinweis und die Telefonnummer u
 |---|---|
 | Adresse, Telefon, E-Mail, Öffnungszeiten, Services, Links (Prospekt, Instagram, Stellensuche) | `content/markt.ts` |
 | Sonderöffnungszeiten (z. B. Heiligabend) | Markt-Cockpit → Inhalte → Sondertage – Feiertage in Hessen und § 3 HLöG rechnet `lib/hours.ts` selbst |
-| Story im ersten Screen (Clip/Fotos, Reihenfolge, Dauer) | `content/story.ts` |
+| Video im ersten Screen (Rundgang, läuft in Schleife) | Clip in `lib/media.ts → clips`, Auswahl in `app/(site)/page.tsx` (`resolveClip`) |
 | Galerie „Aus dem Markt“ | `content/galerie.ts` |
 | Beiträge unter /aktuelles (Markdown) | `content/aktuelles.ts` |
 | Offene Stellen (erzeugen automatisch JobPosting-Daten) | Markt-Cockpit → Inhalte → Stellen |
