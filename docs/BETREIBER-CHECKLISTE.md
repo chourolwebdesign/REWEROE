@@ -29,6 +29,7 @@ Stand: 04.10.2026. Alles hier fehlt auf der Website oder ist als Lücke markiert
 - [ ] **Feedback-Alarm**: E-Mail-Adresse(n) der Marktleitung für 1–2 Sterne (`FEEDBACK_ALARM_AN`), Mail-Versand einrichten.
 - [ ] **Vercel**: `FEEDBACK_KEY` für Preview und Production eintragen (Wert aus `.env.local`), sonst meldet `/feedback` „Senden hat nicht geklappt“.
 - [ ] **Plakat**: `/aushang` Seite 2 in A4 oder A3 drucken; an Kasse und Ausgang auf Augenhöhe aufhängen.
+- [ ] **REWE-Umfrage**: Gilt der Umfrage-Link (mit `FingerprintHash`) für alle Kunden des Markts – oder nur für einen Kassenbon? Und ist es mit REWE abgestimmt, dass zufriedene Kunden (4–5 Sterne) dorthin geleitet werden? Bis zur Klärung steht der Link der Agentur in `content/markt.ts`.
 
 ## Bildrechte
 

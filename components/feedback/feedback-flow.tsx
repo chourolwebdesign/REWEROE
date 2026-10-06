@@ -33,7 +33,7 @@ const field = "mt-2 block w-full rounded-2xl px-4 text-base ring-1 ring-line out
  * Feedback aus dem Markt (QR-Plakat): Gesicht antippen → zufrieden: Dank und großer Google-Knopf; sonst erst Bereiche,
  * Kommentar und freiwilliger Kontakt, dann Dank und ein ruhiger Google-Link. Fünf Sprachen, Arabisch von rechts nach links.
  */
-export function FeedbackFlow({ initialLang, googleUrl }: { initialLang: Lang; googleUrl: string }) {
+export function FeedbackFlow({ initialLang, googleUrl, surveyUrl }: { initialLang: Lang; googleUrl: string; surveyUrl: string }) {
   const [lang, setLang] = useState<Lang>(initialLang);
   const [step, setStep] = useState<Step>("rate");
   const [rating, setRating] = useState(0);
@@ -222,37 +222,53 @@ export function FeedbackFlow({ initialLang, googleUrl }: { initialLang: Lang; go
             )}
             <div className={cn("mt-8 text-center", good && "rounded-[1.75rem] bg-white p-6 shadow-[var(--shadow-lift)]")}>
               <p className={good ? "text-lede font-semibold" : "text-muted"}>{good ? t.pitchGood : t.pitchBad}</p>
-              <a
-                data-google={good ? "gross" : "dezent"}
-                href={googleUrl}
-                target="_blank"
-                rel="noopener"
-                onClick={() => {
-                  if (sentId) void markGoogleClick(sentId);
-                }}
-                className={cn(good ? buttonClasses("ink", "lg") : buttonClasses("outline"), "mt-4 w-full gap-2")}
-              >
-                {t.googleButton}
-                <ExternalLink className="size-[1.05em] rtl:-scale-x-100" aria-hidden />
-                <span className="sr-only"> ({t.newTab})</span>
-              </a>
+              {good ? (
+                <>
+                  {/* 4–5 Sterne: groß zur Kundenumfrage der REWE Group (Wunsch des Markts); Google bleibt unten im Fuß */}
+                  <a data-survey href={surveyUrl} target="_blank" rel="noopener" className={cn(buttonClasses("ink", "lg"), "mt-4 w-full gap-2")}>
+                    {t.surveyButton}
+                    <ExternalLink className="size-[1.05em] rtl:-scale-x-100" aria-hidden />
+                    <span className="sr-only"> ({t.surveyNewTab})</span>
+                  </a>
+                  <p className="mt-3 text-[0.875rem] text-muted">{t.surveyNote}</p>
+                </>
+              ) : (
+                <a
+                  data-google="dezent"
+                  href={googleUrl}
+                  target="_blank"
+                  rel="noopener"
+                  onClick={() => {
+                    if (sentId) void markGoogleClick(sentId);
+                  }}
+                  className={cn(buttonClasses("outline"), "mt-4 w-full gap-2")}
+                >
+                  {t.googleButton}
+                  <ExternalLink className="size-[1.05em] rtl:-scale-x-100" aria-hidden />
+                  <span className="sr-only"> ({t.newTab})</span>
+                </a>
+              )}
             </div>
           </section>
         )}
       </main>
 
       <footer className="mt-12 grid gap-2 text-[0.875rem] text-muted">
-        {/* Google für alle und in jedem Schritt – auch wenn das Senden scheitert (keine selektive Einholung); im Dank steht er groß */}
-        {step !== "done" && (
+        {/* Google für alle und in jedem Schritt – auch wenn das Senden scheitert (keine selektive Einholung); nach 1–3 Sternen steht
+            er ruhig im Dank, nach 4–5 Sternen bleibt er hier unten (im Dank steht dann die REWE-Umfrage) */}
+        {(step !== "done" || good) && (
           <p>
             <a
               data-google-footer
               href={googleUrl}
               target="_blank"
               rel="noopener"
+              onClick={() => {
+                if (sentId) void markGoogleClick(sentId);
+              }}
               className="inline-flex min-h-11 items-center gap-1.5 font-semibold text-ink underline underline-offset-4"
             >
-              {t.googleFooter}
+              {step === "done" ? t.googleButton : t.googleFooter}
               <ExternalLink className="size-[1em] rtl:-scale-x-100" aria-hidden />
               <span className="sr-only"> ({t.newTab})</span>
             </a>

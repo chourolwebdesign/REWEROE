@@ -136,7 +136,9 @@ export default function DatenschutzPage() {
           </p>
           <p>
             „Auf Google bewerten“ ist ein Link zu Google; erst mit dem Antippen verlässt du unsere Seite. Ob du ihn antippst, vermerken wir
-            bei deiner Rückmeldung.
+            bei deiner Rückmeldung. Bei 4–5 Sternen bieten wir außerdem einen Link zur Kundenumfrage der REWE Group an (betrieben über
+            Qualtrics); auch hier verlässt du unsere Seite erst mit dem Antippen, und wir übermitteln dabei keine Daten aus deiner
+            Rückmeldung. Dort gilt die Datenschutzerklärung der REWE Group.
           </p>
 
           <h2>Kontakt per Telefon</h2>

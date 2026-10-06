@@ -1,5 +1,5 @@
-// node --env-file=.env.local e2e/feedback.mjs – /feedback: zufrieden (großer Google-Knopf), unzufrieden (Bereiche, Kommentar,
-// Kontakt, Doppeltipp), Sprachen (Accept-Language, Auswahl, Arabisch von rechts), Tastatur, 320 px, Limit, axe, keine
+// node --env-file=.env.local e2e/feedback.mjs – /feedback: zufrieden (großer Knopf zur REWE-Umfrage, Google im Fuß), unzufrieden
+// (Bereiche, Kommentar, Kontakt, Doppeltipp), Sprachen (Deutsch als Start, Auswahl, Arabisch von rechts), Tastatur, 320 px, Limit, axe, keine
 // Drittanbieter. Löscht alle eigenen Rückmeldungen wieder.
 import { createClient } from "@supabase/supabase-js";
 import { readFileSync } from "node:fs";
@@ -48,16 +48,18 @@ const text = (page, sel) => page.$eval(sel, (e) => e.textContent.trim());
 try {
   // 1) zufrieden, Deutsch, Handy
   let page = await open();
-  check((await text(page, "h1")) === "Wie war dein Einkauf?", "Deutsch per Accept-Language, „du“");
+  check((await text(page, "h1")) === "Wie war dein Einkauf?", "Deutsch als Startsprache, „du“");
   check((await page.$eval("[data-google-footer]", (a) => a.getAttribute("href")).catch(() => null))?.startsWith("https://"), "Google-Link für alle schon auf der Startseite (Fuß)");
   await axe(page, "/feedback Start 390px");
   await page.click('[data-face="5"]');
   const good = await done(page);
   check((await text(page, "h1")) === "Herzlichen Dank!", "5 Sterne → Dank");
-  check((await page.$eval("[data-google]", (a) => a.dataset.google)) === "gross", "… großer Google-Knopf");
+  const survey = await page.$eval("[data-survey]", (a) => ({ href: a.getAttribute("href"), target: a.target })).catch(() => null);
+  check(Boolean(survey?.href?.startsWith("https://rewegroup.fra1.qualtrics.com/")) && survey.target === "_blank", "… großer Knopf zur REWE-Umfrage (neuer Tab)");
+  check(Boolean(await page.$("[data-google-footer]")), "… Google-Link bleibt unten");
   await axe(page, "/feedback Dank 390px");
   await page.evaluate(() => {
-    const a = document.querySelector("[data-google]");
+    const a = document.querySelector("[data-google-footer]");
     a.addEventListener("click", (e) => e.preventDefault());
     a.click();
   });
@@ -69,7 +71,9 @@ try {
 
   // 2) unzufrieden, Türkisch, Desktop, Doppeltipp auf „Gönder“
   page = await open({ lang: "tr-TR,tr;q=0.9,de;q=0.5", width: 1280 });
-  check((await text(page, "h1")) === "Alışverişiniz nasıldı?", "Türkisch per Accept-Language");
+  check((await text(page, "h1")) === "Wie war dein Einkauf?", "Startsprache Deutsch, auch wenn der Browser Türkisch bevorzugt");
+  await page.select("[data-lang-select]", "tr");
+  check((await text(page, "h1")) === "Alışverişiniz nasıldı?", "Sprachwahl → Türkisch");
   await page.click('[data-face="2"]');
   await page.waitForSelector('[data-aspect="kasse"]');
   check((await page.evaluate(() => document.activeElement?.tagName)) === "H1", "Fokus springt auf die neue Überschrift");
@@ -87,6 +91,7 @@ try {
   await new Promise((r) => setTimeout(r, 1500));
   check(Boolean(await page.$("[data-care]")), "2 Sterne → Hinweis der Marktleitung");
   check((await page.$eval("[data-google]", (a) => a.dataset.google)) === "dezent", "Google-Link auch bei 2 Sternen sichtbar, ruhig");
+  check(!(await page.$("[data-survey]")), "2 Sterne → keine REWE-Umfrage");
   const rows = await sb.from("feedback").select("id,rating,aspects,contact,lang").eq("comment", marker);
   check(rows.data?.length === 1, `Doppeltipp → genau eine Zeile (${rows.data?.length})`);
   const r = rows.data[0];
@@ -96,6 +101,7 @@ try {
 
   // 3) Arabisch: von rechts nach links, Pfeiltasten gespiegelt; Sprachwahl
   page = await open({ lang: "ar" });
+  await page.select("[data-lang-select]", "ar");
   check((await page.$eval("[data-feedback-root]", (e) => e.dir)) === "rtl", "Arabisch: dir=rtl");
   await page.focus('[data-face="1"]');
   await page.keyboard.press("ArrowLeft");
@@ -110,6 +116,7 @@ try {
   // 3b) Doppeltipp auf ein Gesicht → genau eine Rückmeldung
   const since = new Date(Date.now() - 1000).toISOString();
   page = await open({ lang: "ru" });
+  await page.select("[data-lang-select]", "ru");
   await page.$eval('[data-face="5"]', (b) => {
     b.click();
     b.click();

@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import { FeedbackFlow } from "@/components/feedback/feedback-flow";
 import { markt } from "@/content/markt";
-import { parseAcceptLanguage, pickLang } from "@/lib/feedback/lang";
 
 export const metadata: Metadata = {
   title: "Wie war dein Einkauf?",
@@ -10,8 +8,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-/** Sprache aus dem Browser (Accept-Language): die Seite erscheint gleich in der richtigen Sprache, ohne Umspringen. */
-export default async function FeedbackPage() {
-  const lang = pickLang(parseAcceptLanguage((await headers()).get("accept-language")));
-  return <FeedbackFlow initialLang={lang} googleUrl={markt.links.googleReview} />;
+/** Startet immer auf Deutsch (Wunsch des Markts); andere Sprachen über die Auswahl oben. Ohne Sprachkopf ist die Seite statisch. */
+export default function FeedbackPage() {
+  return <FeedbackFlow initialLang="de" googleUrl={markt.links.googleReview} surveyUrl={markt.links.reweSurvey} />;
 }

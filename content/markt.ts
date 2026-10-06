@@ -47,6 +47,10 @@ export const markt: Markt = {
     instagram: "https://www.instagram.com/rewealialamyaar/",
     // Google-Profil des Markts (aus der QR-Vorlage); der direkte „Bewertung schreiben“-Link (g.page/r/…/review) kommt vom Betreiber
     googleReview: "https://share.google/akKSeJtd9xnEmGSwN",
+    // Kundenumfrage der REWE Group für diesen Markt (Link von der Agentur, 06.10.2026) – Feedback-Dank bei 4–5 Sternen.
+    // Offen: ob FingerprintHash markt- oder bonbezogen ist (beim Betreiber bzw. REWE klären).
+    reweSurvey:
+      "https://rewegroup.fra1.qualtrics.com/jfe/form/SV_cBKGRf9CObtdEqi?FingerprintHash=94538588fa0a9ce07628f2c7e87cf45a88f90f6976724e4024f616c7f690acc7&p5=1&tp=KF",
     // Wie auf der REWE-Marktseite verlinkt
     jobs: "https://karriere.rewe.de/jobs/suche?location=60489&range=25&sort=date",
     ausbildung: "https://karriere.rewe.de/ausbildung",

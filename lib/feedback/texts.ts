@@ -34,6 +34,9 @@ export interface FeedbackTexts {
   careTitle: string;
   careText: string;
   pitchGood: string;
+  surveyButton: string;
+  surveyNote: string;
+  surveyNewTab: string;
   pitchBad: string;
   googleButton: string;
   googleFooter: string;
@@ -78,7 +81,10 @@ export const FEEDBACK_TEXTS: Record<Lang, FeedbackTexts> = {
     leadBad: "Deine Rückmeldung hilft uns wirklich weiter.",
     careTitle: "Wir kümmern uns darum",
     careText: "Deine Rückmeldung geht direkt an die Marktleitung. Hast du Kontaktdaten hinterlassen, melden wir uns bei dir.",
-    pitchGood: "Teile deine Erfahrung auf Google – das dauert 30 Sekunden.",
+    pitchGood: "Bewerte deinen Einkauf auch bei REWE – das hilft unserem Markt.",
+    surveyButton: "Bei REWE bewerten",
+    surveyNote: "Umfrage der REWE Group",
+    surveyNewTab: "öffnet die REWE-Umfrage in einem neuen Tab",
     pitchBad: "Du kannst deine Erfahrung auch öffentlich auf Google teilen.",
     googleButton: "Auf Google bewerten",
     googleFooter: "Lieber gleich auf Google bewerten",
@@ -120,7 +126,10 @@ export const FEEDBACK_TEXTS: Record<Lang, FeedbackTexts> = {
     leadBad: "Geri bildiriminiz bize gerçekten yardımcı oluyor.",
     careTitle: "Bununla ilgileniyoruz",
     careText: "Geri bildiriminiz doğrudan mağaza müdürlüğüne iletiliyor. İletişim bilgisi bıraktıysanız size dönüş yapacağız.",
-    pitchGood: "Deneyiminizi Google'da paylaşın – 30 saniye sürer.",
+    pitchGood: "Alışverişinizi REWE'de de değerlendirin – marketimize yardımcı olur.",
+    surveyButton: "REWE'de değerlendir",
+    surveyNote: "REWE Group anketi (Almanca)",
+    surveyNewTab: "REWE anketi yeni sekmede açılır",
     pitchBad: "Deneyiminizi dilerseniz Google'da da paylaşabilirsiniz.",
     googleButton: "Google'da değerlendir",
     googleFooter: "Doğrudan Google'da değerlendirin",
@@ -162,7 +171,10 @@ export const FEEDBACK_TEXTS: Record<Lang, FeedbackTexts> = {
     leadBad: "ملاحظاتك تساعدنا فعلاً.",
     careTitle: "سنهتم بالأمر",
     careText: "تصل ملاحظاتك مباشرة إلى إدارة المتجر. إذا تركت بيانات اتصال فسنتواصل معك.",
-    pitchGood: "شارك تجربتك على Google — يستغرق ذلك ٣٠ ثانية.",
+    pitchGood: "قيّم تسوّقك لدى REWE أيضاً – فهذا يساعد متجرنا.",
+    surveyButton: "التقييم لدى REWE",
+    surveyNote: "استبيان مجموعة REWE (بالألمانية)",
+    surveyNewTab: "يفتح استبيان REWE في علامة تبويب جديدة",
     pitchBad: "يمكنك أيضاً مشاركة تجربتك علناً على Google.",
     googleButton: "قيّمنا على Google",
     googleFooter: "قيّمنا مباشرة على Google",
@@ -204,7 +216,10 @@ export const FEEDBACK_TEXTS: Record<Lang, FeedbackTexts> = {
     leadBad: "Ваш отзыв действительно нам помогает.",
     careTitle: "Мы этим займёмся",
     careText: "Ваш отзыв поступает напрямую руководству магазина. Если вы оставили контакты, мы с вами свяжемся.",
-    pitchGood: "Поделитесь опытом в Google — это займёт 30 секунд.",
+    pitchGood: "Оцените покупку и в опросе REWE – это поможет нашему магазину.",
+    surveyButton: "Оценить в REWE",
+    surveyNote: "Опрос REWE Group (на немецком)",
+    surveyNewTab: "опрос REWE откроется в новой вкладке",
     pitchBad: "Вы также можете публично поделиться опытом в Google.",
     googleButton: "Оценить в Google",
     googleFooter: "Оценить сразу в Google",
@@ -246,7 +261,10 @@ export const FEEDBACK_TEXTS: Record<Lang, FeedbackTexts> = {
     leadBad: "Your feedback genuinely helps us.",
     careTitle: "We are on it",
     careText: "Your feedback goes straight to the store management. If you left contact details, we will get back to you.",
-    pitchGood: "Share your experience on Google – it takes 30 seconds.",
+    pitchGood: "Rate your visit with REWE too – it helps our store.",
+    surveyButton: "Rate us with REWE",
+    surveyNote: "REWE Group survey (in German)",
+    surveyNewTab: "opens the REWE survey in a new tab",
     pitchBad: "You are also welcome to share your experience publicly on Google.",
     googleButton: "Review us on Google",
     googleFooter: "Review us directly on Google",
