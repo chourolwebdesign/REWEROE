@@ -79,7 +79,7 @@ export function FlyerTicket({
             className="mx-auto mt-8 block w-40 rotate-[2deg] overflow-hidden rounded-xl shadow-[0_20px_50px_rgb(18_18_18/0.25)] ring-1 ring-line transition-transform duration-150 active:scale-[0.97] md:mt-0 md:w-36 xl:w-48"
           >
             {/* eslint-disable-next-line @next/next/no-img-element -- fertig skaliertes Vorschaubild */}
-            <img src={cover.src} width={cover.width} height={cover.height} alt="Titelseite des aktuellen Prospekts" className="h-auto w-full" />
+            <img src={cover.src} width={cover.width} height={cover.height} alt="Titelseite des aktuellen Prospekts" loading="lazy" decoding="async" className="h-auto w-full" />
           </a>
         )}
       </div>

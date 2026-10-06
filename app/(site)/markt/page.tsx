@@ -10,6 +10,7 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { VisitSection } from "@/components/visit/visit-section";
 import { galerie } from "@/content/galerie";
 import { markt } from "@/content/markt";
+import { currentFlyerLink } from "@/lib/data/flyers";
 import { breadcrumbJsonLd, ldScript } from "@/lib/jsonld";
 import { media } from "@/lib/media";
 import { resolveGallery } from "@/lib/resolve";
@@ -22,7 +23,8 @@ export const metadata: Metadata = pageMetadata({
   card: "markt",
 });
 
-export default function MarktPage() {
+export default async function MarktPage() {
+  const flyer = await currentFlyerLink();
   return (
     <>
       <PageHeader
@@ -33,7 +35,7 @@ export default function MarktPage() {
       >
         <div className="mt-8 flex flex-wrap items-center gap-3">
           <OpenStatus tone="soft" />
-          <ButtonLink href={markt.links.flyer} external size="sm">
+          <ButtonLink href={flyer.href} external={flyer.external} size="sm">
             Prospekt der Woche
           </ButtonLink>
         </div>
