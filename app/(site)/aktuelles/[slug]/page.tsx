@@ -42,6 +42,8 @@ export default async function PostPage({ params }: PageProps<"/aktuelles/[slug]"
   return (
     <article>
       <PageHeader
+        tone="red"
+        mark="Aktuell"
         crumbs={[
           { href: "/aktuelles", label: "Aktuelles" },
           { href: `/aktuelles/${post.slug}`, label: post.title },
@@ -50,7 +52,7 @@ export default async function PostPage({ params }: PageProps<"/aktuelles/[slug]"
         lede={post.excerpt}
         className="[&_h1]:max-w-[22ch]"
       >
-        <p className="mt-6 text-[0.9375rem] font-semibold text-red">
+        <p className="mt-6 text-[0.9375rem] font-semibold text-white">
           <time dateTime={post.date}>{formatDate(post.date)}</time>
         </p>
       </PageHeader>

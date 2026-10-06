@@ -60,6 +60,8 @@ export default async function KontaktPage() {
   return (
     <>
       <PageHeader
+        tone="red"
+        mark="Kontakt"
         crumbs={[{ href: "/kontakt", label: "Kontakt" }]}
         eyebrow="Kontakt"
         title="So erreichst du uns."

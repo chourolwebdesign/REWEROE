@@ -21,6 +21,7 @@ export function StoryHero({ items, intro, side }: { items: StoryMedia[]; intro: 
   return (
     <section
       ref={sectionRef}
+      data-hero
       aria-roledescription="Story"
       aria-label="Einblicke in den Markt"
       onKeyDown={onKeyDown}

@@ -29,16 +29,18 @@ export default async function KarrierePage() {
   return (
     <>
       <PageHeader
+        tone="red"
+        mark="Karriere"
         crumbs={[{ href: "/karriere", label: "Karriere" }]}
         eyebrow="Karriere"
         title="Arbeiten im Supermarkt um die Ecke."
         lede="Kurze Wege, ein Markt mitten im Viertel und Arbeit, die man am Ende des Tages sieht. So kannst du bei uns einsteigen."
       >
         <div className="cta-row mt-8">
-          <ButtonLink href="/karriere/bewerben" size="lg">
+          <ButtonLink href="/karriere/bewerben" variant="white" size="lg">
             In 60 Sekunden bewerben
           </ButtonLink>
-          <ButtonLink href={markt.links.jobs} external variant="soft" size="lg">
+          <ButtonLink href={markt.links.jobs} external variant="glass" size="lg">
             REWE-Stellensuche
           </ButtonLink>
         </div>

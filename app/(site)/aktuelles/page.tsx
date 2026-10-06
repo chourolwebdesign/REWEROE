@@ -20,6 +20,8 @@ export default function AktuellesPage() {
   return (
     <>
       <PageHeader
+        tone="red"
+        mark="Aktuell"
         crumbs={[{ href: "/aktuelles", label: "Aktuelles" }]}
         eyebrow="Aktuelles"
         title="Neues aus Rödelheim."

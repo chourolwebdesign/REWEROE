@@ -53,6 +53,8 @@ export default async function AngebotePage() {
   return (
     <>
       <PageHeader
+        tone="red"
+        mark="Prospekt"
         crumbs={[{ href: "/angebote", label: "Angebote" }]}
         eyebrow="Angebote"
         title="Prospekt der Woche."

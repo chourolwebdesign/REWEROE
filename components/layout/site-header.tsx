@@ -10,21 +10,26 @@ import { InstallApp } from "@/components/pwa/install-app";
 import { buttonClasses, ButtonLink } from "@/components/ui/button";
 import { InstagramIcon } from "@/components/ui/icons";
 import { markt } from "@/content/markt";
-import { NAV } from "@/lib/site";
+import { hasHero, NAV } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 /**
- * Kopfzeile, 72 px, sticky. Auf der Startseite liegt sie transparent über der Story und wird beim Scrollen weiß.
+ * Kopfzeile, 72 px, sticky. Über roten Köpfen (Startseite, `hasHero`) liegt sie transparent, bis der Kopf (`[data-hero]`)
+ * weggescrollt ist; sonst weiß.
  * Mobil öffnet der Menüknopf ein Vollbild-Menü (natives <dialog>: Fokusfalle, Esc, inerter Hintergrund).
  */
 export function SiteHeader({ flyer = { href: markt.links.flyer, external: true } }: { flyer?: { href: string; external: boolean } }) {
   const pathname = usePathname();
   const [atTop, setAtTop] = useState(true);
-  const overHero = pathname === "/" && atTop;
+  const overHero = hasHero(pathname) && atTop;
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setAtTop(window.scrollY < window.innerHeight - 96);
+    // transparent, solange der rote Kopf unter der Leiste liegt (Höhe je Seite verschieden)
+    const onScroll = () => {
+      const hero = document.querySelector<HTMLElement>("[data-hero]");
+      setAtTop(hero ? window.scrollY < hero.offsetTop + hero.offsetHeight - 96 : false);
+    };
     const raf = requestAnimationFrame(onScroll);
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
@@ -33,7 +38,7 @@ export function SiteHeader({ flyer = { href: markt.links.flyer, external: true }
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, []);
+  }, [pathname]);
 
   // Nach einer Navigation das Menü schließen.
   useEffect(() => {

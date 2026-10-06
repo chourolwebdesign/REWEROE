@@ -28,14 +28,16 @@ export default async function MarktPage() {
   return (
     <>
       <PageHeader
+        tone="red"
+        mark="Markt"
         crumbs={[{ href: "/markt", label: "Unser Markt" }]}
         eyebrow="Unser Markt"
         title="Dein REWE in der Thudichumstraße."
         lede={`Ein selbstständig geführter REWE-Markt der ${markt.legalName} – mitten in Rödelheim, sechs Tage die Woche von 7 bis 22 Uhr.`}
       >
         <div className="mt-8 flex flex-wrap items-center gap-3">
-          <OpenStatus tone="soft" />
-          <ButtonLink href={flyer.href} external={flyer.external} size="sm">
+          <OpenStatus tone="dark" />
+          <ButtonLink href={flyer.href} external={flyer.external} variant="white" size="sm">
             Prospekt der Woche
           </ButtonLink>
         </div>
