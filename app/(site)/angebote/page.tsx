@@ -62,7 +62,7 @@ export default async function AngebotePage() {
       <section id="prospekt" aria-label="Aktueller Prospekt" className="wrap">
         {weeks ? (
           <>
-            <FlyerViewer weeks={weeks} defaultTab={choice.defaultTab} />
+            <FlyerViewer weeks={weeks} defaultTab={choice.defaultTab} shareUrl={absoluteUrl("/angebote")} />
             <p className="mt-6 text-[0.9375rem] text-muted">
               Alle Angebote auch als Text:{" "}
               <a href={markt.links.flyer} target="_blank" rel="noopener" className="font-semibold text-ink underline underline-offset-4">
