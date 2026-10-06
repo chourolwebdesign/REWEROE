@@ -136,6 +136,7 @@ export function Gallery({ items, row = false, className }: { items: GalleryMedia
                         )
                   }
                   quality={75}
+                  fetchPriority="low"
                   className="object-cover transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.04]"
                 />
                 {it.type === "clip" && <TileClip sources={it.sources} />}

@@ -49,7 +49,10 @@ export function RundgangHero({ clip, intro, side }: { clip: HeroClip; intro: Rea
           data-hero-video
           className="absolute inset-0 z-0 bg-night lg:relative lg:inset-auto lg:z-10 lg:aspect-[9/16] lg:h-[min(calc(100svh-7rem),52rem)] lg:overflow-hidden lg:rounded-[1.75rem] lg:shadow-[0_40px_100px_rgb(60_0_8/0.55)] lg:ring-1 lg:ring-white/25 lg:rotate-[1.5deg]"
         >
-          <Image src={clip.poster} alt={clip.alt} fill loading="eager" fetchPriority="high" sizes={POSTER_SIZES} quality={85} className="object-cover" />
+          {/* sofort laden, aber ohne fetchPriority="high": auf dem Handy füllt das Poster den Bildschirm und zählt für den LCP als
+              Hintergrund – LCP ist die Überschrift, die auf die Titelschrift wartet; ein vorgezogenes Poster nahm ihr die Leitung
+              (Lighthouse lokal / 90 → 93, LCP 3,6 → 3,2 s). Bilder im sichtbaren Bereich stuft Chrome nach dem Layout selbst hoch. */}
+          <Image src={clip.poster} alt={clip.alt} fill loading="eager" sizes={POSTER_SIZES} quality={85} className="object-cover" />
           <video
             ref={videoRef}
             loop
