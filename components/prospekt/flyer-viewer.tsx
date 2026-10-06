@@ -48,7 +48,7 @@ export function FlyerViewer({ weeks, defaultTab, shareUrl }: { weeks: ViewerWeek
   const pager = useRef<PagerHandle>(null);
 
   const open = useCallback(
-    async ({ flyer, kw }: ViewerWeek, index: number) => {
+    async ({ flyer, kw }: ViewerWeek, index: number, from: "pager" | "grid" = "pager") => {
       const { default: PhotoSwipeLightbox } = await import("photoswipe/lightbox");
       let current = index;
       const lightbox = new PhotoSwipeLightbox({
@@ -76,7 +76,9 @@ export function FlyerViewer({ weeks, defaultTab, shareUrl }: { weeks: ViewerWeek
       lightbox.on("destroy", () => {
         setPageParam(kw, null);
         pager.current?.show(current + 1);
-        pager.current?.focus(current + 1);
+        // Fokus dorthin zurück, wo geöffnet wurde: in der Übersicht „Alle Seiten“ oder in der Blätter-Leiste
+        if (from === "grid") document.querySelector<HTMLElement>(`[data-flyer-grid-page="${current + 1}"]`)?.focus();
+        else pager.current?.focus(current + 1);
       });
       lightbox.init();
       lightbox.loadAndOpen(index);
@@ -131,8 +133,8 @@ export function FlyerViewer({ weeks, defaultTab, shareUrl }: { weeks: ViewerWeek
             <li key={`${flyer.id}-${i}`}>
               <button
                 type="button"
-                data-flyer-grid-page
-                onClick={() => void open(week, i)}
+                data-flyer-grid-page={i + 1}
+                onClick={() => void open(week, i, "grid")}
                 className="block w-full overflow-hidden rounded-xl bg-white ring-1 ring-line transition-transform duration-150 active:scale-[0.98]"
                 aria-label={`Prospektseite ${i + 1} von ${flyer.page_count} vergrößern`}
               >

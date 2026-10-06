@@ -22,3 +22,6 @@ export function pagerTarget(page: number, total: number, spreads: boolean): numb
   const p = Math.min(Math.max(1, Math.round(page)), Math.max(1, total));
   return spreads && p > 1 && p % 2 === 1 ? p - 1 : p;
 }
+
+/** Doppelseiten (ab 1024 px) nur bei Hochformat – Querformat-Seiten stehen schon allein breit genug */
+export const usesSpreads = (pageWidth: number, pageHeight: number) => pageHeight >= pageWidth;

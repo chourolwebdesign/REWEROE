@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { nearPages, pageLabel, pagerTarget } from "./pager";
+import { nearPages, pageLabel, pagerTarget, usesSpreads } from "./pager";
 
 describe("pageLabel", () => {
   it("eine Seite, Doppelseite, unsortiert, leer", () => {
@@ -33,5 +33,13 @@ describe("pagerTarget", () => {
     expect(pagerTarget(34, 34, true)).toBe(34);
     expect(pagerTarget(3, 3, true)).toBe(2);
     expect(pagerTarget(1, 1, true)).toBe(1);
+  });
+});
+
+describe("usesSpreads", () => {
+  it("Doppelseiten nur bei Hochformat (und quadratisch); Querformat blättert einzeln", () => {
+    expect(usesSpreads(1800, 3182)).toBe(true);
+    expect(usesSpreads(1800, 1800)).toBe(true);
+    expect(usesSpreads(1800, 1018)).toBe(false);
   });
 });

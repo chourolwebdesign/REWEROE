@@ -37,7 +37,7 @@ Stand: 04.10.2026. Alles hier fehlt auf der Website oder ist als Lücke markiert
 - [ ] **Resilienzwoche 2026**: Auf Gruppen- und Rundgangsfotos sind Minister, Gäste und Feuerwehrleute zu sehen. Personenfotos stehen nur im Beitrag unter Aktuelles. Freigabe/Bildnachweis bestätigen (Gruppenfoto laut Pressemitteilung: © Jörg Halisch).
 - [ ] **REWE-Bilder** (REWE Regional, REWE Bio, „Aus deiner Region“, Landwirt-/Lieferfotos): Nutzung über das REWE-Partnerportal bestätigen bzw. offizielle Dateien von dort verwenden.
 - [ ] **Offizielles REWE-Logo** als Datei (aktuell als SVG nachgebaut).
-- [ ] **Originaldateien**: Video und Fotos in Originalqualität – direkt vom Handy oder der Kamera, nicht aus Instagram (z. B. per AirDrop, USB-Stick oder Cloud-Link). Instagram liefert höchstens 720 × 1280; mit dem Original wird der Rundgang in 1080p kodiert.
+- [ ] **Originaldateien**: Video und Fotos in Originalqualität – direkt vom Handy oder der Kamera, nicht aus Instagram (z. B. per AirDrop, USB-Stick oder Cloud-Link). Unser Instagram-Download des Rundgangs hat nur 720 × 1280; mit dem Original wird er in 1080p kodiert.
 
 ## Inhalte, die die Website besser machen
 
