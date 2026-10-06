@@ -43,6 +43,8 @@ export interface Markt {
     instagram: string;
     /** Google-Bewertung (Feedback-Dank); bis zum g.page/r/…/review-Link das Profil */
     googleReview: string;
+    /** Kundenumfrage der REWE Group (Qualtrics) – Feedback-Dank bei 4–5 Sternen */
+    reweSurvey: string;
     jobs: string;
     ausbildung: string;
     googleMaps: string;
