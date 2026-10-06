@@ -180,3 +180,49 @@ Befunde:
 
 Vercel hat den Merge-Commit von #10 (Feedback-Umfrage) nicht gebaut. Mit dem Merge dieser Stufe nach `main` geht #10 automatisch
 mit live.
+
+## Ergebnis (gemessen 2026-10-06, gleiche Messung wie oben)
+
+| Ziel | Ergebnis |
+|---|---|
+| Startseite höchstens 10 Bildschirme | 9,9 (vorher 14,4) |
+| Footer höchstens 1,2 Bildschirme | 1,17 (vorher 1,88) |
+| Roter Kopf höchstens die Hälfte | `/angebote` 0,45 · `/kontakt` 0,37 · `/aktuelles` 0,42 erreicht; `/markt` 0,59 · `/karriere` 0,67 · Beitrag 0,62 nicht (vorher 0,69 / 0,77 / 0,76) |
+| `/angebote`: zwei Drittel der ersten Prospektseite im ersten Bildschirm | 69 % (vorher 39 %) |
+| Formularfelder ≥ 16 px, Brotkrumen ≥ 24 px, Eyebrows ≥ 14 px | erreicht |
+| Galerie-Kacheln scharf auf 3×-Displays | erreicht; Gruppenfoto unbeschnitten (die Quelle bleibt 709 px) |
+| Video 1080 × 1920, SSIM ≥ 0,97 | AV1 3,9 MB (0,978) · HEVC 5,7 MB (0,977) · H.264 7,1 MB (0,977) |
+| Handy-Hero: Video randlos, Text und Knöpfe im ersten Bildschirm | erreicht (`e2e/hero.mjs`) |
+| Lighthouse lokal auf `/` ≥ 91 | 93, LCP 3,2 s |
+
+Lighthouse 13.5 mobil, Median aus 3 Läufen, lokaler Produktions-Build (vorher = Ergebnis Stufe 5):
+
+| Seite | Leistung | LCP | Übertragung |
+|---|---|---|---|
+| `/` | 91 → 93 | 3,4 → 3,2 s | 2 425 → 4 373 KB (ohne Video 530 → 849 KB) |
+| `/angebote` | 91 → 91 | 3,5 → 3,5 s | 440 → 798 KB |
+| `/markt` | 92 → 91 | 3,4 → 3,4 s | 661 → 778 KB |
+| `/kontakt` | 96 → 96 | 2,8 → 2,8 s | 352 → 351 KB |
+| `/karriere` | 96 → 96 | 2,8 → 2,8 s | 369 → 368 KB |
+| `/aktuelles` | 97 → 96 | 2,7 → 2,7 s | 383 → 384 KB |
+| Beitrag | 94 → 92 | 3,1 → 3,3 s | 406 → 492 KB |
+
+Mehr Übertragung, weil:
+- das Video in 1080p größer ist (AV1 3,6 MB übertragen);
+- die schärferen Galeriebilder größere Fassungen laden;
+- auf der kürzeren Startseite Galerie- und Markenbilder schon in den Vorladebereich des Browsers fallen;
+- auf `/angebote` die 34 Vorschaubilder (189 KB) und die Seiten 2–3 nach `load` mitladen, ohne Einfluss auf den LCP.
+
+Ziel auf Vercel (≥ 95): nach dem Merge messen.
+
+Entscheidungen bei der Umsetzung:
+- **Desktop-Rahmen:** `min(100svh − 7rem, 52rem)` statt `min(88svh, 52rem)`, weil der Rahmen sonst bei 900 px über den ersten Bildschirm hinausragte. Jetzt sind es 87,6 % der Höhe, der Rahmen liegt ganz im Bild.
+- **Startseite ≤ 10 Bildschirme:** Die Maßnahmen aus Abschnitt 3 ergaben 11,8. Zusätzlich:
+  - Abschnittsabstände auf dem Handy 64 statt 96 px;
+  - „Regional, Bio und frisch gebacken“ ebenfalls als Wisch-Reihe, als benannter, fokussierbarer Bereich, damit er per Tastatur scrollbar ist (axe).
+- **Roter Kopf:** `/markt`, `/karriere` und Beiträge bleiben über der Hälfte. Ihre Knopfzeile bzw. langer Titel mit Einleitung sind Inhalt, die Einleitung bleibt laut Spec. Testgrenze dort 0,7.
+- **`/angebote`:** Die erste Prospektseite ist 617 px hoch. Zwei Drittel waren nur ohne Einleitung erreichbar (sonst etwa 58 %). Die Einleitung fehlt deshalb nur dort unter 768 px. Der Abstand unter allen roten Köpfen beträgt auf dem Handy 24 statt 48 px.
+- **Hero-Poster ohne `fetchPriority="high"`:** Auf dem Handy gilt das randlose Poster für Chrome als Hintergrund. LCP ist die Überschrift, die auf die Titelschrift wartet; das vorgezogene Poster nahm ihr die Leitung (`/` 90 → 93). Galerie-Bilder laden mit niedriger Priorität.
+- **Kontrast:** rechnerisch gegen reines Weiß statt am Screenshot geprüft. An der Eyebrow liegen etwa 62 % Schwarz, das ergibt rund 6,2:1; an der Kopfleiste 55 %, rund 4,8:1.
+- **SSIM:** Bilder über ihre Nummer gepaart. Mit Zeitstempeln (MKV, auf Millisekunden gerundet) verschoben sich die Paare um ein Bild, und alle Werte lagen fälschlich bei 0,89.
+
