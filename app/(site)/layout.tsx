@@ -2,6 +2,7 @@ import { MobileBar } from "@/components/layout/mobile-bar";
 import { HoursProvider } from "@/components/live/hours-provider";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { SnapRows } from "@/components/layout/snap-rows";
 import { RevealObserver } from "@/components/motion/reveal-observer";
 import { ServiceWorker } from "@/components/pwa/service-worker";
 import { currentFlyerLink } from "@/lib/data/flyers";
@@ -25,6 +26,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       <SiteFooter />
       <MobileBar flyer={flyer} />
       <RevealObserver />
+      <SnapRows />
       <ServiceWorker />
       <script type="application/ld+json" dangerouslySetInnerHTML={ldScript(storeJsonLd(new Date(), hours))} />
     </HoursProvider>

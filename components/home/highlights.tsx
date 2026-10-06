@@ -18,11 +18,12 @@ export function Highlights({ row = false, className }: { row?: boolean; classNam
   const body = "flex flex-1 flex-col p-6 md:p-7";
 
   return (
-    // Als Reihe scrollt der Bereich waagerecht, enthält aber keine Links – daher selbst fokussierbar (Pfeiltasten scrollen, axe
-    // „scrollable-region-focusable“) und benannt.
+    // Als Reihe scrollt der Bereich waagerecht, enthält aber keine Links: SnapRows macht ihn dann zum fokussierbaren, benannten
+    // Bereich (nur solange er scrollt). Karten nicht auf die höchste strecken – sonst bleibt unter Regional und Bio Leerraum.
     <div
-      {...(row && { tabIndex: 0, role: "region", "aria-label": "Regional, Bio und frisch gebacken" })}
-      className={cn(row ? "max-md:snap-row md:grid md:grid-cols-2 md:gap-4 xl:grid-cols-4" : "grid gap-3 sm:grid-cols-2 md:gap-4 xl:grid-cols-4", className)}
+      data-snap-row={row || undefined}
+      data-snap-region={row ? "Regional, Bio und frisch gebacken" : undefined}
+      className={cn(row ? "max-md:snap-row max-md:items-start md:grid md:grid-cols-2 md:gap-4 xl:grid-cols-4" : "grid gap-3 sm:grid-cols-2 md:gap-4 xl:grid-cols-4", className)}
     >
       {/* REWE Regional */}
       <article className={card}>

@@ -6,9 +6,9 @@
 import { BASE, browser, check } from "./lib.mjs";
 
 const PAGES = ["/", "/angebote", "/markt", "/kontakt", "/karriere", "/karriere/bewerben", "/aktuelles", "/aktuelles/resilienzwoche-2026", "/feedback", "/impressum", "/datenschutz"];
-// Rote Köpfe: höchstens halber Bildschirm; mit Knopfzeile (Markt, Karriere) oder langem Titel und Einleitung (Beitrag) höchstens
-// 0,7 – dort gehören sie zum Inhalt (vorher 0,69–0,77).
-const RED = [["/angebote", 0.5], ["/kontakt", 0.5], ["/aktuelles", 0.5], ["/markt", 0.7], ["/karriere", 0.7], ["/aktuelles/resilienzwoche-2026", 0.7]];
+// Rote Köpfe: höchstens halber Bildschirm; mit Knopfzeile (Markt, Karriere) oder langem Titel und Einleitung (Beitrag) knapp über
+// dem gemessenen Wert (0,59 / 0,67 / 0,62; vorher 0,69 / 0,77 / 0,76) – dort gehören sie zum Inhalt, die Grenzen fangen Rückschritte.
+const RED = [["/angebote", 0.5], ["/kontakt", 0.5], ["/aktuelles", 0.5], ["/markt", 0.62], ["/karriere", 0.7], ["/aktuelles/resilienzwoche-2026", 0.65]];
 const phone = (width) => ({ width, height: Math.round(width * 2.164), isMobile: true, hasTouch: true, deviceScaleFactor: 3 });
 const b = await browser();
 const p = await b.newPage();
@@ -28,8 +28,9 @@ const row = (list) =>
 
 // Startseite
 await open("/");
-const home = await p.evaluate(() => document.documentElement.scrollHeight / innerHeight);
-check(home <= 10, `Startseite höchstens 10 Bildschirme (${home.toFixed(1)})`);
+// ohne den Abschnitt „Termine“, den es nur gibt, wenn der Markt Termine einträgt
+const home = await p.evaluate(() => (document.documentElement.scrollHeight - (document.querySelector('section[aria-labelledby="termine-titel"]')?.getBoundingClientRect().height ?? 0)) / innerHeight);
+check(home <= 10, `Startseite höchstens 10 Bildschirme, ohne Termine (${home.toFixed(1)})`);
 check((await shown(".marquee-viewport")) === 0 && (await shown('section[aria-labelledby="zahlen-titel"]')) === 0, "Startseite: kein Laufband, kein Zahlenband");
 check((await shown('section[aria-labelledby="markt-titel"] button[aria-label^="Clip abspielen"]')) === 0, "Startseite: Galerie ohne Rundgang-Clip (der ist der Hero)");
 const gallery = await row('section[aria-labelledby="markt-titel"] ul');
@@ -39,6 +40,40 @@ check(highlights.oneRow && highlights.scrolls, `Startseite: „Regional, Bio und
 const services = await row('section[aria-labelledby="praktisch-titel"] ul');
 check(services.oneRow && services.scrolls, `Startseite: Service-Karten als waagerechte Reihe (${services.items})`);
 check((await p.$$eval('section[aria-labelledby="praktisch-titel"] h3', (hs) => hs.filter((h) => h.getClientRects().length && /Bewerben/.test(h.textContent)).length)) === 0, "Startseite: keine Karte „Bewerben in 60 Sekunden“ (die Karriere-Band bleibt)");
+const stretched = await p.$$eval('section[aria-labelledby="sortiment-titel"] article', (cards) =>
+  cards
+    .filter((c) => c.getClientRects().length)
+    .map((c) => Math.round(c.getBoundingClientRect().bottom - Math.max(...[...c.querySelectorAll("h3, p, li")].filter((e) => e.getClientRects().length).map((e) => e.getBoundingClientRect().bottom))))
+    .filter((gap) => gap > 40),
+);
+check(stretched.length === 0, `Startseite: Marken-Karten nicht auf die höchste gestreckt${stretched.length ? ` (Leerraum ${stretched.join(", ")} px)` : ""}`);
+
+// Tastatur in den Wisch-Reihen: das fokussierte Element ist ganz zu sehen, sein Fokusrahmen (Abstand 3 + Breite 2 px) nicht abgeschnitten
+const focusIssues = [];
+for (const sel of ['section[aria-labelledby="markt-titel"] ul', 'section[aria-labelledby="sortiment-titel"] [class*="snap-row"]', 'section[aria-labelledby="praktisch-titel"] ul']) {
+  const count = await p.$eval(sel, (row) => {
+    const all = [...document.querySelectorAll("a[href], button, [tabindex='0'], input, select, textarea")].filter((e) => e.getClientRects().length && !e.closest("[inert]"));
+    const inside = all.filter((e) => row.contains(e) || e === row);
+    all[all.indexOf(inside[0]) - 1].focus();
+    return inside.length;
+  });
+  for (let i = 0; i < count; i++) {
+    await p.keyboard.press("Tab");
+    await new Promise((r) => setTimeout(r, 450));
+    const issue = await p.$eval(sel, (row) => {
+      const el = document.activeElement;
+      if (el === row || !row.contains(el)) return "";
+      const box = (el.closest("li, article") ?? el).getBoundingClientRect();
+      const own = el.getBoundingClientRect();
+      const clip = row.getBoundingClientRect();
+      const visible = box.left >= -1 && box.right <= innerWidth + 1;
+      const ring = own.top - 5 >= clip.top - 0.5 && own.bottom + 5 <= clip.bottom + 0.5;
+      return visible && ring ? "" : `${(el.getAttribute("aria-label") || el.textContent).trim().slice(0, 28)}${visible ? "" : " (nicht ganz sichtbar)"}${ring ? "" : " (Rahmen abgeschnitten)"}`;
+    });
+    if (issue) focusIssues.push(issue);
+  }
+}
+check(focusIssues.length === 0, `Tastatur in den Wisch-Reihen: Fokus ganz sichtbar, Rahmen frei${focusIssues.length ? ` (${focusIssues.slice(0, 3).join("; ")})` : ""}`);
 
 // Footer
 const footer = await p.evaluate(() => [...document.querySelectorAll("footer")].pop().getBoundingClientRect().height / innerHeight);
@@ -137,8 +172,16 @@ for (const width of [360, 430]) {
   check(wide.length === 0, `${width} px: kein seitliches Scrollen${wide.length ? ` (${wide.join(", ")})` : ""}`);
 }
 
-// Desktop behält die Bewerben-Karte
+// Desktop behält die Bewerben-Karte; Galerie zeigt auf Desktop und Tablet alle Fotos; das Marken-Raster ist dort kein Tab-Stopp
+const tiles = () => p.$$eval('section[aria-labelledby="markt-titel"] li', (lis) => ({ all: lis.length, shown: lis.filter((l) => l.getClientRects().length).length }));
 await p.setViewport({ width: 1280, height: 900 });
 await open("/");
 check((await p.$$eval('section[aria-labelledby="praktisch-titel"] h3', (hs) => hs.filter((h) => h.getClientRects().length && /Bewerben/.test(h.textContent)).length)) === 1, "Desktop: Karte „Bewerben in 60 Sekunden“ bleibt");
+let t = await tiles();
+check(t.shown === t.all, `Desktop 1280 px: Galerie zeigt alle ${t.all} Fotos (${t.shown})`);
+check(await p.$eval('section[aria-labelledby="sortiment-titel"] [class*="snap-row"]', (el) => el.tabIndex < 0 && !el.hasAttribute("role")), "Desktop: Marken-Raster ist kein Tab-Stopp und keine zweite Region");
+await p.setViewport({ width: 900, height: 1200, isMobile: true, hasTouch: true });
+await open("/");
+t = await tiles();
+check(t.shown === t.all, `Tablet 900 px: Galerie zeigt alle ${t.all} Fotos (${t.shown})`);
 await b.close();

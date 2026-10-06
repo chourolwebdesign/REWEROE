@@ -12,7 +12,7 @@ export function Services({ calendarUrl, className }: { calendarUrl: string; clas
   return (
     // Handy: Reihe zum Wischen ohne die Bewerben-Karte (die Karriere-Band folgt weiter unten); Tablet: zwei Karten nebeneinander,
     // die dritte darunter in voller Breite; ab 1024 px drei Spalten
-    <ul className={cn("max-md:snap-row md:grid md:grid-cols-2 md:gap-4 lg:grid-cols-3", className)}>
+    <ul data-snap-row className={cn("max-md:snap-row md:grid md:grid-cols-2 md:gap-4 lg:grid-cols-3", className)}>
       <li className={cn(card, "on-dark relative z-10 bg-red text-white")}>
         <span className={cn(icon, "bg-white/15")}>
           <CalendarHeart className="size-6" aria-hidden />

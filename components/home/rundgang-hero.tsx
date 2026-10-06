@@ -36,18 +36,25 @@ export function RundgangHero({ clip, intro, side }: { clip: HeroClip; intro: Rea
         </p>
       </div>
 
-      {/* Unter 1024 px ist der Abschnitt der Bezugsrahmen des Videos (randlos, z-0 – mit negativem z-index läge der Grid-Container
-          darüber und finge die Klicks auf den Pause-Knopf ab), darüber die rechte Spalte. */}
+      {/* Unter 1024 px ist der Abschnitt der Bezugsrahmen des Videos (randlos), darüber die rechte Spalte. Die Video-Ebene hat dort
+          keinen z-index: mit negativem läge der Grid-Container darüber, mit 0 würde sie ein eigener Stapelkontext und der Textblock
+          (z-10) läge über dem Pause-Knopf – so stehen Knopf (z-10, später im DOM) und Textblock auf einer Ebene. */}
       <div className="wrap grid min-h-[100svh] lg:relative lg:grid-cols-[minmax(0,1.1fr)_auto] lg:items-center lg:gap-20 lg:pt-[5.5rem] lg:pb-6">
         {/* unten ausgerichtet statt gestreckt – sonst läge der Textblock über dem Pause-Knopf oben im Video */}
         <div className="relative z-10 grid gap-6 self-end pt-28 pb-8 sm:pb-12 lg:gap-12 lg:self-center lg:p-0">
+          {/* Handy: dunkler Grund am Text verankert, nicht an der Höhe des Heros – an der Oberkante des Textes (Eyebrow) 72 % Schwarz,
+              auf jedem Bildschirm und auch quer. Gegen reines Weiß ergibt das rund 9:1. */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-[calc(50%-50vw)] top-4 bottom-0 -z-10 bg-[linear-gradient(to_bottom,transparent,rgb(0_0_0/0.72)_6rem,rgb(0_0_0/0.85))] lg:hidden"
+          />
           <div>{intro}</div>
           <div>{side}</div>
         </div>
 
         <div
           data-hero-video
-          className="absolute inset-0 z-0 bg-night lg:relative lg:inset-auto lg:z-10 lg:aspect-[9/16] lg:h-[min(calc(100svh-7rem),52rem)] lg:overflow-hidden lg:rounded-[1.75rem] lg:shadow-[0_40px_100px_rgb(60_0_8/0.55)] lg:ring-1 lg:ring-white/25 lg:rotate-[1.5deg]"
+          className="absolute inset-0 bg-night lg:relative lg:inset-auto lg:z-10 lg:aspect-[9/16] lg:h-[min(calc(100svh-7rem),52rem)] lg:overflow-hidden lg:rounded-[1.75rem] lg:shadow-[0_40px_100px_rgb(60_0_8/0.55)] lg:ring-1 lg:ring-white/25 lg:rotate-[1.5deg]"
         >
           {/* sofort laden, aber ohne fetchPriority="high": auf dem Handy füllt das Poster den Bildschirm und zählt für den LCP als
               Hintergrund – LCP ist die Überschrift, die auf die Titelschrift wartet; ein vorgezogenes Poster nahm ihr die Leitung
@@ -63,9 +70,10 @@ export function RundgangHero({ clip, intro, side }: { clip: HeroClip; intro: Rea
             aria-hidden
             className={cn("absolute inset-0 h-full w-full object-cover transition-opacity duration-500", shown ? "opacity-100" : "opacity-0")}
           />
-          {/* Handy: oben für die Kopfleiste, unten für Text und Knöpfe; Desktop: dezent für die Instagram-Zeile */}
-          <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/55 to-transparent lg:h-36 lg:from-black/60" />
-          <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[72%] bg-gradient-to-t from-black/90 via-black/55 to-transparent lg:h-28 lg:from-black/50 lg:via-transparent" />
+          {/* Handy: Verlauf für die Kopfleiste (an Logo und Menü mindestens 62 % Schwarz); Desktop: dezent für die Instagram-Zeile */}
+          <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-44 bg-[linear-gradient(to_bottom,rgb(0_0_0/0.72),rgb(0_0_0/0.62)_4.5rem,transparent)] lg:hidden" />
+          <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 hidden h-36 bg-gradient-to-b from-black/60 to-transparent lg:block" />
+          <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-28 bg-gradient-to-t from-black/50 to-transparent lg:block" />
 
           <div className="absolute top-[5.25rem] right-4 flex items-center gap-2.5 text-[0.875rem] sm:right-6 lg:inset-x-3 lg:top-3">
             <span className="hidden size-8 shrink-0 place-items-center overflow-hidden rounded-full bg-red ring-2 ring-white lg:grid">
@@ -79,7 +87,8 @@ export function RundgangHero({ clip, intro, side }: { clip: HeroClip; intro: Rea
               type="button"
               onClick={toggle}
               className="relative z-10 grid size-11 shrink-0 place-items-center rounded-full bg-black/35 text-white ring-1 ring-white/25 backdrop-blur-sm transition-[background-color,transform] duration-150 hover:bg-white/15 active:scale-95 lg:ml-auto lg:bg-transparent lg:ring-0 lg:backdrop-blur-none"
-              aria-label={paused ? "Rundgang abspielen" : "Rundgang anhalten"}
+              // fester Name, Zustand über aria-pressed: „Rundgang anhalten, gedrückt“ = angehalten
+              aria-label="Rundgang anhalten"
               aria-pressed={paused}
             >
               {paused ? <Play className="size-5 fill-current" aria-hidden /> : <Pause className="size-5 fill-current" aria-hidden />}

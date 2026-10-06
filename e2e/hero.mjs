@@ -1,7 +1,7 @@
 // node e2e/hero.mjs – Startseite, Rundgang-Hero (nur lesend). Handy (390 × 844): das Video füllt den ersten Bildschirm randlos,
 // Überschrift und beide Knöpfe liegen darin, die Kopfleiste ist transparent, der Rundgang läuft in Schleife und lässt sich anhalten;
 // bei reduzierter Bewegung und im Datensparmodus startet er nicht von selbst, der Knopf startet ihn. Desktop (1440 × 900): Text links,
-// großer Rahmen rechts (≥ 85 % der Höhe). Keine Story-Navigation mehr.
+// großer Rahmen rechts (≥ 85 % der Höhe). Keine Story-Navigation mehr. Der Pause-Knopf ist auch bei 320 × 568 und quer antippbar.
 import { BASE, browser, check } from "./lib.mjs";
 
 const HERO = "section[data-hero]";
@@ -50,10 +50,27 @@ check(await m.$eval(VIDEO, (v) => v.loop), "… in Schleife");
 check((await m.$$(`${HERO} video`)).length === 1 && (await storyNav(m)).length === 0, "nur der Rundgang, keine Story-Navigation");
 await m.click(TOGGLE);
 check(await m.$eval(VIDEO, (v) => v.paused), "Pause-Knopf hält den Rundgang an");
-check(await m.$eval(TOGGLE, (t) => t.getAttribute("aria-pressed") === "true" && /abspielen/.test(t.getAttribute("aria-label"))), "… und heißt dann „Rundgang abspielen“");
+check(await m.$eval(TOGGLE, (t) => t.getAttribute("aria-pressed") === "true" && t.getAttribute("aria-label") === "Rundgang anhalten"), "… fester Name „Rundgang anhalten“, angehalten = gedrückt (Screenreader: kein widersprüchlicher Zustand)");
 await m.click(TOGGLE);
 check(await running(m), "… und startet ihn wieder");
 await m.close();
+
+// Kleine und quer gehaltene Handys: der Pause-Knopf liegt oben und ist antippbar (nicht unter dem Textblock)
+for (const [width, height] of [[320, 568], [844, 390]]) {
+  const p = await b.newPage();
+  await p.setViewport({ width, height, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
+  await p.goto(`${BASE}/`, { waitUntil: "load" });
+  await running(p);
+  const onTop = await p.$eval(TOGGLE, (btn) => {
+    const r = btn.getBoundingClientRect();
+    const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+    return hit === btn || btn.contains(hit);
+  });
+  await p.tap(TOGGLE);
+  const pausedAfterTap = await p.$eval(VIDEO, (v) => v.paused);
+  check(onTop && pausedAfterTap, `${width} × ${height}: Pause-Knopf liegt obenauf und hält den Rundgang an`);
+  await p.close();
+}
 
 // Reduzierte Bewegung und Datensparmodus: kein Autoplay, der Knopf startet
 for (const [name, prep] of [

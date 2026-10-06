@@ -90,6 +90,9 @@
   margin-inline: calc(-1 * clamp(1rem, 0.6rem + 1.8vw, 1.75rem));
   padding-inline: clamp(1rem, 0.6rem + 1.8vw, 1.75rem);
   scroll-padding-inline: clamp(1rem, 0.6rem + 1.8vw, 1.75rem);
+  /* Platz für den Fokusrahmen (3 px Abstand + 2 px): ein Scroller schneidet auch senkrecht ab */
+  padding-block: 6px;
+  margin-block: -6px;
 }
 
 /* Karte mit sanftem Anheben beim Zeigen. */
