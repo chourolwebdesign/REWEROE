@@ -135,14 +135,17 @@ export const media = {
 export type MediaKey = keyof typeof media;
 
 /**
- * Video-Dateien liegen in public/media (ohne Ton, H.264 High@4.0, „faststart“). `src` hat 720 × 1280 für Tablet und
- * Desktop, `srcSmall` 540 × 960 für Handys (ein Drittel weniger Daten). /media wird ein Jahr lang gecacht –
- * geänderte Videos deshalb immer unter neuem Dateinamen ablegen.
+ * Video-Dateien liegen in public/media: ohne Ton, 720 × 1280 wie die Quelle, „faststart“ – AV1 (Chrome, Firefox, neue iPhones),
+ * HEVC (Safari), H.264 als Rückfall. Der Browser nimmt die erste Fassung, die er abspielen kann (lib/video.ts). Kodieren: README
+ * „Neue Clips“. /media wird ein Jahr lang gecacht – geänderte Videos immer unter neuem Dateinamen ablegen.
  */
 export const clips = {
   "markt-rundgang": {
-    src: "/media/markt-rundgang-720.mp4",
-    srcSmall: "/media/markt-rundgang-540.mp4",
+    sources: [
+      { src: "/media/markt-rundgang-av1.mp4", type: 'video/mp4; codecs="av01.0.05M.08"' },
+      { src: "/media/markt-rundgang-hevc.mp4", type: 'video/mp4; codecs="hvc1.1.6.L93.B0"' },
+      { src: "/media/markt-rundgang-h264.mp4", type: 'video/mp4; codecs="avc1.640028"' },
+    ],
     poster: "markt-rundgang-poster" as MediaKey,
     label: "Rundgang durch den Markt",
     credit: instagram,

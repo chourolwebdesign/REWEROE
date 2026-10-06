@@ -46,7 +46,7 @@ Ohne Mail-Konfiguration zeigt das Formular einen Hinweis und die Telefonnummer u
 | Termine im Markt (Startseite + Markt-Kalender) | Markt-Cockpit → Inhalte → Termine |
 | Auswahl im Bewerbungsformular | `content/bewerbung.ts` |
 | Neue Fotos | Datei nach `assets/media/`, in `lib/media.ts` mit Alt-Text, Kurztitel und Bildnachweis eintragen |
-| Neue Clips | zwei MP4 (H.264, stumm, `faststart`: 720 px und 540 px breit) nach `public/media/`, Posterbild nach `assets/media/`, Eintrag in `lib/media.ts → clips`. Geänderte Videos immer unter neuem Namen (`/media` wird ein Jahr gecacht) |
+| Neue Clips | Quelle (am besten das Original vom Handy, nicht aus Instagram) dreimal kodieren, ohne Ton, `faststart`: AV1 `-c:v libsvtav1 -preset 4 -crf 46 -g 150`, HEVC `-c:v libx265 -preset slow -crf 31 -tag:v hvc1`, H.264 `-c:v libx264 -preset slow -crf 28 -profile:v high -level 4.0`, jeweils `-pix_fmt yuv420p -an -movflags +faststart`; Ziel SSIM ≥ 0,97 gegen die Quelle. Dateien nach `public/media/` unter neuem Namen, Posterbild nach `assets/media/`, Eintrag in `lib/media.ts → clips` (`sources` in dieser Reihenfolge) |
 
 Clips komprimieren (so wurde der Rundgang erstellt – Handys bekommen automatisch die 540er-Datei, im Datensparmodus läuft gar kein Video):
 

@@ -2,10 +2,10 @@
 
 import type { StaticImageData } from "next/image";
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
-import { autoplaySource } from "@/lib/video";
+import { autoplaySource, type VideoSource } from "@/lib/video";
 
 export type StoryMedia =
-  | { type: "clip"; src: string; srcSmall: string; poster: StaticImageData; alt: string; caption: string }
+  | { type: "clip"; sources: readonly VideoSource[]; poster: StaticImageData; alt: string; caption: string }
   | { type: "image"; image: StaticImageData; alt: string; caption: string; seconds: number; position?: string };
 
 /** Standzeit eines Clips, wenn er nicht laufen darf (Datensparmodus): dann zeigt die Story sein Standbild. */
@@ -13,7 +13,7 @@ const STILL_SECONDS = 6;
 
 /**
  * Ablauf der Story: Start nach dem Laden, Pause außer Sicht, Fortschrittsbalken, Blättern. Kein Autoplay bei
- * reduzierter Bewegung. Clips laden erst beim Abspielen – auf Handys in kleiner Auflösung, im Datensparmodus gar nicht.
+ * reduzierter Bewegung. Clips laden erst beim Abspielen – in der besten Fassung, die der Browser abspielen kann, im Datensparmodus gar nicht.
  */
 export function useStory(items: StoryMedia[]) {
   const [index, setIndex] = useState(0);
@@ -31,7 +31,7 @@ export function useStory(items: StoryMedia[]) {
     (i: number) => {
       const it = items[i];
       if (it.type !== "clip") return null;
-      if (!(i in sources.current)) sources.current[i] = autoplaySource(it);
+      if (!(i in sources.current)) sources.current[i] = autoplaySource(it.sources);
       return sources.current[i];
     },
     [items],

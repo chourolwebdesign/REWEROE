@@ -4,19 +4,19 @@ import Image, { type StaticImageData } from "next/image";
 import { ChevronLeft, ChevronRight, Play, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { autoplaySource } from "@/lib/video";
+import { autoplaySource, type VideoSource } from "@/lib/video";
 
 export type GalleryMedia =
   | { type: "image"; image: StaticImageData; alt: string; caption: string; credit: string }
-  | { type: "clip"; src: string; srcSmall: string; poster: StaticImageData; alt: string; caption: string; credit: string };
+  | { type: "clip"; sources: readonly VideoSource[]; poster: StaticImageData; alt: string; caption: string; credit: string };
 
 /** Clip in der Kachel: läuft stumm, solange er sichtbar ist – nicht bei reduzierter Bewegung oder im Datensparmodus. */
-function TileClip({ src, srcSmall }: { src: string; srcSmall: string }) {
+function TileClip({ sources }: { sources: readonly VideoSource[] }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [shown, setShown] = useState(false);
   useEffect(() => {
     const v = ref.current;
-    const source = autoplaySource({ src, srcSmall });
+    const source = autoplaySource(sources);
     if (!v || !source || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const io = new IntersectionObserver(
       ([e]) => {
@@ -29,7 +29,7 @@ function TileClip({ src, srcSmall }: { src: string; srcSmall: string }) {
     );
     io.observe(v);
     return () => io.disconnect();
-  }, [src, srcSmall]);
+  }, [sources]);
   return (
     <video
       ref={ref}
@@ -103,7 +103,7 @@ export function Gallery({ items, className }: { items: GalleryMedia[]; className
                   quality={70}
                   className="object-cover transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.04]"
                 />
-                {it.type === "clip" && <TileClip src={it.src} srcSmall={it.srcSmall} />}
+                {it.type === "clip" && <TileClip sources={it.sources} />}
                 <span className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end gap-2 bg-gradient-to-t from-black/70 via-black/25 to-transparent px-3 pt-12 pb-3 text-[0.875rem] font-semibold text-white md:px-4 md:pb-4 md:text-[0.9375rem]">
                   {it.type === "clip" && <Play className="mb-0.5 size-4 shrink-0 fill-current" aria-hidden />}
                   {it.caption}
@@ -153,7 +153,11 @@ export function Gallery({ items, className }: { items: GalleryMedia[]; className
                   className="mx-auto h-full w-auto max-w-full rounded-xl object-contain"
                 />
               ) : (
-                <video key={open} src={current.src} controls autoPlay muted playsInline loop className="mx-auto h-full max-w-full rounded-xl" aria-label={current.alt} />
+                <video key={open} controls autoPlay muted playsInline loop className="mx-auto h-full max-w-full rounded-xl" aria-label={current.alt}>
+                  {current.sources.map((s) => (
+                    <source key={s.src} src={s.src} type={s.type} />
+                  ))}
+                </video>
               )}
               <button
                 type="button"
