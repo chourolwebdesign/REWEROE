@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { FlyerWeekText } from "@/components/live/flyer-week";
 import { ButtonLink } from "@/components/ui/button";
 import { ShareButton } from "@/components/ui/share-button";
@@ -78,8 +79,15 @@ export function FlyerTicket({
             href="/angebote#prospekt"
             className="mx-auto mt-8 block w-40 rotate-[2deg] overflow-hidden rounded-xl shadow-[0_20px_50px_rgb(18_18_18/0.25)] ring-1 ring-line transition-transform duration-150 active:scale-[0.97] md:mt-0 md:w-36 xl:w-48"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element -- fertig skaliertes Vorschaubild */}
-            <img src={cover.src} width={cover.width} height={cover.height} alt="Titelseite des aktuellen Prospekts" className="h-auto w-full" />
+            <Image
+              src={cover.src}
+              width={cover.width}
+              height={cover.height}
+              sizes="(min-width: 80rem) 12rem, (min-width: 48rem) 9rem, 10rem"
+              quality={75}
+              alt="Titelseite des aktuellen Prospekts"
+              className="h-auto w-full"
+            />
           </a>
         )}
       </div>

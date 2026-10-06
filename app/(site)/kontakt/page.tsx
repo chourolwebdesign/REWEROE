@@ -5,6 +5,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { InstagramIcon } from "@/components/ui/icons";
 import { VisitSection } from "@/components/visit/visit-section";
 import { markt } from "@/content/markt";
+import { currentFlyerLink } from "@/lib/data/flyers";
 import { breadcrumbJsonLd, ldScript } from "@/lib/jsonld";
 import { pageMetadata } from "@/lib/site";
 
@@ -15,7 +16,8 @@ export const metadata: Metadata = pageMetadata({
   card: "kontakt",
 });
 
-export default function KontaktPage() {
+export default async function KontaktPage() {
+  const flyer = await currentFlyerLink();
   const cards = [
     {
       icon: Phone,
@@ -48,7 +50,7 @@ export default function KontaktPage() {
       title: "Angebote",
       text: "Alle Angebote der Woche stehen im offiziellen REWE-Prospekt deines Marktes.",
       action: (
-        <ButtonLink href={markt.links.flyer} external variant="ink">
+        <ButtonLink href={flyer.href} external={flyer.external} variant="ink">
           Prospekt öffnen
         </ButtonLink>
       ),
@@ -58,6 +60,8 @@ export default function KontaktPage() {
   return (
     <>
       <PageHeader
+        tone="red"
+        mark="Kontakt"
         crumbs={[{ href: "/kontakt", label: "Kontakt" }]}
         eyebrow="Kontakt"
         title="So erreichst du uns."

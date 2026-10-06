@@ -37,7 +37,7 @@ export function RegionalBand({ className }: { className?: string }) {
             alt={media["regional-lieferung"].alt}
             fill
             sizes="(min-width: 64rem) 50vw, 100vw"
-            quality={72}
+            quality={85}
             className="object-cover"
           />
           <span aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent lg:bg-gradient-to-r lg:from-black/45 lg:via-transparent lg:to-transparent" />

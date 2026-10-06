@@ -21,6 +21,7 @@ export function StoryHero({ items, intro, side }: { items: StoryMedia[]; intro: 
   return (
     <section
       ref={sectionRef}
+      data-hero
       aria-roledescription="Story"
       aria-label="Einblicke in den Markt"
       onKeyDown={onKeyDown}
@@ -50,7 +51,7 @@ export function StoryHero({ items, intro, side }: { items: StoryMedia[]; intro: 
               >
                 {it.type === "clip" ? (
                   <>
-                    <Image src={it.poster} alt={it.alt} fill loading={i === 0 ? "eager" : "lazy"} fetchPriority={i === 0 ? "high" : "auto"} sizes={IMG_SIZES} quality={70} className="object-cover" />
+                    <Image src={it.poster} alt={it.alt} fill loading={i === 0 ? "eager" : "lazy"} fetchPriority={i === 0 ? "high" : "auto"} sizes={IMG_SIZES} quality={85} className="object-cover" />
                     <video
                       ref={(el) => {
                         videoRefs.current[i] = el;
@@ -66,7 +67,7 @@ export function StoryHero({ items, intro, side }: { items: StoryMedia[]; intro: 
                   </>
                 ) : (
                   near(i) && (
-                    <Image src={it.image} alt={it.alt} fill loading={i === 0 ? "eager" : "lazy"} fetchPriority={i === 0 ? "high" : "auto"} sizes={IMG_SIZES} quality={70} className="object-cover" style={{ objectPosition: it.position ?? "50% 50%" }} />
+                    <Image src={it.image} alt={it.alt} fill loading={i === 0 ? "eager" : "lazy"} fetchPriority={i === 0 ? "high" : "auto"} sizes={IMG_SIZES} quality={85} className="object-cover" style={{ objectPosition: it.position ?? "50% 50%" }} />
                   )
                 )}
               </div>

@@ -10,6 +10,7 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { VisitSection } from "@/components/visit/visit-section";
 import { galerie } from "@/content/galerie";
 import { markt } from "@/content/markt";
+import { currentFlyerLink } from "@/lib/data/flyers";
 import { breadcrumbJsonLd, ldScript } from "@/lib/jsonld";
 import { media } from "@/lib/media";
 import { resolveGallery } from "@/lib/resolve";
@@ -22,18 +23,21 @@ export const metadata: Metadata = pageMetadata({
   card: "markt",
 });
 
-export default function MarktPage() {
+export default async function MarktPage() {
+  const flyer = await currentFlyerLink();
   return (
     <>
       <PageHeader
+        tone="red"
+        mark="Markt"
         crumbs={[{ href: "/markt", label: "Unser Markt" }]}
         eyebrow="Unser Markt"
         title="Dein REWE in der Thudichumstraße."
         lede={`Ein selbstständig geführter REWE-Markt der ${markt.legalName} – mitten in Rödelheim, sechs Tage die Woche von 7 bis 22 Uhr.`}
       >
         <div className="mt-8 flex flex-wrap items-center gap-3">
-          <OpenStatus tone="soft" />
-          <ButtonLink href={markt.links.flyer} external size="sm">
+          <OpenStatus tone="dark" />
+          <ButtonLink href={flyer.href} external={flyer.external} variant="white" size="sm">
             Prospekt der Woche
           </ButtonLink>
         </div>
@@ -49,7 +53,7 @@ export default function MarktPage() {
               loading="eager"
               fetchPriority="high"
               sizes="(min-width: 48rem) 57vw, 100vw"
-              quality={75}
+              quality={85}
               className="object-cover"
               style={{ objectPosition: "70% 50%" }}
             />
@@ -60,7 +64,7 @@ export default function MarktPage() {
               alt={media["markt-rundgang-poster"].alt}
               fill
               sizes="(min-width: 48rem) 43vw, 100vw"
-              quality={75}
+              quality={85}
               className="object-cover"
               style={{ objectPosition: "50% 40%" }}
             />

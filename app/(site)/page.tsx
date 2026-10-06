@@ -19,9 +19,9 @@ import { posts } from "@/content/aktuelles";
 import { galerie } from "@/content/galerie";
 import { markt } from "@/content/markt";
 import { story } from "@/content/story";
-import { publishedFlyers } from "@/lib/data/flyers";
+import { currentFlyerLink, publishedFlyers } from "@/lib/data/flyers";
 import { flyerWeek } from "@/lib/flyer";
-import { flyerLink, pickFlyers, shownFlyer } from "@/lib/prospekt/select";
+import { pickFlyers, shownFlyer } from "@/lib/prospekt/select";
 import { flyerImage } from "@/lib/prospekt/urls";
 import { eventsFrom } from "@/lib/data/inhalte";
 import { berlinNow } from "@/lib/hours";
@@ -35,7 +35,7 @@ export default async function HomePage() {
   const events = await eventsFrom(today);
   // Titelseite und Ziel der Prospekt-Knöpfe: der Prospekt, den /angebote gerade vorauswählt (sonntags die neue Woche)
   const shown = shownFlyer(pickFlyers(await publishedFlyers(), new Date()));
-  const flyer = flyerLink(shown, markt.links.flyer);
+  const flyer = await currentFlyerLink();
   const cover = shown ? { src: flyerImage(shown, 1, "thumb"), width: 480, height: Math.round((shown.page_height / shown.page_width) * 480) } : undefined;
 
   return (

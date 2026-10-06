@@ -35,7 +35,7 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
     deviceSizes: [390, 640, 828, 1080, 1280, 1600, 1920],
-    qualities: [70, 75, 85],
+    qualities: [75, 85],
   },
   experimental: {
     optimizePackageImports: ["lucide-react"],

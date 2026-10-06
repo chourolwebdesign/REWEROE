@@ -31,4 +31,21 @@ await desktop.setViewport({ width: 1280, height: 800 });
 await desktop.goto(`${BASE}/kontakt`, { waitUntil: "networkidle0" });
 const header = await desktop.evaluate(() => [...document.querySelectorAll("header a")].find((a) => a.textContent.trim().startsWith("Prospekt"))?.getAttribute("href"));
 check(ok(header), `Kopf-Knopf (Unterseite) → ${header}`);
+
+// Unterseiten: keine Titelseite im Hintergrund (der Prefetch der Startseite lud sie bisher mit), Knöpfe wie Kopf und Leiste
+const sub = await b.newPage();
+await sub.setViewport({ width: 390, height: 844, isMobile: true, hasTouch: true });
+const flyerLoads = [];
+sub.on("request", (r) => {
+  if (r.url().includes("prospekt-bilder")) flyerLoads.push(r.url());
+});
+// „load“ statt „networkidle0“: unter dem Service Worker (schon von der Startseite installiert) kommt sonst nie Netzruhe
+await sub.goto(`${BASE}/kontakt`, { waitUntil: "load" });
+await new Promise((r) => setTimeout(r, 3000));
+check(flyerLoads.length === 0, `/kontakt lädt keine Prospektbilder (${flyerLoads.length})`);
+const kontaktBtn = await sub.evaluate(() => [...document.querySelectorAll("main a")].find((a) => a.textContent.trim().startsWith("Prospekt öffnen"))?.getAttribute("href"));
+check(ok(kontaktBtn), `/kontakt „Prospekt öffnen“ → ${kontaktBtn}`);
+await sub.goto(`${BASE}/markt`, { waitUntil: "load" });
+const marktBtn = await sub.evaluate(() => [...document.querySelectorAll("main a")].find((a) => a.textContent.trim().startsWith("Prospekt der Woche"))?.getAttribute("href"));
+check(ok(marktBtn), `/markt „Prospekt der Woche“ → ${marktBtn}`);
 await b.close();

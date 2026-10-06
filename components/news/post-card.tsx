@@ -38,7 +38,7 @@ export function PostCard({
           alt=""
           fill
           sizes={wide ? "(min-width: 64rem) 55vw, 100vw" : "(min-width: 48rem) 50vw, 100vw"}
-          quality={70}
+          quality={85}
           className="object-cover transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.03]"
         />
       </div>
