@@ -63,6 +63,10 @@ export function pageMetadata({
   };
 }
 
-/** Seiten mit rotem Kopf: Die Kopfleiste liegt dort anfangs transparent darüber – schon im Server-HTML, ohne Aufblitzen. */
-const HERO_PAGES = new Set(["/", "/angebote", "/markt", "/kontakt", "/karriere", "/aktuelles"]);
+/**
+ * Seiten mit rotem Kopf: Die Kopfleiste liegt dort anfangs transparent darüber – schon im Server-HTML, ohne Aufblitzen.
+ * „/index“: So meldet usePathname() die Startseite beim Vorrendern auf Vercel; ohne diesen Eintrag ist die Leiste im HTML weiß,
+ * im Browser transparent, React baut die Seite nach Fehler #418 neu auf und entfernt dabei die Klasse `js` von <html>.
+ */
+const HERO_PAGES = new Set(["/", "/index", "/angebote", "/markt", "/kontakt", "/karriere", "/aktuelles"]);
 export const hasHero = (pathname: string) => HERO_PAGES.has(pathname) || /^\/aktuelles\/[^/]+$/.test(pathname);
