@@ -9,7 +9,20 @@ await page.setViewport({ width: 390, height: 844, isMobile: true, hasTouch: true
 await page.emulateMediaFeatures([{ name: "prefers-reduced-motion", value: "reduce" }]);
 const third = new Set();
 page.on("request", (r) => { const u = new URL(r.url()); if (!["localhost", "127.0.0.1"].includes(u.hostname) && u.protocol.startsWith("http")) third.add(u.hostname); });
+// Bildgewicht beim Laden: nur fertig übertragene Bilder zählen
+const cdp = await page.createCDPSession();
+await cdp.send("Network.enable");
+const kinds = new Map();
+const imageBytes = new Map();
+cdp.on("Network.responseReceived", (e) => kinds.set(e.requestId, e.type));
+cdp.on("Network.loadingFinished", (e) => {
+  if (kinds.get(e.requestId) === "Image") imageBytes.set(e.requestId, e.encodedDataLength);
+});
 await page.goto(`${BASE}/angebote`, { waitUntil: "networkidle0" });
+await new Promise((r) => setTimeout(r, 1500));
+check((await page.$eval("[data-flyer-page] img", (i) => i.currentSrc)).includes("/_next/image"), "Prospektseiten über die Bildoptimierung (AVIF/WebP)");
+const imageKb = Math.round([...imageBytes.values()].reduce((a, b) => a + b, 0) / 1024);
+check(imageKb <= 700, `Bilder beim Laden ${imageKb} KB (≤ 700)`);
 
 const thumbs = await page.$$("[data-flyer-page]");
 check(thumbs.length >= 1, `Raster mit ${thumbs.length} Seiten`);

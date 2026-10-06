@@ -3,7 +3,7 @@
 import "photoswipe/style.css";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { linkTarget, type FlyerRecord } from "@/lib/prospekt/select";
-import { flyerImage } from "@/lib/prospekt/urls";
+import { FlyerImage, flyerMiniSrc, flyerZoomSrc } from "./flyer-image";
 import { cn } from "@/lib/utils";
 
 export interface ViewerWeek {
@@ -50,8 +50,8 @@ export function FlyerViewer({ weeks, defaultTab }: { weeks: ViewerWeek[]; defaul
       let current = index;
       const lightbox = new PhotoSwipeLightbox({
         dataSource: Array.from({ length: flyer.page_count }, (_, i) => ({
-          src: flyerImage(flyer, i + 1, "full"),
-          msrc: flyerImage(flyer, i + 1, "thumb"),
+          src: flyerZoomSrc(flyer, i + 1),
+          msrc: flyerMiniSrc(flyer, i + 1),
           width: flyer.page_width,
           height: flyer.page_height,
           alt: `Prospektseite ${i + 1} von ${flyer.page_count}`,
@@ -123,14 +123,12 @@ export function FlyerViewer({ weeks, defaultTab }: { weeks: ViewerWeek[]; defaul
               className="group block w-full overflow-hidden rounded-2xl bg-white ring-1 ring-line transition-transform duration-150 active:scale-[0.98]"
               aria-label={`Prospektseite ${i + 1} von ${flyer.page_count} vergrößern`}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element -- fertig skaliert (480 px), keine Optimierung nötig */}
-              <img
-                src={flyerImage(flyer, i + 1, "thumb")}
-                width={480}
-                height={Math.round((flyer.page_height / flyer.page_width) * 480)}
-                alt={`Prospektseite ${i + 1} von ${flyer.page_count}`}
-                loading={i < 4 ? "eager" : "lazy"}
-                decoding="async"
+              <FlyerImage
+                flyer={flyer}
+                page={i + 1}
+                size="thumb"
+                sizes={i === 0 ? "(min-width: 64rem) 46vw, (min-width: 40rem) 62vw, 92vw" : "(min-width: 64rem) 22vw, (min-width: 40rem) 30vw, 45vw"}
+                priority={i === 0}
                 className="h-auto w-full transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:scale-[1.02]"
               />
             </button>
