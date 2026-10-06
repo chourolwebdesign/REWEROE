@@ -41,6 +41,8 @@ export interface Markt {
     flyer: string;
     marktseite: string;
     instagram: string;
+    /** Google-Bewertung (Feedback-Dank); bis zum g.page/r/…/review-Link das Profil */
+    googleReview: string;
     jobs: string;
     ausbildung: string;
     googleMaps: string;

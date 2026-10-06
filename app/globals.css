@@ -16,6 +16,7 @@
   --color-muted: #625e58;
   --color-line: #e6e2da;
   --color-open: #15803d;
+  --color-open-deep: #166534; /* Grün als Text auf hellem Grün (≥ 4,5:1) */
   --color-open-bright: #4ade80;
   --color-yellow: #ffcc00;
   --color-bio: #1e6b3a;
@@ -434,4 +435,12 @@ html.js .application-form .step + .step {
   .aushang-wrap {
     padding: 0 !important;
   }
+}
+
+/* ───────────── Prospekt-Viewer (PhotoSwipe) in Markenfarben ───────────── */
+.pswp {
+  --pswp-bg: #0c0c0c;
+  --pswp-placeholder-bg: #2b2925;
+  --pswp-icon-color: #fff;
+  --pswp-icon-color-secondary: #0c0c0c;
 }

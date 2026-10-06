@@ -38,12 +38,12 @@ Ohne Mail-Konfiguration zeigt das Formular einen Hinweis und die Telefonnummer u
 | Was | Wo |
 |---|---|
 | Adresse, Telefon, E-Mail, Öffnungszeiten, Services, Links (Prospekt, Instagram, Stellensuche) | `content/markt.ts` |
-| Sonderöffnungszeiten (z. B. Heiligabend) | `content/markt.ts → hours.specialDays` – Feiertage in Hessen und § 3 HLöG rechnet `lib/hours.ts` selbst |
+| Sonderöffnungszeiten (z. B. Heiligabend) | Markt-Cockpit → Inhalte → Sondertage – Feiertage in Hessen und § 3 HLöG rechnet `lib/hours.ts` selbst |
 | Story im ersten Screen (Clip/Fotos, Reihenfolge, Dauer) | `content/story.ts` |
 | Galerie „Aus dem Markt“ | `content/galerie.ts` |
 | Beiträge unter /aktuelles (Markdown) | `content/aktuelles.ts` |
-| Offene Stellen (erzeugen automatisch JobPosting-Daten) | `content/jobs.ts` |
-| Termine im Markt (Startseite + Markt-Kalender) | `content/termine.ts` |
+| Offene Stellen (erzeugen automatisch JobPosting-Daten) | Markt-Cockpit → Inhalte → Stellen |
+| Termine im Markt (Startseite + Markt-Kalender) | Markt-Cockpit → Inhalte → Termine |
 | Auswahl im Bewerbungsformular | `content/bewerbung.ts` |
 | Neue Fotos | Datei nach `assets/media/`, in `lib/media.ts` mit Alt-Text, Kurztitel und Bildnachweis eintragen |
 | Neue Clips | zwei MP4 (H.264, stumm, `faststart`: 720 px und 540 px breit) nach `public/media/`, Posterbild nach `assets/media/`, Eintrag in `lib/media.ts → clips`. Geänderte Videos immer unter neuem Namen (`/media` wird ein Jahr gecacht) |
@@ -66,6 +66,21 @@ ffmpeg -i quelle.mp4 -an -vf "scale=540:960:flags=lanczos" -c:v libx264 -profile
 | Aushang mit QR-Codes | `/aushang` (noindex) | A4 drucken; nach dem Domainwechsel neu drucken |
 | Teilen-Vorschau | `/og/<karte>.jpg`, `lib/og.tsx` | eigene Karte je Seite und Beitrag (roter Hero-Look, beim Build erzeugt); neue Seite: Karte in `lib/og.tsx → PAGES`, Metadaten mit `pageMetadata()` aus `lib/site.ts` |
 
+## Markt-Cockpit
+
+`/cockpit` – Anmeldung mit E-Mail und Passwort (Supabase, Projekt `rewe-roedelheim`, Frankfurt). Der Markt lädt hier den Wochenprospekt als PDF hoch; die Seiten werden im Browser in Bilder umgewandelt, nach einer Vorschau veröffentlicht und auf `/angebote` sowie im Startseiten-Ticket gezeigt – alle „Prospekt“-Knöpfe führen dann auf die eigene Seite statt zu rewe.de. Ab Samstag erscheint ein schon hochgeladener Prospekt als „Nächste Woche“; Prospekte, deren Woche länger als vier Wochen vorbei ist, löscht das nächste Veröffentlichen.
+
+| Aufgabe | So geht's |
+|---|---|
+| Konto anlegen | Supabase-Dashboard → Authentication → Add user (E-Mail, Passwort, „Auto Confirm“), dann im SQL-Editor `insert into public.editors (user_id, name) values ('<uuid>', '<Vorname>');` |
+| Registrierung sperren | Authentication → Sign In / Providers → „Allow new users to sign up“ aus (einmalig) |
+| Datenbank ändern | neue Datei in `supabase/migrations/`, per Supabase-MCP `apply_migration` oder SQL-Editor anwenden |
+| Tests | Server auf Port 3100 starten, dann `node --env-file=.env.local e2e/<skript>.mjs` (`rls-check`, `cockpit-login`, `cockpit-prospekt`, `cockpit-fehlerfaelle`, `prospekt-viewer`, `start-ticket`, `feedback`, `cockpit-feedback`, `inhalte-website`, `cockpit-inhalte`, `cockpit-axe`, `public-qa`); Test-Editor in `.env.local` (siehe `.env.example`). Die Cockpit-Skripte schreiben in das Supabase-Projekt (Testprospekt bzw. Testwoche 2031, Einträge „E2E-…“/„RLS-…“) und räumen danach auf; Sondertage legen sie nur an Tagen an, an denen der Markt nichts eingetragen hat. Liest die Live-Website aus demselben Projekt, kann ein Testeintrag bis zum Aufräumen auf einer gerade neu erzeugten Seite stehen (bis zu 1 Stunde, Kalender 6 Stunden) – vor dem offiziellen Start die Tests gegen ein eigenes Test-Projekt laufen lassen (Spec, Abschnitt 9) |
+| Geräte | Hochladen braucht einen aktuellen Browser (iPhone ab iOS 17.4); pdf.js läuft als Legacy-Build |
+| Feedback | `/feedback` (QR-Plakat unter `/aushang`, Seite 2). Schreiben nur mit `FEEDBACK_KEY` (Server; in Supabase steht nur der SHA-256 in `private.settings`). Neuer Schlüssel: Befehl aus Plan 2026-10-05-feedback, Task 1 Step 3, dann Hash per SQL ersetzen und `FEEDBACK_KEY` in Vercel tauschen. Alarm bei 1–2 Sternen: `FEEDBACK_ALARM_AN` + Mail-Einrichtung |
+| Inhalte | `/cockpit/inhalte`: Sondertage (Vorrang vor Feiertagen; die gesetzlichen Grenzen – Heiligabend und Silvester 14 Uhr, Gründonnerstag 20 Uhr – werden geprüft), Termine (Startseite, Markt-Kalender) und Stellen (/karriere mit JobPosting). Die Website liest sie aus Supabase (`lib/data/inhalte.ts`); jedes Speichern erneuert die Seiten |
+| Tarif | Für den Livegang Supabase Pro (pausiert nicht, tägliche Sicherung); Vercel-Tarif auf kommerzielle Nutzung prüfen |
+
 ## Grundsätze
 
 - **Nur Belegtes.** Keine Preise, Bewertungen, Zitate oder Stellen erfinden. Angebote kommen ausschließlich aus dem offiziellen REWE-Prospekt (Link in `content/markt.ts`).
@@ -75,7 +90,9 @@ ffmpeg -i quelle.mp4 -an -vf "scale=540:960:flags=lanczos" -c:v libx264 -profile
 ## Struktur
 
 ```
-app/            Seiten (/, /angebote, /markt, /aktuelles, /karriere, /kontakt, /impressum, /datenschutz), Layout, robots, sitemap
+app/(site)/     öffentliche Seiten (/, /angebote, /markt, /aktuelles, /karriere, /kontakt, /impressum, /datenschutz) mit Kopf und Footer
+app/            Root-Layout, 404, robots, sitemap, Manifest, /kalender.ics, /og (Teilen-Bilder)
+e2e/            Browser-Tests (puppeteer-core): node e2e/public-qa.mjs bei laufendem Server auf Port 3100
 components/     home/ (Story, Prospekt-Ticket, Highlights, Karriere), layout/, live/ (Öffnungsstatus, KW), media/ (Galerie), visit/, ui/
 content/        Inhalte (siehe oben)
 lib/            hours.ts, flyer.ts (+ Tests), media.ts, jsonld.ts, site.ts

@@ -4,7 +4,7 @@
  *
  * Reihenfolge: bestätigte Sonderzeiten > Feiertage Hessen > reguläre Zeiten, begrenzt durch die
  * gesetzlichen Schlusszeiten nach § 3 Abs. 2 HLöG (Gründonnerstag 20 Uhr, 24.12. und 31.12. 14 Uhr).
- * Aus dem Gesetz abgeleitete Zeiten sind „vorläufig“, bis der Markt sie in content/markt.ts bestätigt.
+ * Aus dem Gesetz abgeleitete Zeiten sind „vorläufig“, bis der Markt sie im Cockpit (Inhalte → Sondertage) festlegt.
  */
 import { markt } from "@/content/markt";
 import type { HoursConfig, TimeRange, Weekday } from "./types";
@@ -119,7 +119,8 @@ function holiday(iso: string) {
   return holidayCache.get(year)!.get(iso) ?? null;
 }
 
-function legalLimit(iso: string) {
+/** Gesetzliche Schlusszeit dieses Tages (Gründonnerstag 20 Uhr, 24.12. und 31.12. 14 Uhr) oder null. */
+export function legalLimit(iso: string) {
   const maundyThursday = addDays(easterSunday(Number(iso.slice(0, 4))), -3);
   return LEGAL_LIMITS.find((l) => (l.rule === "gruendonnerstag" ? iso === maundyThursday : iso.slice(5) === l.rule)) ?? null;
 }
@@ -180,6 +181,12 @@ export function upcomingSpecialDays(from: string, days: number, cfg: HoursConfig
     if (plan.label && !(cfg.regular[plan.weekday] === null && plan.hours === null)) list.push(plan);
   }
   return list;
+}
+
+/** Zeiten eines besonderen Tages für Listen: „10 – 14 Uhr“ (immer mit Beginn), aus dem Gesetz abgeleitete mit „*“, sonst „geschlossen“. */
+export function specialDayHours(d: DayPlan) {
+  if (!d.hours) return "geschlossen";
+  return `${formatTime(d.hours[0]).replace(" Uhr", "")} – ${formatTime(d.hours[1])}${d.provisional ? "*" : ""}`;
 }
 
 /** Wochentabelle Mo–So mit zusammengefassten Zeilen, z. B. „Montag – Samstag · 7 – 22 Uhr“. */
