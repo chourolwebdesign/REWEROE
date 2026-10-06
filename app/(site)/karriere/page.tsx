@@ -90,7 +90,7 @@ export default async function KarrierePage() {
               alt={media["regional-lieferung"].alt}
               fill
               sizes="(min-width: 48rem) 45vw, 100vw"
-              quality={70}
+              quality={85}
               className="object-cover"
               style={{ objectPosition: "60% 40%" }}
             />

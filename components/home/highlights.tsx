@@ -25,7 +25,7 @@ export function Highlights({ className }: { className?: string }) {
             alt={media["regional-label"].alt}
             fill
             sizes="(min-width: 80rem) 320px, (min-width: 40rem) 50vw, 100vw"
-            quality={72}
+            quality={85}
             className="object-cover"
           />
         </div>
@@ -43,7 +43,7 @@ export function Highlights({ className }: { className?: string }) {
             alt={media["bio-produkte"].alt}
             fill
             sizes="(min-width: 80rem) 320px, (min-width: 40rem) 50vw, 100vw"
-            quality={72}
+            quality={85}
             className="object-cover"
           />
           <span className="absolute top-4 left-4 rounded-xl bg-white p-2 shadow-[var(--shadow-soft)]">

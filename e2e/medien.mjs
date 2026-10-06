@@ -40,4 +40,25 @@ check(v.playing && /-(hevc|h264)\.mp4$/.test(v.src) && v.w === 720, `ohne AV1: H
 v = await storyVideo(mobile, { saveData: true });
 check(!v.playing && !v.src, "Datensparmodus: kein Video, nur das Standbild");
 
+// Fotos: Qualität der Bildoptimierung (Parameter q= in der Bildadresse)
+const photos = await b.newPage();
+await photos.setViewport(desktop);
+await photos.goto(`${BASE}/`, { waitUntil: "load" });
+const param = (sel, name) => photos.$eval(sel, (i, n) => new URL(i.currentSrc || i.src, location.href).searchParams.get(n), name).catch(() => null);
+const STORY_IMG = 'section[aria-roledescription="Story"] img';
+const TILE_IMG = 'button[aria-label^="Foto vergrößern"] img';
+const MARKT_IMG = 'section[aria-label="Bilder aus dem Markt"] img';
+check((await param(STORY_IMG, "q")) === "85", "Story: Qualität 85");
+check((await param(TILE_IMG, "q")) === "75", "Galerie-Kachel: Qualität 75");
+await photos.goto(`${BASE}/markt`, { waitUntil: "load" });
+check((await param(MARKT_IMG, "q")) === "85", "/markt: großes Foto Qualität 85");
+// Retina-Handy (3×): die Bildoptimierung liefert genug Pixel (sizes passt zur angezeigten Breite)
+await photos.setViewport({ ...mobile, deviceScaleFactor: 3 });
+await photos.goto(`${BASE}/`, { waitUntil: "load" });
+check(Number(await param(STORY_IMG, "w")) >= 1080, `Story auf Retina-Handy ≥ 1080 px (${await param(STORY_IMG, "w")})`);
+check(Number(await param(TILE_IMG, "w")) >= 384, `Galerie-Kachel auf Retina-Handy ≥ 384 px (${await param(TILE_IMG, "w")})`);
+await photos.goto(`${BASE}/markt`, { waitUntil: "load" });
+check(Number(await param(MARKT_IMG, "w")) >= 1080, `/markt-Foto auf Retina-Handy ≥ 1080 px (${await param(MARKT_IMG, "w")})`);
+await photos.close();
+
 await b.close();

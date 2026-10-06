@@ -53,7 +53,7 @@ export default async function MarktPage() {
               loading="eager"
               fetchPriority="high"
               sizes="(min-width: 48rem) 57vw, 100vw"
-              quality={75}
+              quality={85}
               className="object-cover"
               style={{ objectPosition: "70% 50%" }}
             />
@@ -64,7 +64,7 @@ export default async function MarktPage() {
               alt={media["markt-rundgang-poster"].alt}
               fill
               sizes="(min-width: 48rem) 43vw, 100vw"
-              quality={75}
+              quality={85}
               className="object-cover"
               style={{ objectPosition: "50% 40%" }}
             />

@@ -100,7 +100,7 @@ export function Gallery({ items, className }: { items: GalleryMedia[]; className
                   alt={it.alt}
                   fill
                   sizes={featured ? "(min-width: 64rem) 640px, 100vw" : "(min-width: 64rem) 320px, (min-width: 40rem) 31vw, 48vw"}
-                  quality={70}
+                  quality={75}
                   className="object-cover transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.04]"
                 />
                 {it.type === "clip" && <TileClip sources={it.sources} />}
