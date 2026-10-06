@@ -35,6 +35,7 @@ Stand: 04.10.2026. Alles hier fehlt auf der Website oder ist als Lücke markiert
 
 - [ ] **Instagram-Fotos und Clip** (@rewealialamyaar): Freigabe des Markts für die Website (Fotograf/Urheber klären).
 - [ ] **Resilienzwoche 2026**: Auf Gruppen- und Rundgangsfotos sind Minister, Gäste und Feuerwehrleute zu sehen. Personenfotos stehen nur im Beitrag unter Aktuelles. Freigabe/Bildnachweis bestätigen (Gruppenfoto laut Pressemitteilung: © Jörg Halisch).
+- [ ] **Gruppenfoto in voller Größe**: Das Gruppenfoto der Resilienzwoche (© Jörg Halisch) liegt nur mit 709 × 465 px vor – auf Handys wird es vergrößert und wirkt unscharf. Eine größere Fassung beim Fotografen oder der Pressestelle erfragen.
 - [ ] **REWE-Bilder** (REWE Regional, REWE Bio, „Aus deiner Region“, Landwirt-/Lieferfotos): Nutzung über das REWE-Partnerportal bestätigen bzw. offizielle Dateien von dort verwenden.
 - [ ] **Offizielles REWE-Logo** als Datei (aktuell als SVG nachgebaut).
 - [ ] **Originaldateien**: Video und Fotos in Originalqualität – direkt vom Handy oder der Kamera, nicht aus Instagram (z. B. per AirDrop, USB-Stick oder Cloud-Link). Der Rundgang läuft jetzt in 1080 × 1920 aus einer KI-Hochrechnung unseres Instagram-Downloads (720 × 1280): in Webgröße schärfer, aber kein Original – bei voller Größe wirken Flächen gemalt, und Schrift auf Schildern ist verschmiert. Mit dem Original vom Handy wird er neu kodiert.
