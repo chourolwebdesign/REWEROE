@@ -113,7 +113,7 @@ export function FeedbackFlow({ initialLang, googleUrl, surveyUrl }: { initialLan
             data-lang-select
             value={lang}
             onChange={(e) => setLang(e.target.value as Lang)}
-            className="h-11 rounded-full bg-white px-3 text-[0.9375rem] font-semibold ring-1 ring-line outline-none focus-visible:ring-2 focus-visible:ring-ink"
+            className="h-11 rounded-full bg-white px-3 text-base font-semibold ring-1 ring-line outline-none focus-visible:ring-2 focus-visible:ring-ink"
           >
             {LANGS.map((l) => (
               <option key={l} value={l} lang={l}>

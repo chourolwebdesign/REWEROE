@@ -36,7 +36,7 @@ export default async function KarrierePage() {
         title="Arbeiten im Supermarkt um die Ecke."
         lede="Kurze Wege, ein Markt mitten im Viertel und Arbeit, die man am Ende des Tages sieht. So kannst du bei uns einsteigen."
       >
-        <div className="cta-row mt-8">
+        <div className="cta-row mt-6 md:mt-8">
           <ButtonLink href="/karriere/bewerben" variant="white" size="lg">
             In 60 Sekunden bewerben
           </ButtonLink>

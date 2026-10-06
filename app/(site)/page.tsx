@@ -80,17 +80,18 @@ export default async function HomePage() {
         }
       />
 
-      <MarqueeBand />
+      {/* Laufband und Zahlenband erst ab 768 px – auf dem Handy wiederholen sie nur, was Hero und „Besuch“ schon sagen */}
+      <MarqueeBand className="hidden md:block" />
 
       <section aria-label="Prospekt der Woche" className="wrap pt-16 md:pt-24">
         <FlyerTicket cover={cover} />
       </section>
 
-      <NumbersBand className="pt-24 md:pt-32" />
+      <NumbersBand className="hidden pt-24 md:block md:pt-32" />
 
-      <RegionalBand className="wrap pt-24 md:pt-32" />
+      <RegionalBand className="wrap pt-16 md:pt-32" />
 
-      <section aria-labelledby="markt-titel" className="wrap pt-24 md:pt-32">
+      <section aria-labelledby="markt-titel" className="wrap pt-16 md:pt-32">
         <SectionHeading
           id="markt-titel"
           eyebrow="Aus dem Markt"
@@ -102,10 +103,11 @@ export default async function HomePage() {
             </ButtonLink>
           }
         />
-        <Gallery items={resolveGallery(galerie)} className="mt-10" />
+        {/* ohne den Rundgang – der läuft schon im Hero */}
+        <Gallery items={resolveGallery(galerie.filter((it) => !("clip" in it)))} row className="mt-10" />
       </section>
 
-      <section aria-labelledby="sortiment-titel" className="wrap pt-24 md:pt-32">
+      <section aria-labelledby="sortiment-titel" className="wrap pt-16 md:pt-32">
         <SectionHeading
           id="sortiment-titel"
           eyebrow="Bei uns im Markt"
@@ -116,10 +118,10 @@ export default async function HomePage() {
             </ButtonLink>
           }
         />
-        <Highlights className="mt-10" />
+        <Highlights row className="mt-10" />
       </section>
 
-      <section aria-labelledby="praktisch-titel" className="wrap pt-24 md:pt-32">
+      <section aria-labelledby="praktisch-titel" className="wrap pt-16 md:pt-32">
         <SectionHeading
           id="praktisch-titel"
           eyebrow="Praktisch"
@@ -130,7 +132,7 @@ export default async function HomePage() {
       </section>
 
       {events.length > 0 && (
-        <section aria-labelledby="termine-titel" className="wrap pt-24 md:pt-32">
+        <section aria-labelledby="termine-titel" className="wrap pt-16 md:pt-32">
           <SectionHeading id="termine-titel" eyebrow="Termine" title="Demnächst im Markt." />
           <div className="mt-10">
             <TermineList events={events} />
@@ -139,7 +141,7 @@ export default async function HomePage() {
       )}
 
       {latest && (
-        <section aria-labelledby="aktuelles-titel" className="wrap pt-24 md:pt-32">
+        <section aria-labelledby="aktuelles-titel" className="wrap pt-16 md:pt-32">
           <SectionHeading
             id="aktuelles-titel"
             eyebrow="Aktuelles"
@@ -156,12 +158,12 @@ export default async function HomePage() {
         </section>
       )}
 
-      <section aria-labelledby="besuch-titel" className="wrap pt-24 md:pt-32">
+      <section aria-labelledby="besuch-titel" className="wrap pt-16 md:pt-32">
         <SectionHeading id="besuch-titel" eyebrow="Besuch" title="Öffnungszeiten & Anfahrt." />
         <VisitSection className="mt-10" />
       </section>
 
-      <section aria-label="Karriere" className="wrap py-24 md:py-32">
+      <section aria-label="Karriere" className="wrap py-16 md:py-32">
         <CareerBand />
       </section>
     </>

@@ -2,7 +2,8 @@
 
 import Image, { type StaticImageData } from "next/image";
 import { ChevronLeft, ChevronRight, Play, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { coverSizes } from "@/lib/sizes";
 import { cn } from "@/lib/utils";
 import { autoplaySource, type VideoSource } from "@/lib/video";
 
@@ -50,6 +51,11 @@ const LAYOUTS = [
   { cols: 3, featured: 3, hide: "sm:max-lg:hidden" },
   { cols: 4, featured: 2, hide: "lg:hidden" },
 ] as const;
+/** Mit `row` ist die Galerie unter 768 px eine waagerechte Reihe (alle Kacheln sichtbar), das Dreier-Raster beginnt erst bei 768 px. */
+const ROW_LAYOUTS = [
+  { cols: 3, featured: 3, hide: "md:max-lg:hidden" },
+  { cols: 4, featured: 2, hide: "lg:hidden" },
+] as const;
 
 /** Wie viele Kacheln ein Raster ohne halbe letzte Zeile füllen (die übrigen bleiben über das Vollbild erreichbar). */
 function fullRows(n: number, cols: number, featured: number) {
@@ -63,7 +69,7 @@ function fullRows(n: number, cols: number, featured: number) {
  * die Höhe der Zeile – so schließt sie bündig mit den Hochkant-Kacheln ab.
  * Die letzte Zeile ist immer voll: Was nicht aufgeht, zeigt nur das Vollbild (7 Einträge passen überall).
  */
-export function Gallery({ items, className }: { items: GalleryMedia[]; className?: string }) {
+export function Gallery({ items, row = false, className }: { items: GalleryMedia[]; row?: boolean; className?: string }) {
   const [open, setOpen] = useState<number | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -79,27 +85,56 @@ export function Gallery({ items, className }: { items: GalleryMedia[]; className
 
   return (
     <>
-      <ul className={cn("grid grid-cols-2 gap-2.5 sm:grid-cols-3 md:gap-4 lg:grid-cols-4", className)}>
+      <ul className={cn(row ? "max-md:snap-row md:grid md:grid-cols-3 md:gap-4 lg:grid-cols-4" : "grid grid-cols-2 gap-2.5 sm:grid-cols-3 md:gap-4 lg:grid-cols-4", className)}>
         {items.map((it, i) => {
           const img = it.type === "image" ? it.image : it.poster;
           const featured = i === 0;
-          const hidden = LAYOUTS.filter((l) => i >= fullRows(items.length, l.cols, l.featured)).map((l) => l.hide);
+          // Große erste Kachel im Raster: ein Querformat zeigt auf dem Handy sein eigenes Seitenverhältnis statt 4:5 – nichts wird
+          // abgeschnitten (z. B. das Gruppenfoto im Beitrag). Hochkant-Kacheln rechnen den Zuschnitt in `sizes` ein.
+          const natural = featured && !row && img.width > img.height;
+          const hidden = (row ? ROW_LAYOUTS : LAYOUTS).filter((l) => i >= fullRows(items.length, l.cols, l.featured)).map((l) => l.hide);
           return (
-            <li key={i} className={cn(featured && "col-span-2 sm:col-span-3 lg:col-span-2", hidden)}>
+            <li
+              key={i}
+              className={cn(
+                row ? "w-[72%] shrink-0 snap-start md:w-auto" : featured && "col-span-2 sm:col-span-3",
+                featured && (row ? "md:col-span-3 lg:col-span-2" : "lg:col-span-2"),
+                hidden,
+              )}
+            >
               <button
                 type="button"
                 onClick={() => setOpen(i)}
                 className={cn(
                   "group relative block w-full overflow-hidden rounded-[1.25rem] bg-soft text-left md:rounded-[1.5rem]",
-                  featured ? "aspect-[4/5] sm:aspect-video lg:aspect-auto lg:h-full" : "aspect-[4/5]",
+                  featured
+                    ? row
+                      ? "aspect-[4/5] md:aspect-video lg:aspect-auto lg:h-full"
+                      : cn(natural ? "aspect-[var(--tile-ar)]" : "aspect-[4/5]", "sm:aspect-video lg:aspect-auto lg:h-full")
+                    : "aspect-[4/5]",
                 )}
+                style={natural ? ({ "--tile-ar": `${img.width} / ${img.height}` } as CSSProperties) : undefined}
                 aria-label={`${it.type === "clip" ? "Clip abspielen" : "Foto vergrößern"}: ${it.caption}`}
               >
                 <Image
                   src={img}
                   alt={it.alt}
                   fill
-                  sizes={featured ? "(min-width: 64rem) 640px, 100vw" : "(min-width: 64rem) 320px, (min-width: 40rem) 31vw, 48vw"}
+                  sizes={
+                    natural
+                      ? "(min-width: 64rem) 640px, 100vw"
+                      : coverSizes(
+                          row
+                            ? featured
+                              ? "(min-width: 64rem) 640px, (min-width: 48rem) 100vw, 72vw"
+                              : "(min-width: 64rem) 320px, (min-width: 48rem) 31vw, 72vw"
+                            : featured
+                              ? "(min-width: 64rem) 640px, 100vw"
+                              : "(min-width: 64rem) 320px, (min-width: 40rem) 31vw, 48vw",
+                          img.width / img.height,
+                          4 / 5,
+                        )
+                  }
                   quality={75}
                   className="object-cover transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.04]"
                 />

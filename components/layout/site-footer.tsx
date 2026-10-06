@@ -10,11 +10,12 @@ export function SiteFooter() {
   const year = new Date().getFullYear();
   return (
     <footer className="on-dark bg-night pb-28 text-white lg:pb-0">
-      {/* vier Spalten erst ab 1280 px – darunter wird die Adresse sonst mitten in „18–22“ umbrochen */}
-      <div className="wrap grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-3 lg:py-24 xl:grid-cols-[1.4fr_1fr_0.85fr_1fr] xl:gap-14">
-        <div className="grid content-start gap-6 md:col-span-2 lg:col-span-3 xl:col-span-1">
+      {/* vier Spalten erst ab 1280 px – darunter wird die Adresse sonst mitten in „18–22“ umbrochen. Handy: Logo und Instagram in
+          einer Zeile, „Besuch“ über die volle Breite, darunter Service und Rechtliches nebeneinander; die Seitenliste steht im Menü. */}
+      <div className="wrap grid grid-cols-[minmax(0,1fr)_auto] gap-x-6 gap-y-8 py-10 md:grid-cols-2 md:gap-12 md:py-16 lg:grid-cols-3 lg:py-24 xl:grid-cols-[1.4fr_1fr_0.85fr_1fr] xl:gap-14">
+        <div className="col-span-2 flex flex-wrap items-center justify-between gap-4 md:grid md:content-start md:justify-normal md:gap-6 lg:col-span-3 xl:col-span-1">
           <Logo tone="light" height={38} />
-          <p className="max-w-[38ch] text-lede text-white/70">
+          <p className="max-w-[38ch] text-lede text-white/70 max-md:hidden">
             Dein REWE in Frankfurt-Rödelheim – ein selbstständig geführter Markt der {markt.legalName}.
           </p>
           <a
@@ -28,7 +29,7 @@ export function SiteFooter() {
           </a>
         </div>
 
-        <div>
+        <div className="col-span-2 md:col-span-1">
           <h2 className="text-eyebrow text-white/60">Besuch</h2>
           <address className="mt-5 not-italic leading-relaxed">
             <span className="whitespace-nowrap">{markt.address.street}</span>
@@ -49,9 +50,9 @@ export function SiteFooter() {
           <p className="mt-3 text-[0.875rem] text-white/50">An Feiertagen geschlossen.</p>
         </div>
 
-        <div>
-          <h2 className="text-eyebrow text-white/60">Seiten</h2>
-          <ul className="mt-4 grid">
+        <div className="max-md:order-last">
+          <h2 className="text-eyebrow text-white/60 max-md:hidden">Seiten</h2>
+          <ul className="mt-4 grid max-md:hidden">
             {NAV.map((item) => (
               <li key={item.href}>
                 <Link href={item.href} className="inline-flex min-h-11 items-center text-white/85 hover:text-white hover:underline hover:underline-offset-4">
@@ -60,7 +61,8 @@ export function SiteFooter() {
               </li>
             ))}
           </ul>
-          <ul className="mt-4 grid gap-1 border-t border-white/10 pt-4">
+          {/* Handy: auf Höhe der Service-Links (Überschrift + Abstand) */}
+          <ul className="grid gap-1 max-md:pt-9 md:mt-4 md:border-t md:border-white/10 md:pt-4">
             <li>
               <Link href="/impressum" className="inline-flex min-h-10 items-center text-white/70 hover:text-white hover:underline">
                 Impressum
@@ -94,7 +96,7 @@ export function SiteFooter() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="wrap flex flex-col gap-2 py-7 text-[0.875rem] text-white/55 sm:flex-row sm:items-center sm:justify-between">
+        <div className="wrap flex flex-col gap-2 py-5 text-[0.875rem] text-white/55 sm:flex-row sm:items-center sm:justify-between md:py-7">
           <p>
             © {year} {markt.legalName}
           </p>

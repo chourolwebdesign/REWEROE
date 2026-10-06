@@ -11,12 +11,19 @@ const ICONS = { baeckerei: Croissant, sushi: Fish } as const;
  * Alle Karten haben denselben Aufbau – Bild- oder Symbolfeld oben, Text unten – damit das Raster ruhig bleibt.
  * Vier Spalten erst ab 1280 px; darunter stehen Regional und Bio nebeneinander und die Service-Karte darunter.
  */
-export function Highlights({ className }: { className?: string }) {
-  const card = "reveal flex flex-col overflow-hidden rounded-[var(--radius-media)] bg-soft";
+export function Highlights({ row = false, className }: { row?: boolean; className?: string }) {
+  // `row`: unter 768 px eine waagerechte Reihe zum Wischen (Startseite), jede Karte 84 % breit
+  const inRow = row && "max-md:w-[84%] max-md:shrink-0 max-md:snap-start";
+  const card = cn("reveal flex flex-col overflow-hidden rounded-[var(--radius-media)] bg-soft", inRow);
   const body = "flex flex-1 flex-col p-6 md:p-7";
 
   return (
-    <div className={cn("grid gap-3 sm:grid-cols-2 md:gap-4 xl:grid-cols-4", className)}>
+    // Als Reihe scrollt der Bereich waagerecht, enthält aber keine Links – daher selbst fokussierbar (Pfeiltasten scrollen, axe
+    // „scrollable-region-focusable“) und benannt.
+    <div
+      {...(row && { tabIndex: 0, role: "region", "aria-label": "Regional, Bio und frisch gebacken" })}
+      className={cn(row ? "max-md:snap-row md:grid md:grid-cols-2 md:gap-4 xl:grid-cols-4" : "grid gap-3 sm:grid-cols-2 md:gap-4 xl:grid-cols-4", className)}
+    >
       {/* REWE Regional */}
       <article className={card}>
         <div className="relative aspect-[16/10] bg-soft-2 xl:aspect-[5/4]">
@@ -24,7 +31,7 @@ export function Highlights({ className }: { className?: string }) {
             src={media["regional-label"].src}
             alt={media["regional-label"].alt}
             fill
-            sizes="(min-width: 80rem) 320px, (min-width: 40rem) 50vw, 100vw"
+            sizes={row ? "(min-width: 80rem) 320px, (min-width: 48rem) 50vw, 84vw" : "(min-width: 80rem) 320px, (min-width: 40rem) 50vw, 100vw"}
             quality={85}
             className="object-cover"
           />
@@ -42,7 +49,7 @@ export function Highlights({ className }: { className?: string }) {
             src={media["bio-produkte"].src}
             alt={media["bio-produkte"].alt}
             fill
-            sizes="(min-width: 80rem) 320px, (min-width: 40rem) 50vw, 100vw"
+            sizes={row ? "(min-width: 80rem) 320px, (min-width: 48rem) 50vw, 84vw" : "(min-width: 80rem) 320px, (min-width: 40rem) 50vw, 100vw"}
             quality={85}
             className="object-cover"
           />
@@ -57,7 +64,7 @@ export function Highlights({ className }: { className?: string }) {
       </article>
 
       {/* Services laut REWE-Marktseite – eine Karte statt zweier leerer Bildfelder */}
-      <article className="reveal on-dark relative flex flex-col overflow-hidden rounded-[var(--radius-media)] bg-ink p-6 text-white sm:col-span-2 md:p-9">
+      <article className={cn("reveal on-dark relative flex flex-col overflow-hidden rounded-[var(--radius-media)] bg-ink p-6 text-white md:p-9", row ? "md:col-span-2" : "sm:col-span-2", inRow)}>
         <span aria-hidden className="pointer-events-none absolute -right-16 -bottom-20 size-72 rounded-full bg-red/30 blur-3xl" />
         <div className="relative">
           <p className="text-eyebrow text-red-bright">Im Markt</p>

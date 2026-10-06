@@ -35,7 +35,7 @@ export default async function MarktPage() {
         title="Dein REWE in der Thudichumstraße."
         lede={`Ein selbstständig geführter REWE-Markt der ${markt.legalName} – mitten in Rödelheim, sechs Tage die Woche von 7 bis 22 Uhr.`}
       >
-        <div className="mt-8 flex flex-wrap items-center gap-3">
+        <div className="mt-6 flex flex-wrap items-center gap-3 md:mt-8">
           <OpenStatus tone="dark" />
           <ButtonLink href={flyer.href} external={flyer.external} variant="white" size="sm">
             Prospekt der Woche
