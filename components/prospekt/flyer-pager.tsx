@@ -39,6 +39,8 @@ export function FlyerPager({ flyer, onOpen, ref }: { flyer: FlyerRecord; onOpen:
   // bis zum Laden der Seite nur die Titelseite (der LCP teilt sich die Leitung nicht), danach auch die Nachbarn und die Vorschau-Leiste
   const [loaded, setLoaded] = useState<number[]>([1]);
   const [stripReady, setStripReady] = useState(false);
+  // Vorschaubild, das gerade den Fokus hat – es bleibt der Tab-Stopp der Leiste, auch wenn die Seiten weiterlaufen
+  const [stripFocus, setStripFocus] = useState<number | null>(null);
   const ready = useRef(false);
   const visibleRef = useRef<number[]>([1]);
   // Seitenanzeige erst, wenn die Leiste steht – sonst sagt sie beim weichen Blättern Zwischenstände wie „Seite 1–2“ an
@@ -123,11 +125,12 @@ export function FlyerPager({ flyer, onOpen, ref }: { flyer: FlyerRecord; onOpen:
     };
   }, [total, settleSoon]);
 
-  // aktuelle Seite in der Vorschau-Leiste sichtbar halten – nur waagerecht, die Seite selbst scrollt nicht
+  // aktuelle Seite(n) in der Vorschau-Leiste mittig halten – nur waagerecht, die Seite selbst scrollt nicht; Doppelseiten als Paar
   useEffect(() => {
     const s = strip.current;
-    const thumb = s?.querySelector<HTMLElement>(`[data-strip-page="${visible[0]}"]`);
-    if (s && thumb) s.scrollTo({ left: thumb.offsetLeft - s.clientWidth / 2 + thumb.clientWidth / 2, behavior: reduced() ? "auto" : "smooth" });
+    const first = s?.querySelector<HTMLElement>(`[data-strip-page="${visible[0]}"]`);
+    const last = s?.querySelector<HTMLElement>(`[data-strip-page="${visible[visible.length - 1]}"]`);
+    if (s && first && last) s.scrollTo({ left: (first.offsetLeft + last.offsetLeft + last.clientWidth) / 2 - s.clientWidth / 2, behavior: reduced() ? "auto" : "smooth" });
   }, [visible]);
 
   const atStart = visible[0] === 1;
@@ -139,6 +142,7 @@ export function FlyerPager({ flyer, onOpen, ref }: { flyer: FlyerRecord; onOpen:
   };
   // Vorschau-Leiste: ein Tab-Stopp (das Bild der aktuellen Seite); Pfeiltasten, Pos1 und Ende wandern von Bild zu Bild
   const onStripKeyDown = (e: KeyboardEvent<HTMLUListElement>) => {
+    if (e.altKey || e.metaKey || e.ctrlKey) return;
     const cur = Number((e.target as HTMLElement).closest("[data-strip-page]")?.getAttribute("data-strip-page"));
     const next = e.key === "ArrowRight" ? cur + 1 : e.key === "ArrowLeft" ? cur - 1 : e.key === "Home" ? 1 : e.key === "End" ? total : 0;
     if (!cur || !next || next < 1 || next > total) return;
@@ -148,7 +152,7 @@ export function FlyerPager({ flyer, onOpen, ref }: { flyer: FlyerRecord; onOpen:
   };
   // Pfeiltasten auf einer Seite: zur nächsten (Doppel-)Seite und den Fokus mitnehmen – Enter vergrößert dann, was man sieht
   const onKeyDown = (e: KeyboardEvent<HTMLUListElement>) => {
-    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    if ((e.key !== "ArrowRight" && e.key !== "ArrowLeft") || e.altKey || e.metaKey || e.ctrlKey) return;
     e.preventDefault();
     const cur = visibleRef.current;
     const next = e.key === "ArrowRight" ? Math.max(...cur) + 1 : Math.min(...cur) - 1;
@@ -189,10 +193,11 @@ export function FlyerPager({ flyer, onOpen, ref }: { flyer: FlyerRecord; onOpen:
                   flyer={flyer}
                   page={p}
                   size="full"
-                  // Hochformat ab 1024 px: die Seite ist höchstens 78 % des Bildschirms hoch, also höchstens so breit
-                  sizes={portrait ? `(min-width: 64rem) min(40vw, calc(78vh * ${(flyer.page_width / flyer.page_height).toFixed(3)})), 92vw` : "92vw"}
+                  // Hochformat ab 1024 px: höchstens eine halbe Leiste breit und höchstens so breit, wie die Höhe (78 % des Bildschirms, 56rem) erlaubt
+                  sizes={portrait ? `(min-width: 64rem) min(50vw, calc(min(78vh, 56rem) * ${(flyer.page_width / flyer.page_height).toFixed(3)})), 92vw` : "92vw"}
                   priority={p === 1}
-                  className={cn("h-auto w-full", portrait && "lg:h-[min(78svh,56rem)] lg:w-auto")}
+                  // Höhe begrenzen statt setzen: in schmalen Spalten (Tablet quer) bleibt das Seitenverhältnis erhalten
+                  className={cn("h-auto w-full", portrait && "lg:max-h-[min(78svh,56rem)] lg:w-auto lg:max-w-full")}
                 />
               ) : (
                 <span
@@ -220,13 +225,21 @@ export function FlyerPager({ flyer, onOpen, ref }: { flyer: FlyerRecord; onOpen:
 
       <nav aria-label="Seiten im Überblick" className="mt-4">
         {/* „relative“: offsetLeft der Bilder bezieht sich dann auf die Leiste – so steht das aktuelle Bild wirklich in der Mitte */}
-        <ul ref={strip} onKeyDown={onStripKeyDown} className="relative flex gap-2 overflow-x-auto pb-2 [scrollbar-width:thin]">
+        <ul
+          ref={strip}
+          onKeyDown={onStripKeyDown}
+          onFocus={(e) => setStripFocus(Number((e.target as HTMLElement).closest("[data-strip-page]")?.getAttribute("data-strip-page")) || null)}
+          onBlur={(e) => {
+            if (!strip.current?.contains(e.relatedTarget as Node | null)) setStripFocus(null);
+          }}
+          className="relative flex gap-2 overflow-x-auto pb-2 [scrollbar-width:thin]"
+        >
           {pages.map((p) => (
             <li key={p} data-strip-page={p} className="shrink-0">
               <button
                 type="button"
                 onClick={() => scrollToPage(p, true)}
-                tabIndex={p === visible[0] ? 0 : -1}
+                tabIndex={p === (stripFocus ?? visible[0]) ? 0 : -1}
                 aria-current={visible.includes(p) ? "true" : undefined}
                 aria-label={`Seite ${p}`}
                 className={cn("block w-12 overflow-hidden rounded-md ring-2 sm:w-14", visible.includes(p) ? "ring-red" : "ring-transparent", INSET_FOCUS)}

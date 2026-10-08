@@ -115,6 +115,43 @@ await p.goto(`${BASE}/`, { waitUntil: "load" });
 check(await p.evaluate((sel) => !document.querySelector(sel)?.getClientRects().length, TOGGLE), "ohne JavaScript kein Pause-Knopf");
 await p.close();
 
+// Kann der Browser kein Format abspielen, gibt es den Knopf gar nicht erst
+p = await b.newPage();
+await p.setViewport(mobile);
+await p.evaluateOnNewDocument(() => {
+  HTMLMediaElement.prototype.canPlayType = () => "";
+});
+await p.goto(`${BASE}/`, { waitUntil: "load" });
+await settle();
+check(await p.evaluate((sel) => !document.querySelector(sel), TOGGLE), "Browser kann kein Format abspielen → kein Pause-Knopf");
+await p.close();
+// Verschwindet der Knopf unter dem Fokus, bleibt der Fokus im Hero (nicht auf <body>)
+p = await blocked(/\.mp4$/);
+await p.emulateMediaFeatures([{ name: "prefers-reduced-motion", value: "reduce" }]);
+await p.goto(`${BASE}/`, { waitUntil: "load" });
+await settle();
+if (await p.$(TOGGLE)) {
+  await p.focus(TOGGLE);
+  await p.keyboard.press("Enter");
+  await settle();
+  await settle();
+}
+check(await p.evaluate((sel) => !document.querySelector(sel) && document.activeElement !== document.body && !!document.activeElement?.closest("section[data-hero]"), TOGGLE), "… Knopf weg, Fokus bleibt im Hero");
+await p.close();
+// Nach einer Client-Navigation von einer Seite ohne Server-HTML (unbekannter Beitrag) ist der Knopf da und html.js gesetzt
+p = await b.newPage();
+await p.setViewport(mobile);
+await p.goto(`${BASE}/aktuelles/gibts-nicht`, { waitUntil: "load" });
+await new Promise((r) => setTimeout(r, 800));
+await Promise.all([p.waitForNavigation({ waitUntil: "load" }).catch(() => {}), p.evaluate(() => [...document.querySelectorAll("main a")].find((a) => a.textContent.includes("Zur Startseite"))?.click())]);
+await p.waitForFunction(() => location.pathname === "/", { timeout: 10000 }).catch(() => {});
+await running(p);
+check(
+  await p.evaluate((sel) => document.documentElement.classList.contains("js") && document.querySelector(sel)?.getClientRects().length > 0, TOGGLE),
+  "Client-Navigation von der 404 zur Startseite: Pause-Knopf sichtbar, html.js gesetzt",
+);
+await p.close();
+
 // Desktop
 const d = await b.newPage();
 await d.setViewport({ width: 1440, height: 900 });

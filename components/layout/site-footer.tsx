@@ -62,7 +62,7 @@ export function SiteFooter() {
             ))}
           </ul>
           {/* Handy: auf Höhe der Service-Links (Überschrift + Abstand) */}
-          <ul className="grid gap-1 max-md:pt-9 max-[22.5rem]:pt-0 md:mt-4 md:border-t md:border-white/10 md:pt-4">
+          <ul className="grid gap-1 max-md:pt-9 max-[23.5rem]:pt-0 md:mt-4 md:border-t md:border-white/10 md:pt-4">
             <li>
               <Link href="/impressum" className="inline-flex min-h-10 items-center text-white/70 hover:text-white hover:underline">
                 Impressum
@@ -76,8 +76,8 @@ export function SiteFooter() {
           </ul>
         </div>
 
-        {/* unter 360 px über beide Spalten – sonst bricht jeder Link zweizeilig um */}
-        <nav aria-label="Service" className="max-[22.5rem]:col-span-2">
+        {/* bis 376 px über beide Spalten – sonst bricht jeder Link zweizeilig um */}
+        <nav aria-label="Service" className="max-[23.5rem]:col-span-2">
           <h2 className="text-eyebrow text-white/60">Service</h2>
           <ul className="mt-4 grid gap-1">
             {[

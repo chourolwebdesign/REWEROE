@@ -168,13 +168,39 @@ await live.goto(`${BASE}/`, { waitUntil: "load" });
 await new Promise((r) => setTimeout(r, 300));
 const faded = await live.$$eval("[data-snap-row] .reveal", (els) => els.filter((e) => getComputedStyle(e).opacity !== "1").length);
 check(faded === 0, `Wisch-Reihen: alle Kacheln sofort sichtbar (${faded} ausgeblendet)`);
+const grew = await live.evaluate(async () => {
+  const rows = [...document.querySelectorAll("[data-snap-row]")];
+  const start = rows.map((r) => r.getBoundingClientRect().height);
+  let max = 0;
+  for (let i = 0; i < 10; i++) {
+    await new Promise((r) => setTimeout(r, 100));
+    rows.forEach((r, k) => (max = Math.max(max, r.getBoundingClientRect().height - start[k])));
+  }
+  return Math.round(max);
+});
+check(grew <= 1, `Wisch-Reihen wachsen nicht nach dem Laden (${grew} px)`);
 await live.close();
 
-// Footer bei 320 px: die Service-Links stehen nicht ohne Abstand übereinander
+// Footer bei 320 und 360 px: die Service-Links stehen mit Abstand, passen in die Spalte und bleiben bei 360 px einzeilig
 await p.setViewport(phone(320));
 await open("/kontakt");
 const gaps = await p.$$eval('footer nav[aria-label="Service"] li', (lis) => lis.slice(1).map((li, i) => Math.round(li.getBoundingClientRect().top - lis[i].getBoundingClientRect().bottom)));
 check(gaps.every((g) => g >= 4), `320 px: Abstand zwischen den Service-Links mindestens 4 px (${gaps.join(", ")})`);
+const wide = await p.$$eval('footer nav[aria-label="Service"] li', (lis) => lis.filter((li) => li.querySelector("a").getBoundingClientRect().right > li.getBoundingClientRect().right + 1).length);
+check(wide === 0, `320 px: kein Service-Link breiter als seine Spalte (${wide})`);
+await p.setViewport(phone(360));
+await open("/kontakt");
+// Zeilen zählen über die Textrechtecke (die Links sind 44 px hoch, auch einzeilig)
+const twoLine = await p.$$eval('footer nav[aria-label="Service"] a', (as) =>
+  as
+    .filter((a) => {
+      const range = document.createRange();
+      range.selectNodeContents(a);
+      return [...range.getClientRects()].filter((r) => r.height > 0).length > 1;
+    })
+    .map((a) => a.textContent.trim()),
+);
+check(twoLine.length === 0, `360 px: Service-Links einzeilig${twoLine.length ? ` (${twoLine.join(", ")})` : ""}`);
 
 for (const width of [360, 430]) {
   await p.setViewport(phone(width));

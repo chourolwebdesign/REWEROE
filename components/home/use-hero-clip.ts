@@ -37,6 +37,8 @@ export function useHeroClip(sources: readonly VideoSource[]) {
     const start = () => {
       idle = window.setTimeout(() => {
         autoSrc.current = autoplaySource(sources);
+        // kann der Browser keine Fassung abspielen, gibt es den Knopf gar nicht erst (Datensparmodus: Fassung ja, Autoplay nein)
+        if (!nextSource()) setUnavailable(true);
         if (!chosen.current && (reduce.matches || !autoSrc.current)) setUserPaused(true);
         setReady(true);
       }, 300);
@@ -47,7 +49,7 @@ export function useHeroClip(sources: readonly VideoSource[]) {
       window.clearTimeout(idle);
       window.removeEventListener("load", start);
     };
-  }, [sources]);
+  }, [sources, nextSource]);
 
   useEffect(() => {
     const el = rootRef.current;
@@ -105,6 +107,8 @@ export function useHeroClip(sources: readonly VideoSource[]) {
     failed.current.push(v.getAttribute("src") ?? "");
     const next = failed.current.length <= sources.length ? nextSource() : null;
     if (!next) {
+      // der Knopf verschwindet gleich – lag der Fokus darauf, bleibt er im Hero statt auf <body>
+      if (rootRef.current?.contains(document.activeElement)) rootRef.current.focus({ preventScroll: true });
       setShown(false);
       setUnavailable(true);
       return;

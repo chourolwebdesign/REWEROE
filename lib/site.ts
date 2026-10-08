@@ -73,14 +73,19 @@ export const hasHero = (pathname: string) => HERO_PAGES.has(pathname) || /^\/akt
 
 /**
  * Meta-Beschreibung aus einem längeren Text: höchstens `max` Zeichen (Suchmaschinen zeigen etwa 160). Gekürzt wird an der letzten
- * Satzgrenze, die hineinpasst; sonst an einer Wortgrenze mit „…“.
+ * Satzgrenze, die hineinpasst – ein Punkt zählt nur nach einem Wort mit mindestens drei Buchstaben und vor einem Großbuchstaben
+ * (nicht nach „26.“ oder „z. B.“); sonst an einer Wortgrenze mit „…“.
  */
 export function metaDescription(text: string, max = 160): string {
   const t = text.replace(/\s+/g, " ").trim();
   if (t.length <= max) return t;
+  let sentence = -1;
+  for (const m of t.matchAll(/\p{L}{3,}[.!?](?= [\p{Lu}„"(])/gu)) {
+    const end = m.index + m[0].length;
+    if (end <= max && end >= 40) sentence = end;
+  }
+  if (sentence > 0) return t.slice(0, sentence);
   const head = t.slice(0, max);
-  const sentence = Math.max(head.lastIndexOf(". "), head.lastIndexOf("! "), head.lastIndexOf("? "));
-  if (sentence >= 40) return head.slice(0, sentence + 1);
   const word = head.lastIndexOf(" ");
   return head.slice(0, word > 0 ? word : max - 1).replace(/[,;:–-]$/, "") + "…";
 }

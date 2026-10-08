@@ -21,7 +21,7 @@ export function getJson<T>(url: string, what: string, { deadlineMs = 15_000 } = 
       let body = "";
       res.setEncoding("utf8");
       res.on("data", (chunk) => (body += chunk));
-      res.on("error", (e) => fail(new Error(`Supabase (${what}): Verbindung abgebrochen (${e.message})`)));
+      res.on("error", (e) => fail(new Error(`Supabase (${what}): Verbindung abgebrochen (${e.message})`, { cause: e })));
       res.on("end", () => {
         clearTimeout(deadline);
         if (!res.complete) return reject(new Error(`Supabase (${what}): Antwort unvollständig`));
@@ -35,7 +35,7 @@ export function getJson<T>(url: string, what: string, { deadlineMs = 15_000 } = 
     });
     const deadline = setTimeout(() => req.destroy(new Error(`Supabase (${what}) antwortet nicht`)), deadlineMs);
     req.on("timeout", () => req.destroy(new Error(`Supabase (${what}) antwortet nicht`)));
-    req.on("error", (e) => fail(new Error(`Supabase (${what}): ${e.message}`)));
+    req.on("error", (e) => fail(new Error(`Supabase (${what}): ${e.message}`, { cause: e })));
     req.end();
   });
 }

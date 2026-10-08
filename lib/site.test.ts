@@ -21,6 +21,15 @@ describe("metaDescription", () => {
     const text = "Innenminister Roman Poseck war bei uns im Markt und hat seinen Notfallbeutel gepackt. Gemeinsam mit Land Hessen, Handelsverband und Feuerwehr haben wir gezeigt, wie ein Vorrat für zehn Tage aussieht.";
     expect(metaDescription(text)).toBe("Innenminister Roman Poseck war bei uns im Markt und hat seinen Notfallbeutel gepackt.");
   });
+  it("hält Ordnungszahlen und Abkürzungen nicht für Satzenden", () => {
+    const date = "Innenminister Roman Poseck besuchte den Markt in Rödelheim am 26. September 2026 und packte dort gemeinsam mit dem ganzen Team vom Markt seinen Notfallbeutel für zehn Tage, wie es das Bundesamt empfiehlt.";
+    expect(metaDescription(date)).not.toMatch(/\d\.$/);
+    expect(metaDescription(date).endsWith("…")).toBe(true);
+    const abbr = "Am Aktionstag gab es ein buntes Programm für Kinder, z. B. Kinderschminken, eine Rallye durch den ganzen Markt und Bastelstationen mit Material aus dem Sortiment des Marktes, dazu Musik.";
+    expect(metaDescription(abbr)).not.toMatch(/z\. B\.$/);
+    expect(metaDescription(abbr).endsWith("…")).toBe(true);
+    expect(metaDescription("Dr. Müller kam. Er brachte den Beutel mit und erklärte den Gästen im Markt sehr ausführlich, was in einen Vorrat für zehn Tage gehört und was nicht hineingehört, danke.")).not.toMatch(/^Dr\.$/);
+  });
   it("kürzt sonst an einer Wortgrenze mit Auslassungszeichen", () => {
     const text = "Wort ".repeat(60).trim();
     const out = metaDescription(text);

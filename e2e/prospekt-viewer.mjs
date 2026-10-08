@@ -204,6 +204,25 @@ if (total % 2 === 0) {
 } else {
   check(await waitLabel(desk, `Seite ${total - 1}–${total} von ${total}`), `Desktop: letzte Doppelseite ${total - 1}–${total}`);
 }
+// Vorschau-Leiste auf dem Desktop: die Doppelseite steht als Paar in der Mitte; der Tab-Stopp folgt dem fokussierten Bild
+await desk.$eval('[data-strip-page="10"] button', (x) => x.click());
+await waitLabel(desk, `Seite 10–11 von ${total}`);
+await new Promise((r) => setTimeout(r, 600));
+const pairCentre = await desk.evaluate(() => {
+  const s = document.querySelector('[aria-label="Seiten im Überblick"] ul');
+  const a = s.querySelector('[data-strip-page="10"]').getBoundingClientRect();
+  const c = s.querySelector('[data-strip-page="11"]').getBoundingClientRect();
+  const box = s.getBoundingClientRect();
+  return Math.round(Math.abs((a.left + c.right) / 2 - (box.left + box.width / 2)));
+});
+check(pairCentre <= 2, `Desktop: Vorschau-Leiste zentriert die Doppelseite 10–11 (Abstand ${pairCentre} px)`);
+await desk.$eval('[data-strip-page="1"] button', (x) => x.click());
+await waitLabel(desk, `Seite 1 von ${total}`);
+await desk.focus('[data-strip-page="1"] button');
+await desk.keyboard.press("ArrowRight");
+await desk.keyboard.press("ArrowRight");
+await waitLabel(desk, `Seite 2–3 von ${total}`);
+check(await desk.evaluate(() => document.activeElement?.closest("[data-strip-page]")?.getAttribute("data-strip-page") === "3" && document.activeElement.tabIndex === 0), "Desktop: nach zwei Pfeiltasten ab Bild 1 ist das fokussierte Vorschaubild 3 der Tab-Stopp (nicht Bild 2)");
 // Drehen / Fensterbreite über 1024 px hinweg: die zuerst sichtbare Seite bleibt stehen
 // nach jedem Drehen kurz warten: der Browser meldet die neue Breite erst beim nächsten Zeichnen (Nutzer tippen nicht im selben Frame)
 const rotate = async (w, h) => {
