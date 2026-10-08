@@ -7,7 +7,8 @@ const third = new Set();
 const watchThird = (p) =>
   p.on("request", (r) => {
     const u = new URL(r.url());
-    if (!["localhost", "127.0.0.1"].includes(u.hostname) && u.protocol.startsWith("http")) third.add(u.hostname);
+    // der geprüfte Host selbst zählt nicht als Drittanbieter – auch bei E2E_BASE=https://reweroe.vercel.app
+    if (!["localhost", "127.0.0.1", new URL(BASE).hostname].includes(u.hostname) && u.protocol.startsWith("http")) third.add(u.hostname);
   });
 const LABEL = '[aria-label="Prospektseiten"] [aria-live]';
 const label = (p) => p.$eval(LABEL, (e) => e.textContent.trim());
