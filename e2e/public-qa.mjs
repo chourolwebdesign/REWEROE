@@ -5,7 +5,8 @@ const require = createRequire(import.meta.url);
 const { AxePuppeteer } = require("@axe-core/puppeteer");
 
 const paths = process.argv.slice(2).length ? process.argv.slice(2) : ["/", "/angebote", "/markt", "/aktuelles", "/karriere", "/karriere/bewerben", "/kontakt", "/impressum", "/datenschutz", "/feedback", "/gibts-nicht"];
-const local = new Set(["localhost", "127.0.0.1"]);
+// der geprüfte Host selbst zählt nicht als Drittanbieter – auch bei E2E_BASE=https://reweroe.vercel.app
+const local = new Set(["localhost", "127.0.0.1", new URL(BASE).hostname]);
 const b = await browser();
 for (const path of paths) {
   for (const vp of [{ width: 1280, height: 800 }, { width: 390, height: 844, isMobile: true, hasTouch: true }]) {
