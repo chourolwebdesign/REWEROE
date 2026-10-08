@@ -7,6 +7,7 @@ import { linkTarget, type FlyerRecord } from "@/lib/prospekt/select";
 import { FlyerImage, flyerMiniSrc, flyerZoomSrc } from "./flyer-image";
 import { cn } from "@/lib/utils";
 import { ShareButton } from "@/components/ui/share-button";
+import { pagesLabel } from "@/lib/prospekt/pager";
 import { FlyerPager, type PagerHandle } from "./flyer-pager";
 
 export interface ViewerWeek {
@@ -125,7 +126,7 @@ export function FlyerViewer({ weeks, defaultTab, shareUrl }: { weeks: ViewerWeek
       <FlyerPager key={flyer.id} ref={pager} flyer={flyer} onOpen={(p) => void open(week, p - 1)} />
       <details className="group mt-8 rounded-[1.5rem] bg-soft p-4 md:p-6">
         <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 font-semibold [&::-webkit-details-marker]:hidden">
-          Alle {flyer.page_count} Seiten ansehen
+          {pagesLabel(flyer.page_count)}
           <ChevronDown className="size-5 transition-transform group-open:rotate-180 motion-reduce:transition-none" aria-hidden />
         </summary>
         <ul className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4 md:gap-3 lg:grid-cols-6">

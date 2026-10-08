@@ -16,8 +16,9 @@ export interface PagerHandle {
 
 const SPREADS = "(min-width: 64rem)";
 const reduced = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+// am Ende „aria-disabled“ statt „disabled“: der Knopf bleibt fokussierbar, der Fokus geht in keinem Browser verloren
 const NAV_BTN =
-  "inline-flex min-h-11 items-center gap-1.5 rounded-full bg-soft px-4 font-semibold transition-transform duration-150 active:scale-[0.97] disabled:opacity-40 disabled:active:scale-100";
+  "inline-flex min-h-11 items-center gap-1.5 rounded-full bg-soft px-4 font-semibold transition-transform duration-150 active:scale-[0.97] aria-disabled:opacity-40 aria-disabled:active:scale-100";
 /** Fokusrahmen nach innen: die waagerechten Leisten schneiden alles ab, was über die Schaltfläche hinausragt */
 const INSET_FOCUS = "focus-visible:outline-offset-[-4px]";
 
@@ -66,6 +67,14 @@ export function FlyerPager({ flyer, onOpen, ref }: { flyer: FlyerRecord; onOpen:
     }),
     [scrollToPage],
   );
+
+  // Drehen oder Fensterbreite über 1024 px hinweg (Doppelseiten an/aus): die zuerst sichtbare Seite bleibt stehen
+  useEffect(() => {
+    const mq = window.matchMedia(SPREADS);
+    const keep = () => scrollToPage(visibleRef.current[0] ?? 1, false);
+    mq.addEventListener("change", keep);
+    return () => mq.removeEventListener("change", keep);
+  }, [scrollToPage]);
 
   useEffect(() => {
     let idle = 0;
@@ -121,9 +130,21 @@ export function FlyerPager({ flyer, onOpen, ref }: { flyer: FlyerRecord; onOpen:
     if (s && thumb) s.scrollTo({ left: thumb.offsetLeft - s.clientWidth / 2 + thumb.clientWidth / 2, behavior: reduced() ? "auto" : "smooth" });
   }, [visible]);
 
+  const atStart = visible[0] === 1;
+  const atEnd = visible.includes(total);
   const step = (dir: 1 | -1) => {
     const t = track.current;
+    if ((dir < 0 && atStart) || (dir > 0 && atEnd)) return;
     if (t) t.scrollBy({ left: dir * t.clientWidth, behavior: reduced() ? "auto" : "smooth" });
+  };
+  // Vorschau-Leiste: ein Tab-Stopp (das Bild der aktuellen Seite); Pfeiltasten, Pos1 und Ende wandern von Bild zu Bild
+  const onStripKeyDown = (e: KeyboardEvent<HTMLUListElement>) => {
+    const cur = Number((e.target as HTMLElement).closest("[data-strip-page]")?.getAttribute("data-strip-page"));
+    const next = e.key === "ArrowRight" ? cur + 1 : e.key === "ArrowLeft" ? cur - 1 : e.key === "Home" ? 1 : e.key === "End" ? total : 0;
+    if (!cur || !next || next < 1 || next > total) return;
+    e.preventDefault();
+    scrollToPage(next, true);
+    strip.current?.querySelector<HTMLElement>(`[data-strip-page="${next}"] button`)?.focus({ preventScroll: true });
   };
   // Pfeiltasten auf einer Seite: zur nächsten (Doppel-)Seite und den Fokus mitnehmen – Enter vergrößert dann, was man sieht
   const onKeyDown = (e: KeyboardEvent<HTMLUListElement>) => {
@@ -168,7 +189,8 @@ export function FlyerPager({ flyer, onOpen, ref }: { flyer: FlyerRecord; onOpen:
                   flyer={flyer}
                   page={p}
                   size="full"
-                  sizes={portrait ? "(min-width: 64rem) 40vw, 92vw" : "92vw"}
+                  // Hochformat ab 1024 px: die Seite ist höchstens 78 % des Bildschirms hoch, also höchstens so breit
+                  sizes={portrait ? `(min-width: 64rem) min(40vw, calc(78vh * ${(flyer.page_width / flyer.page_height).toFixed(3)})), 92vw` : "92vw"}
                   priority={p === 1}
                   className={cn("h-auto w-full", portrait && "lg:h-[min(78svh,56rem)] lg:w-auto")}
                 />
@@ -185,24 +207,26 @@ export function FlyerPager({ flyer, onOpen, ref }: { flyer: FlyerRecord; onOpen:
       </ul>
 
       <div className="mt-4 flex items-center justify-between gap-3">
-        <button type="button" onClick={() => step(-1)} disabled={visible[0] === 1} className={NAV_BTN}>
+        <button type="button" onClick={() => step(-1)} aria-disabled={atStart} className={NAV_BTN}>
           <ChevronLeft className="size-5" aria-hidden /> Zurück
         </button>
         <p aria-live="polite" className="font-semibold tabular-nums">
           {pageLabel(settled, total)}
         </p>
-        <button type="button" onClick={() => step(1)} disabled={visible.includes(total)} className={NAV_BTN}>
+        <button type="button" onClick={() => step(1)} aria-disabled={atEnd} className={NAV_BTN}>
           Weiter <ChevronRight className="size-5" aria-hidden />
         </button>
       </div>
 
       <nav aria-label="Seiten im Überblick" className="mt-4">
-        <ul ref={strip} className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:thin]">
+        {/* „relative“: offsetLeft der Bilder bezieht sich dann auf die Leiste – so steht das aktuelle Bild wirklich in der Mitte */}
+        <ul ref={strip} onKeyDown={onStripKeyDown} className="relative flex gap-2 overflow-x-auto pb-2 [scrollbar-width:thin]">
           {pages.map((p) => (
             <li key={p} data-strip-page={p} className="shrink-0">
               <button
                 type="button"
                 onClick={() => scrollToPage(p, true)}
+                tabIndex={p === visible[0] ? 0 : -1}
                 aria-current={visible.includes(p) ? "true" : undefined}
                 aria-label={`Seite ${p}`}
                 className={cn("block w-12 overflow-hidden rounded-md ring-2 sm:w-14", visible.includes(p) ? "ring-red" : "ring-transparent", INSET_FOCUS)}

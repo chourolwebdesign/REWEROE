@@ -25,3 +25,6 @@ export function pagerTarget(page: number, total: number, spreads: boolean): numb
 
 /** Doppelseiten (ab 1024 px) nur bei Hochformat – Querformat-Seiten stehen schon allein breit genug */
 export const usesSpreads = (pageWidth: number, pageHeight: number) => pageHeight >= pageWidth;
+
+/** Text des Aufklappers „Alle Seiten“ – bei einer Seite ohne „Alle 1 Seiten“ */
+export const pagesLabel = (n: number) => (n === 1 ? "Die Seite ansehen" : `Alle ${n} Seiten ansehen`);
