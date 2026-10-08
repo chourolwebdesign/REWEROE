@@ -247,9 +247,6 @@ Entscheidungen bei der Umsetzung:
   - Der Knopf hat einen festen Namen („Rundgang anhalten“); der Zustand steht in `aria-pressed`.
 - **SSIM:** Die Bilder werden über ihre Nummer gepaart. Mit Zeitstempeln (MKV, auf Millisekunden gerundet) verschoben sich die Paare um ein Bild, und alle Werte lagen fälschlich bei 0,89.
 
-Zurückgestellt (kleinere Punkte aus dem Review):
-- Video-Fehler: Kein `onError` und keine nächste Fassung, wenn die gewählte Datei nicht lädt. Ohne abspielbare Fassung und ohne JS bleibt der Knopf wirkungslos.
-- Einblend-Animation (`.reveal`) für Karten, die in den Reihen seitlich außerhalb starten.
-- Footer bei 320 px: Die Service-Links brechen zweizeilig um und stehen ohne Abstand.
-- `coverSizes` skaliert nur `px` und `vw`; die erste Kachel ab 768 px fordert etwas zu große Bilder an.
-
+Zurückgestellt (kleinere Punkte aus dem Review) – in Stufe 7 (Spec `2026-10-08-feinschliff-design.md`) behoben: Video-Fehler
+(nächste Fassung, ohne Fassung kein Knopf, ohne JS kein Knopf), Einblend-Animation in den Wisch-Reihen, Footer bei 320 px,
+`coverSizes` mit `rem`. Offen bleibt nur die etwas zu große Bildfassung der ersten Galeriekachel ab 768 px.

@@ -52,6 +52,8 @@ check((await param(HERO_IMG, "q")) === "85", "Hero-Poster: Qualität 85");
 check((await param(TILE_IMG, "q")) === "75", "Galerie-Kachel: Qualität 75");
 await photos.goto(`${BASE}/markt`, { waitUntil: "load" });
 check((await param(MARKT_IMG, "q")) === "85", "/markt: großes Foto Qualität 85");
+await photos.goto(`${BASE}/aktuelles/resilienzwoche-2026`, { waitUntil: "load" });
+check((await param("main figure img", "q")) === "85", "Beitrag: Titelbild Qualität 85");
 // Retina-Handy (3×): die Bildoptimierung liefert genug Pixel (sizes passt zur angezeigten Breite)
 await photos.setViewport({ ...mobile, deviceScaleFactor: 3 });
 await photos.goto(`${BASE}/`, { waitUntil: "load" });

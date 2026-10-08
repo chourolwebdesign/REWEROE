@@ -52,7 +52,7 @@ export function SiteFooter() {
 
         <div className="max-md:order-last">
           <h2 className="text-eyebrow text-white/60 max-md:hidden">Seiten</h2>
-          <ul className="mt-4 grid max-md:hidden">
+          <ul className="mt-4 grid gap-1 max-md:hidden">
             {NAV.map((item) => (
               <li key={item.href}>
                 <Link href={item.href} className="inline-flex min-h-11 items-center text-white/85 hover:text-white hover:underline hover:underline-offset-4">
@@ -62,7 +62,7 @@ export function SiteFooter() {
             ))}
           </ul>
           {/* Handy: auf Höhe der Service-Links (Überschrift + Abstand) */}
-          <ul className="grid gap-1 max-md:pt-9 md:mt-4 md:border-t md:border-white/10 md:pt-4">
+          <ul className="grid gap-1 max-md:pt-9 max-[22.5rem]:pt-0 md:mt-4 md:border-t md:border-white/10 md:pt-4">
             <li>
               <Link href="/impressum" className="inline-flex min-h-10 items-center text-white/70 hover:text-white hover:underline">
                 Impressum
@@ -76,9 +76,10 @@ export function SiteFooter() {
           </ul>
         </div>
 
-        <nav aria-label="Service">
+        {/* unter 360 px über beide Spalten – sonst bricht jeder Link zweizeilig um */}
+        <nav aria-label="Service" className="max-[22.5rem]:col-span-2">
           <h2 className="text-eyebrow text-white/60">Service</h2>
-          <ul className="mt-4 grid">
+          <ul className="mt-4 grid gap-1">
             {[
               { href: "/karriere/bewerben", label: "Bewerben in 60 Sekunden" },
               { href: "/angebote#kalender", label: "Markt-Kalender abonnieren" },

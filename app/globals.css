@@ -183,6 +183,15 @@
     animation-delay: 180ms;
   }
 }
+/* Wisch-Reihen auf dem Handy: Kacheln außerhalb des Bildes erschienen sonst erst beim Wischen (und die Reihe wuchs kurz) */
+@media (prefers-reduced-motion: no-preference) and (width < 48rem) {
+  html.js [data-snap-row] .reveal:not(.is-in) {
+    opacity: 1;
+  }
+  html.js [data-snap-row] .reveal.is-in {
+    animation: none;
+  }
+}
 
 /* ───────────── Aktionsknöpfe ─────────────
    Mobil untereinander in voller Breite (große Tippflächen, ruhige Kante), ab 640 px nebeneinander.

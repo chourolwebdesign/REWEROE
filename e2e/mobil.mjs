@@ -161,6 +161,21 @@ const poster = (await realPx("[data-hero-video] img"))[0];
 check(poster?.has === 1080, `Hero-Poster in 1080 px (${poster?.has})`);
 
 // 360 und 430 px: kein seitliches Scrollen
+// Wisch-Reihen ohne Einblend-Animation: auch Kacheln außerhalb des Bildes sind sofort deckend (sonst erschienen sie erst beim Wischen)
+const live = await b.newPage();
+await live.setViewport(phone(390));
+await live.goto(`${BASE}/`, { waitUntil: "load" });
+await new Promise((r) => setTimeout(r, 300));
+const faded = await live.$$eval("[data-snap-row] .reveal", (els) => els.filter((e) => getComputedStyle(e).opacity !== "1").length);
+check(faded === 0, `Wisch-Reihen: alle Kacheln sofort sichtbar (${faded} ausgeblendet)`);
+await live.close();
+
+// Footer bei 320 px: die Service-Links stehen nicht ohne Abstand übereinander
+await p.setViewport(phone(320));
+await open("/kontakt");
+const gaps = await p.$$eval('footer nav[aria-label="Service"] li', (lis) => lis.slice(1).map((li, i) => Math.round(li.getBoundingClientRect().top - lis[i].getBoundingClientRect().bottom)));
+check(gaps.every((g) => g >= 4), `320 px: Abstand zwischen den Service-Links mindestens 4 px (${gaps.join(", ")})`);
+
 for (const width of [360, 430]) {
   await p.setViewport(phone(width));
   const wide = [];

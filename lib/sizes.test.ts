@@ -19,4 +19,9 @@ describe("coverSizes", () => {
   it("kommt mit einer einzelnen Angabe ohne Bedingung aus", () => {
     expect(coverSizes("640px", 16 / 9, 4 / 5)).toBe("1422px");
   });
+
+  it("skaliert auch rem; andere Angaben bleiben, wie sie sind", () => {
+    expect(coverSizes("(min-width: 64rem) 20rem, 72vw", 3 / 2, 4 / 5)).toBe("(min-width: 64rem) 38rem, 135vw");
+    expect(coverSizes("calc(100vw - 2rem)", 3 / 2, 4 / 5)).toBe("calc(100vw - 2rem)");
+  });
 });

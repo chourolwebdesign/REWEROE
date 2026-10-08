@@ -694,7 +694,7 @@ export function ApplicationForm({ ready, phone, phoneHref }: { ready: boolean; p
             >
               <span className="font-medium">
                 Ich habe die{" "}
-                <Link href="/datenschutz#bewerbung" target="_blank" className="font-semibold underline underline-offset-4">
+                <Link href="/datenschutz#bewerbung" target="_blank" rel="noopener" className="font-semibold underline underline-offset-4">
                   Datenschutzhinweise zur Bewerbung
                 </Link>{" "}
                 gelesen.

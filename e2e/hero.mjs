@@ -88,6 +88,33 @@ for (const [name, prep] of [
   await p.close();
 }
 
+// Lädt die gewählte Fassung nicht, läuft die nächste; läuft gar keine, bleibt das Poster und der Knopf verschwindet; ohne JS kein Knopf
+const blocked = async (pattern) => {
+  const p = await b.newPage();
+  await p.setViewport(mobile);
+  await p.setRequestInterception(true);
+  p.on("request", (r) => (pattern.test(r.url()) ? r.abort() : r.continue()));
+  await p.goto(`${BASE}/`, { waitUntil: "load" });
+  return p;
+};
+let p = await blocked(/-av1\.mp4$/);
+check(await running(p) && /-(hevc|h264)\.mp4$/.test(await p.$eval(VIDEO, (v) => v.currentSrc)), `AV1 lädt nicht → nächste Fassung läuft (${await p.$eval(VIDEO, (v) => v.currentSrc.split("/").pop())})`);
+await p.close();
+p = await blocked(/\.mp4$/);
+await settle();
+await settle();
+check(
+  await p.evaluate((sel) => !document.querySelector(sel)?.getClientRects().length && document.querySelector("[data-hero-video] img")?.getClientRects().length > 0, TOGGLE),
+  "keine Fassung lädt → Poster bleibt, kein Pause-Knopf",
+);
+await p.close();
+p = await b.newPage();
+await p.setViewport(mobile);
+await p.setJavaScriptEnabled(false);
+await p.goto(`${BASE}/`, { waitUntil: "load" });
+check(await p.evaluate((sel) => !document.querySelector(sel)?.getClientRects().length, TOGGLE), "ohne JavaScript kein Pause-Knopf");
+await p.close();
+
 // Desktop
 const d = await b.newPage();
 await d.setViewport({ width: 1440, height: 900 });

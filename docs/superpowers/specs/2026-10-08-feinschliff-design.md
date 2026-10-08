@@ -52,10 +52,11 @@ Browser-Tests, Unit-Tests, `tsc` und `lint` bleiben grün; Lighthouse lokal nich
 
 ## 3. Fehlerseiten und Robustheit
 
-9. **404-Seite** (`app/not-found.tsx`, `components/layout/site-header.tsx`): `NotFound` wird `async` und nutzt
-   `currentFlyerLink()` für Kopfleiste und Knopf. `SiteHeader` bekommt `hero?: boolean`; `NotFound` übergibt `false`, damit die
-   Leiste auch unter `/aktuelles/<unbekannt>` weiß ist. Test: `/aktuelles/gibts-nicht` → Leiste ohne `on-dark`, Knopf und Kopf
-   führen auf `/angebote#prospekt` (mit Prospekt) bzw. rewe.de (ohne).
+9. **404-Seite** (`app/not-found.tsx`, `components/layout/site-header.tsx`): Die Seite wird beim Build erzeugt; ein beim Build
+   eingefrorener Prospekt-Link (rewe.de oder Viewer) wäre später falsch. Kopfleiste und Knopf führen deshalb immer auf die eigene
+   Prospektseite `/angebote#prospekt`, die ohne Prospekt selbst zu rewe.de verweist. `SiteHeader` bekommt `hero?: boolean`;
+   `NotFound` übergibt `false`, damit die Leiste auch unter `/aktuelles/<unbekannt>` schon im Server-HTML weiß ist. Test:
+   Server-HTML von `/aktuelles/gibts-nicht` hat eine weiße Leiste; beide Prospekt-Knöpfe zeigen auf `/angebote#prospekt`.
 10. **`getJson`** (`lib/data/rest.ts`): `res.on("error")` und eine Gesamtfrist (15 s), nach der die Anfrage abgebrochen wird; das
     Modul wählt `http` oder `https` nach der Adresse, damit ein Unit-Test mit einem lokalen `http`-Server läuft: Antwort nach den
     Headern abgebrochen → Fehler; keine Antwort → Fehler nach der Frist.

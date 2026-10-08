@@ -24,7 +24,7 @@ const POSTER_SIZES = "(min-width: 64rem) 30rem, (max-aspect-ratio: 9/16) 56.25vh
  * großer Hochkant-Rahmen rechts.
  */
 export function RundgangHero({ clip, intro, side }: { clip: HeroClip; intro: ReactNode; side: ReactNode }) {
-  const { rootRef, videoRef, paused, toggle, shown, onPlaying } = useHeroClip(clip.sources);
+  const { rootRef, videoRef, paused, toggle, shown, unavailable, onPlaying, onError } = useHeroClip(clip.sources);
 
   return (
     <section ref={rootRef} data-hero aria-labelledby="hero-titel" className="on-dark relative isolate -mt-[4.5rem] overflow-hidden bg-night text-white lg:bg-red">
@@ -67,6 +67,7 @@ export function RundgangHero({ clip, intro, side }: { clip: HeroClip; intro: Rea
             playsInline
             preload="none"
             onPlaying={onPlaying}
+            onError={onError}
             aria-hidden
             className={cn("absolute inset-0 h-full w-full object-cover transition-opacity duration-500", shown ? "opacity-100" : "opacity-0")}
           />
@@ -83,16 +84,19 @@ export function RundgangHero({ clip, intro, side }: { clip: HeroClip; intro: Rea
               <span className="font-semibold">{HANDLE}</span>
               <span className="text-white/75"> · {clip.caption}</span>
             </p>
+            {/* nur mit JavaScript (js-only) und nur, solange eine Fassung spielt oder spielen kann */}
+            {!unavailable && (
             <button
               type="button"
               onClick={toggle}
-              className="relative z-10 grid size-11 shrink-0 place-items-center rounded-full bg-black/35 text-white ring-1 ring-white/25 backdrop-blur-sm transition-[background-color,transform] duration-150 hover:bg-white/15 active:scale-95 lg:ml-auto lg:bg-transparent lg:ring-0 lg:backdrop-blur-none"
+              className="js-only relative z-10 grid size-11 shrink-0 place-items-center rounded-full bg-black/35 text-white ring-1 ring-white/25 backdrop-blur-sm transition-[background-color,transform] duration-150 hover:bg-white/15 active:scale-95 lg:ml-auto lg:bg-transparent lg:ring-0 lg:backdrop-blur-none"
               // fester Name, Zustand über aria-pressed: „Rundgang anhalten, gedrückt“ = angehalten
               aria-label="Rundgang anhalten"
               aria-pressed={paused}
             >
               {paused ? <Play className="size-5 fill-current" aria-hidden /> : <Pause className="size-5 fill-current" aria-hidden />}
             </button>
+            )}
           </div>
         </div>
       </div>

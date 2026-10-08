@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { autoplaySource, pickSource, type VideoSource } from "@/lib/video";
 
 /**
@@ -13,12 +13,23 @@ export function useHeroClip(sources: readonly VideoSource[]) {
   const [userPaused, setUserPaused] = useState(false);
   const [inView, setInView] = useState(true);
   const [shown, setShown] = useState(false);
+  /** keine Fassung spielt (Browser kann keine, oder alle Dateien schlugen fehl): Poster bleibt, Knopf verschwindet */
+  const [unavailable, setUnavailable] = useState(false);
   const rootRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   /** Fassung für den automatischen Start; null = nur auf Knopfdruck (Datensparmodus). */
   const autoSrc = useRef<string | null>(null);
   /** Wer vor dem Start schon gedrückt hat, behält seine Wahl (auch bei reduzierter Bewegung). */
   const chosen = useRef(false);
+  /** Dateien, die nicht luden – die nächste abspielbare Fassung kommt dran */
+  const failed = useRef<string[]>([]);
+  const playingRef = useRef(false);
+  const nextSource = useCallback(() => {
+    const v = videoRef.current;
+    if (!v) return null;
+    const left = sources.filter((s) => !failed.current.includes(s.src));
+    return pickSource(left, (type) => v.canPlayType(type));
+  }, [sources]);
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -68,9 +79,9 @@ export function useHeroClip(sources: readonly VideoSource[]) {
       return;
     }
     if (!v.getAttribute("src")) {
-      const src = autoSrc.current ?? pickSource(sources, (type) => v.canPlayType(type));
+      const src = autoSrc.current && !failed.current.includes(autoSrc.current) ? autoSrc.current : nextSource();
       if (!src) {
-        setUserPaused(true);
+        setUnavailable(true);
         return;
       }
       v.src = src;
@@ -78,10 +89,29 @@ export function useHeroClip(sources: readonly VideoSource[]) {
     v.play().catch((e: unknown) => {
       if (e instanceof DOMException && e.name === "NotAllowedError") setUserPaused(true);
     });
-  }, [playing, sources]);
+  }, [playing, sources, nextSource]);
+
+  useEffect(() => {
+    playingRef.current = playing;
+  }, [playing]);
 
   /** Knopf zeigt „abspielen“, solange der Clip nicht läuft oder laufen soll (vor dem Start oder angehalten). */
   const paused = userPaused || !ready;
+  /** Die gewählte Datei lädt nicht (z. B. blockiert): nächste Fassung, sonst bleibt das Poster. */
+  const onError = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    // der gesetzte Pfad (relativ wie in `sources`) – currentSrc wäre absolut und fiele nie aus der Auswahl
+    failed.current.push(v.getAttribute("src") ?? "");
+    const next = failed.current.length <= sources.length ? nextSource() : null;
+    if (!next) {
+      setShown(false);
+      setUnavailable(true);
+      return;
+    }
+    v.src = next;
+    if (playingRef.current) v.play().catch(() => {});
+  };
 
   return {
     rootRef,
@@ -92,6 +122,8 @@ export function useHeroClip(sources: readonly VideoSource[]) {
       setUserPaused(!paused);
     },
     shown,
+    unavailable,
     onPlaying: () => setShown(true),
+    onError,
   };
 }

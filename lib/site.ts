@@ -70,3 +70,17 @@ export function pageMetadata({
  */
 const HERO_PAGES = new Set(["/", "/index", "/angebote", "/markt", "/kontakt", "/karriere", "/aktuelles"]);
 export const hasHero = (pathname: string) => HERO_PAGES.has(pathname) || /^\/aktuelles\/[^/]+$/.test(pathname);
+
+/**
+ * Meta-Beschreibung aus einem längeren Text: höchstens `max` Zeichen (Suchmaschinen zeigen etwa 160). Gekürzt wird an der letzten
+ * Satzgrenze, die hineinpasst; sonst an einer Wortgrenze mit „…“.
+ */
+export function metaDescription(text: string, max = 160): string {
+  const t = text.replace(/\s+/g, " ").trim();
+  if (t.length <= max) return t;
+  const head = t.slice(0, max);
+  const sentence = Math.max(head.lastIndexOf(". "), head.lastIndexOf("! "), head.lastIndexOf("? "));
+  if (sentence >= 40) return head.slice(0, sentence + 1);
+  const word = head.lastIndexOf(" ");
+  return head.slice(0, word > 0 ? word : max - 1).replace(/[,;:–-]$/, "") + "…";
+}

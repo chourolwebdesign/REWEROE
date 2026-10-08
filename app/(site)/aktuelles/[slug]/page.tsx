@@ -11,7 +11,7 @@ import { articleJsonLd, breadcrumbJsonLd, ldScript } from "@/lib/jsonld";
 import { Markdown } from "@/lib/markdown";
 import { media } from "@/lib/media";
 import { resolveImages } from "@/lib/resolve";
-import { pageMetadata } from "@/lib/site";
+import { metaDescription, pageMetadata } from "@/lib/site";
 
 // Kein dynamicParams = false: nach revalidatePath("/", "layout") aus dem Cockpit lieferte `next start` den schon
 // vorgerenderten Beitrag sonst als 404 (NoFallbackError). Unbekannte Beiträge enden weiter in notFound().
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: PageProps<"/aktuelles/[slug]"
   if (!post) return {};
   return pageMetadata({
     title: post.title,
-    description: post.excerpt,
+    description: metaDescription(post.excerpt),
     path: `/aktuelles/${post.slug}`,
     card: `beitrag-${post.slug}`,
     socialTitle: post.title,
@@ -59,7 +59,7 @@ export default async function PostPage({ params }: PageProps<"/aktuelles/[slug]"
 
       <figure className="wrap">
         <div className="relative aspect-[3/2] overflow-hidden rounded-[1.75rem] bg-soft md:aspect-[2/1]">
-          <Image src={cover.src} alt={cover.alt} fill loading="eager" fetchPriority="high" sizes="(min-width: 82.5rem) 1270px, 100vw" quality={75} className="object-cover" />
+          <Image src={cover.src} alt={cover.alt} fill loading="eager" fetchPriority="high" sizes="(min-width: 82.5rem) 1270px, 100vw" quality={85} className="object-cover" />
         </div>
         <figcaption className="mt-3 text-[0.8125rem] text-muted">{cover.credit}</figcaption>
       </figure>
