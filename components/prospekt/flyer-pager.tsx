@@ -16,8 +16,9 @@ export interface PagerHandle {
 
 const SPREADS = "(min-width: 64rem)";
 const reduced = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+// am Ende „aria-disabled“ statt „disabled“: der Knopf bleibt fokussierbar, der Fokus geht in keinem Browser verloren
 const NAV_BTN =
-  "inline-flex min-h-11 items-center gap-1.5 rounded-full bg-soft px-4 font-semibold transition-transform duration-150 active:scale-[0.97] disabled:opacity-40 disabled:active:scale-100";
+  "inline-flex min-h-11 items-center gap-1.5 rounded-full bg-soft px-4 font-semibold transition-transform duration-150 active:scale-[0.97] aria-disabled:opacity-40 aria-disabled:active:scale-100";
 /** Fokusrahmen nach innen: die waagerechten Leisten schneiden alles ab, was über die Schaltfläche hinausragt */
 const INSET_FOCUS = "focus-visible:outline-offset-[-4px]";
 
@@ -38,6 +39,8 @@ export function FlyerPager({ flyer, onOpen, ref }: { flyer: FlyerRecord; onOpen:
   // bis zum Laden der Seite nur die Titelseite (der LCP teilt sich die Leitung nicht), danach auch die Nachbarn und die Vorschau-Leiste
   const [loaded, setLoaded] = useState<number[]>([1]);
   const [stripReady, setStripReady] = useState(false);
+  // Vorschaubild, das gerade den Fokus hat – es bleibt der Tab-Stopp der Leiste, auch wenn die Seiten weiterlaufen
+  const [stripFocus, setStripFocus] = useState<number | null>(null);
   const ready = useRef(false);
   const visibleRef = useRef<number[]>([1]);
   // Seitenanzeige erst, wenn die Leiste steht – sonst sagt sie beim weichen Blättern Zwischenstände wie „Seite 1–2“ an
@@ -66,6 +69,14 @@ export function FlyerPager({ flyer, onOpen, ref }: { flyer: FlyerRecord; onOpen:
     }),
     [scrollToPage],
   );
+
+  // Drehen oder Fensterbreite über 1024 px hinweg (Doppelseiten an/aus): die zuerst sichtbare Seite bleibt stehen
+  useEffect(() => {
+    const mq = window.matchMedia(SPREADS);
+    const keep = () => scrollToPage(visibleRef.current[0] ?? 1, false);
+    mq.addEventListener("change", keep);
+    return () => mq.removeEventListener("change", keep);
+  }, [scrollToPage]);
 
   useEffect(() => {
     let idle = 0;
@@ -114,20 +125,34 @@ export function FlyerPager({ flyer, onOpen, ref }: { flyer: FlyerRecord; onOpen:
     };
   }, [total, settleSoon]);
 
-  // aktuelle Seite in der Vorschau-Leiste sichtbar halten – nur waagerecht, die Seite selbst scrollt nicht
+  // aktuelle Seite(n) in der Vorschau-Leiste mittig halten – nur waagerecht, die Seite selbst scrollt nicht; Doppelseiten als Paar
   useEffect(() => {
     const s = strip.current;
-    const thumb = s?.querySelector<HTMLElement>(`[data-strip-page="${visible[0]}"]`);
-    if (s && thumb) s.scrollTo({ left: thumb.offsetLeft - s.clientWidth / 2 + thumb.clientWidth / 2, behavior: reduced() ? "auto" : "smooth" });
+    const first = s?.querySelector<HTMLElement>(`[data-strip-page="${visible[0]}"]`);
+    const last = s?.querySelector<HTMLElement>(`[data-strip-page="${visible[visible.length - 1]}"]`);
+    if (s && first && last) s.scrollTo({ left: (first.offsetLeft + last.offsetLeft + last.clientWidth) / 2 - s.clientWidth / 2, behavior: reduced() ? "auto" : "smooth" });
   }, [visible]);
 
+  const atStart = visible[0] === 1;
+  const atEnd = visible.includes(total);
   const step = (dir: 1 | -1) => {
     const t = track.current;
+    if ((dir < 0 && atStart) || (dir > 0 && atEnd)) return;
     if (t) t.scrollBy({ left: dir * t.clientWidth, behavior: reduced() ? "auto" : "smooth" });
+  };
+  // Vorschau-Leiste: ein Tab-Stopp (das Bild der aktuellen Seite); Pfeiltasten, Pos1 und Ende wandern von Bild zu Bild
+  const onStripKeyDown = (e: KeyboardEvent<HTMLUListElement>) => {
+    if (e.altKey || e.metaKey || e.ctrlKey) return;
+    const cur = Number((e.target as HTMLElement).closest("[data-strip-page]")?.getAttribute("data-strip-page"));
+    const next = e.key === "ArrowRight" ? cur + 1 : e.key === "ArrowLeft" ? cur - 1 : e.key === "Home" ? 1 : e.key === "End" ? total : 0;
+    if (!cur || !next || next < 1 || next > total) return;
+    e.preventDefault();
+    scrollToPage(next, true);
+    strip.current?.querySelector<HTMLElement>(`[data-strip-page="${next}"] button`)?.focus({ preventScroll: true });
   };
   // Pfeiltasten auf einer Seite: zur nächsten (Doppel-)Seite und den Fokus mitnehmen – Enter vergrößert dann, was man sieht
   const onKeyDown = (e: KeyboardEvent<HTMLUListElement>) => {
-    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    if ((e.key !== "ArrowRight" && e.key !== "ArrowLeft") || e.altKey || e.metaKey || e.ctrlKey) return;
     e.preventDefault();
     const cur = visibleRef.current;
     const next = e.key === "ArrowRight" ? Math.max(...cur) + 1 : Math.min(...cur) - 1;
@@ -168,9 +193,11 @@ export function FlyerPager({ flyer, onOpen, ref }: { flyer: FlyerRecord; onOpen:
                   flyer={flyer}
                   page={p}
                   size="full"
-                  sizes={portrait ? "(min-width: 64rem) 40vw, 92vw" : "92vw"}
+                  // Hochformat ab 1024 px: höchstens eine halbe Leiste breit und höchstens so breit, wie die Höhe (78 % des Bildschirms, 56rem) erlaubt
+                  sizes={portrait ? `(min-width: 64rem) min(50vw, calc(min(78vh, 56rem) * ${(flyer.page_width / flyer.page_height).toFixed(3)})), 92vw` : "92vw"}
                   priority={p === 1}
-                  className={cn("h-auto w-full", portrait && "lg:h-[min(78svh,56rem)] lg:w-auto")}
+                  // Höhe begrenzen statt setzen: in schmalen Spalten (Tablet quer) bleibt das Seitenverhältnis erhalten
+                  className={cn("h-auto w-full", portrait && "lg:max-h-[min(78svh,56rem)] lg:w-auto lg:max-w-full")}
                 />
               ) : (
                 <span
@@ -185,24 +212,34 @@ export function FlyerPager({ flyer, onOpen, ref }: { flyer: FlyerRecord; onOpen:
       </ul>
 
       <div className="mt-4 flex items-center justify-between gap-3">
-        <button type="button" onClick={() => step(-1)} disabled={visible[0] === 1} className={NAV_BTN}>
+        <button type="button" onClick={() => step(-1)} aria-disabled={atStart} className={NAV_BTN}>
           <ChevronLeft className="size-5" aria-hidden /> Zurück
         </button>
         <p aria-live="polite" className="font-semibold tabular-nums">
           {pageLabel(settled, total)}
         </p>
-        <button type="button" onClick={() => step(1)} disabled={visible.includes(total)} className={NAV_BTN}>
+        <button type="button" onClick={() => step(1)} aria-disabled={atEnd} className={NAV_BTN}>
           Weiter <ChevronRight className="size-5" aria-hidden />
         </button>
       </div>
 
       <nav aria-label="Seiten im Überblick" className="mt-4">
-        <ul ref={strip} className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:thin]">
+        {/* „relative“: offsetLeft der Bilder bezieht sich dann auf die Leiste – so steht das aktuelle Bild wirklich in der Mitte */}
+        <ul
+          ref={strip}
+          onKeyDown={onStripKeyDown}
+          onFocus={(e) => setStripFocus(Number((e.target as HTMLElement).closest("[data-strip-page]")?.getAttribute("data-strip-page")) || null)}
+          onBlur={(e) => {
+            if (!strip.current?.contains(e.relatedTarget as Node | null)) setStripFocus(null);
+          }}
+          className="relative flex gap-2 overflow-x-auto pb-2 [scrollbar-width:thin]"
+        >
           {pages.map((p) => (
             <li key={p} data-strip-page={p} className="shrink-0">
               <button
                 type="button"
                 onClick={() => scrollToPage(p, true)}
+                tabIndex={p === (stripFocus ?? visible[0]) ? 0 : -1}
                 aria-current={visible.includes(p) ? "true" : undefined}
                 aria-label={`Seite ${p}`}
                 className={cn("block w-12 overflow-hidden rounded-md ring-2 sm:w-14", visible.includes(p) ? "ring-red" : "ring-transparent", INSET_FOCUS)}

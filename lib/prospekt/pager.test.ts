@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { nearPages, pageLabel, pagerTarget, usesSpreads } from "./pager";
+import { nearPages, pageLabel, pagerTarget, pagesLabel, usesSpreads } from "./pager";
 
 describe("pageLabel", () => {
   it("eine Seite, Doppelseite, unsortiert, leer", () => {
@@ -41,5 +41,13 @@ describe("usesSpreads", () => {
     expect(usesSpreads(1800, 3182)).toBe(true);
     expect(usesSpreads(1800, 1800)).toBe(true);
     expect(usesSpreads(1800, 1018)).toBe(false);
+  });
+});
+
+describe("pagesLabel", () => {
+  it("„Alle n Seiten ansehen“, bei einer Seite ohne „Alle 1 Seiten“", () => {
+    expect(pagesLabel(34)).toBe("Alle 34 Seiten ansehen");
+    expect(pagesLabel(2)).toBe("Alle 2 Seiten ansehen");
+    expect(pagesLabel(1)).toBe("Die Seite ansehen");
   });
 });

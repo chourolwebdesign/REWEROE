@@ -39,20 +39,24 @@ Ohne Mail-Konfiguration zeigt das Formular einen Hinweis und die Telefonnummer u
 |---|---|
 | Adresse, Telefon, E-Mail, Öffnungszeiten, Services, Links (Prospekt, Instagram, Stellensuche) | `content/markt.ts` |
 | Sonderöffnungszeiten (z. B. Heiligabend) | Markt-Cockpit → Inhalte → Sondertage – Feiertage in Hessen und § 3 HLöG rechnet `lib/hours.ts` selbst |
-| Story im ersten Screen (Clip/Fotos, Reihenfolge, Dauer) | `content/story.ts` |
+| Video im ersten Screen (Rundgang, läuft in Schleife) | Clip in `lib/media.ts → clips`, Auswahl in `app/(site)/page.tsx` (`resolveClip`) |
 | Galerie „Aus dem Markt“ | `content/galerie.ts` |
 | Beiträge unter /aktuelles (Markdown) | `content/aktuelles.ts` |
 | Offene Stellen (erzeugen automatisch JobPosting-Daten) | Markt-Cockpit → Inhalte → Stellen |
 | Termine im Markt (Startseite + Markt-Kalender) | Markt-Cockpit → Inhalte → Termine |
 | Auswahl im Bewerbungsformular | `content/bewerbung.ts` |
 | Neue Fotos | Datei nach `assets/media/`, in `lib/media.ts` mit Alt-Text, Kurztitel und Bildnachweis eintragen |
-| Neue Clips | Quelle (am besten das Original vom Handy, nicht aus Instagram) dreimal kodieren, ohne Ton, `faststart`: AV1 `-c:v libsvtav1 -preset 4 -crf 46 -g 150`, HEVC `-c:v libx265 -preset slow -crf 31 -tag:v hvc1`, H.264 `-c:v libx264 -preset slow -crf 28 -profile:v high -level 4.0`, jeweils `-pix_fmt yuv420p -an -movflags +faststart`; Ziel SSIM ≥ 0,97 gegen die Quelle. Dateien nach `public/media/` unter neuem Namen, Posterbild nach `assets/media/`, Eintrag in `lib/media.ts → clips` (`sources` in dieser Reihenfolge) |
+| Neue Clips | Quelle (am besten das Original vom Handy, nicht aus Instagram) auf 1080 × 1920 verkleinern und dreimal kodieren, ohne Ton, `faststart` – Befehle unten. Ziel SSIM ≥ 0,97 gegen die verkleinerte Quelle; beim Messen die Bilder über ihre Nummer paaren (`settb=1/24,setpts=N` auf beide Eingänge), sonst verschieben gerundete Zeitstempel die Paare. `codecs` aus ffprobe ablesen (1080p: `av01.0.08M.08`, `hvc1.1.6.L120.B0`, `avc1.640028`). Dateien nach `public/media/` unter neuem Namen, Posterbild (erstes Bild, gleiche Auflösung) nach `assets/media/` und in `lib/og.tsx → MEDIA_FILES`, Eintrag in `lib/media.ts → clips` (`sources` in dieser Reihenfolge) |
 
-Clips komprimieren (so wurde der Rundgang erstellt – Handys bekommen automatisch die 540er-Datei, im Datensparmodus läuft gar kein Video):
+Clips komprimieren – so wurde der Rundgang erstellt (Quelle: KI-Hochrechnung des Instagram-Clips, 2160 × 3840, 24 fps; Ergebnis
+AV1 3,9 MB, HEVC 5,7 MB, H.264 7,1 MB, SSIM 0,977–0,978). Alle Geräte bekommen 1080 × 1920, der Browser nimmt die erste Fassung, die
+er abspielen kann; im Datensparmodus bleibt das Standbild. `-g` = 5 Sekunden in Bildern:
 
 ```bash
-ffmpeg -i quelle.mp4 -an -c:v libx264 -profile:v high -level:v 4.0 -preset veryslow -crf 31 -pix_fmt yuv420p -movflags +faststart public/media/name-720.mp4
-ffmpeg -i quelle.mp4 -an -vf "scale=540:960:flags=lanczos" -c:v libx264 -profile:v high -level:v 4.0 -preset veryslow -crf 31 -pix_fmt yuv420p -movflags +faststart public/media/name-540.mp4
+ffmpeg -i quelle.mp4 -an -vf scale=1080:1920:flags=lanczos -c:v libsvtav1 -preset 4 -crf 46 -g 120 -pix_fmt yuv420p -movflags +faststart public/media/name-1080-av1.mp4
+ffmpeg -i quelle.mp4 -an -vf scale=1080:1920:flags=lanczos -c:v libx265 -preset slow -crf 31 -tag:v hvc1 -x265-params log-level=error -pix_fmt yuv420p -movflags +faststart public/media/name-1080-hevc.mp4
+ffmpeg -i quelle.mp4 -an -vf scale=1080:1920:flags=lanczos -c:v libx264 -preset slow -crf 28 -profile:v high -level 4.0 -pix_fmt yuv420p -movflags +faststart public/media/name-1080-h264.mp4
+ffmpeg -i quelle.mp4 -vf "select=eq(n\,0),scale=1080:1920:flags=lanczos" -frames:v 1 -q:v 2 assets/media/name-poster-1080.jpg
 ```
 
 ## Service-Funktionen
@@ -75,7 +79,7 @@ ffmpeg -i quelle.mp4 -an -vf "scale=540:960:flags=lanczos" -c:v libx264 -profile
 | Konto anlegen | Supabase-Dashboard → Authentication → Add user (E-Mail, Passwort, „Auto Confirm“), dann im SQL-Editor `insert into public.editors (user_id, name) values ('<uuid>', '<Vorname>');` |
 | Registrierung sperren | Authentication → Sign In / Providers → „Allow new users to sign up“ aus (einmalig) |
 | Datenbank ändern | neue Datei in `supabase/migrations/`, per Supabase-MCP `apply_migration` oder SQL-Editor anwenden |
-| Tests | Server auf Port 3100 starten, dann `node --env-file=.env.local e2e/<skript>.mjs` (`rls-check`, `cockpit-login`, `cockpit-prospekt`, `cockpit-fehlerfaelle`, `prospekt-viewer`, `start-ticket`, `feedback`, `cockpit-feedback`, `inhalte-website`, `cockpit-inhalte`, `cockpit-axe`, `public-qa`, `seitenkopf`, `medien`, `lighthouse`; `prospekt-viewer` und `start-ticket` brauchen einen veröffentlichten Prospekt der laufenden Woche); Test-Editor in `.env.local` (siehe `.env.example`). Die Cockpit-Skripte schreiben in das Supabase-Projekt (Testprospekt bzw. Testwoche 2031, Einträge „E2E-…“/„RLS-…“) und räumen danach auf; Sondertage legen sie nur an Tagen an, an denen der Markt nichts eingetragen hat. Liest die Live-Website aus demselben Projekt, kann ein Testeintrag bis zum Aufräumen auf einer gerade neu erzeugten Seite stehen (bis zu 1 Stunde, Kalender 6 Stunden) – vor dem offiziellen Start die Tests gegen ein eigenes Test-Projekt laufen lassen (Spec, Abschnitt 9) |
+| Tests | Server auf Port 3100 starten, dann `node --env-file=.env.local e2e/<skript>.mjs`. **Lesend** (dürfen auch gegen die Live-Seite laufen, `E2E_BASE=https://reweroe.vercel.app`): `prospekt-viewer`, `start-ticket`, `public-qa`, `seitenkopf`, `medien`, `hero` (Rundgang-Hero), `hero-kontrast` (Schrift über dem Video), `mobil` (Handy: Längen, Köpfe, Felder, Tippflächen, Bildschärfe, Wisch-Reihen, Footer), `lighthouse`, `cockpit-axe` (meldet sich mit dem Test-Editor an, legt nichts an); `public-qa` prüft zusätzlich `target=_blank` mit `noopener`, die 404-Seite und dass die Bildoptimierung fremde Pfade ablehnt (`images.localPatterns`); `prospekt-viewer` und `start-ticket` brauchen einen veröffentlichten Prospekt der laufenden Woche. **Schreibend**: `rls-check`, `cockpit-login`, `cockpit-prospekt`, `cockpit-fehlerfaelle`, `feedback`, `cockpit-feedback`, `inhalte-website`, `cockpit-inhalte` – sie legen Testeinträge im Supabase-Projekt an („E2E-…“/„RLS-…“, Testprospekt bzw. Testwoche 2031) und räumen danach auf. Seit dem 6. Oktober 2026 liest die Live-Website aus demselben Projekt: schreibende Tests nur noch gegen ein eigenes Test-Projekt (Spec 2026-10-05, Abschnitt 9). Test-Editor in `.env.local` (siehe `.env.example`) |
 | Geräte | Hochladen braucht einen aktuellen Browser (iPhone ab iOS 17.4); pdf.js läuft als Legacy-Build |
 | Feedback | `/feedback` (QR-Plakat unter `/aushang`, Seite 2). Startet immer auf Deutsch (Auswahl für tr/ar/ru/en); nach 4–5 Sternen ein großer Knopf zur Kundenumfrage der REWE Group (`content/markt.ts → links.reweSurvey`), Google-Link für alle unten. Schreiben nur mit `FEEDBACK_KEY` (Server; in Supabase steht nur der SHA-256 in `private.settings`). Neuer Schlüssel: Befehl aus Plan 2026-10-05-feedback, Task 1 Step 3, dann Hash per SQL ersetzen und `FEEDBACK_KEY` in Vercel tauschen. Alarm bei 1–2 Sternen: `FEEDBACK_ALARM_AN` + Mail-Einrichtung |
 | Inhalte | `/cockpit/inhalte`: Sondertage (Vorrang vor Feiertagen; die gesetzlichen Grenzen – Heiligabend und Silvester 14 Uhr, Gründonnerstag 20 Uhr – werden geprüft), Termine (Startseite, Markt-Kalender) und Stellen (/karriere mit JobPosting). Die Website liest sie aus Supabase (`lib/data/inhalte.ts`); jedes Speichern erneuert die Seiten |

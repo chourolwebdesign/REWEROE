@@ -84,6 +84,25 @@ check(clipped.length === 0, `Fokusrahmen nicht abgeschnitten (${clipped.join(", 
 // Vorschau-Leiste springt
 await page.$eval('[data-strip-page="5"] button', (x) => x.click());
 check(await waitLabel(page, "Seite 5 von"), "Vorschau-Leiste: Seite 5");
+// Vorschau-Leiste: aktuelle Seite mittig, ein einziger Tab-Stopp, Pfeiltasten wandern von Bild zu Bild
+await new Promise((r) => setTimeout(r, 600));
+const centre = await page.evaluate(() => {
+  const s = document.querySelector('[aria-label="Seiten im Überblick"] ul');
+  const t = s.querySelector('[data-strip-page="5"]').getBoundingClientRect();
+  const b = s.getBoundingClientRect();
+  return Math.round(Math.abs(t.left + t.width / 2 - (b.left + b.width / 2)));
+});
+check(centre <= 2, `Vorschau-Leiste: Seite 5 steht in der Mitte (Abstand ${centre} px)`);
+const stops = await page.$$eval("#prospekt a[href], #prospekt button, #prospekt summary, #prospekt [tabindex='0']", (els) => els.filter((e) => e.tabIndex >= 0 && e.getClientRects().length && !(e.closest("details:not([open])") && e.tagName !== "SUMMARY")).length);
+check(stops <= 8, `Tab-Stopps im Prospekt-Bereich höchstens 8 (${stops})`);
+await page.focus('[data-strip-page="5"] button');
+await page.keyboard.press("ArrowRight");
+check(await waitLabel(page, "Seite 6 von"), "Pfeiltaste → in der Vorschau-Leiste → Seite 6");
+check(await page.evaluate(() => document.activeElement?.closest("[data-strip-page]")?.getAttribute("data-strip-page") === "6"), "… der Fokus wandert auf das Vorschaubild 6");
+await page.keyboard.press("Home");
+check(await waitLabel(page, "Seite 1 von"), "Pos1 in der Vorschau-Leiste → Seite 1");
+await page.$eval('[data-strip-page="5"] button', (x) => x.click());
+await waitLabel(page, "Seite 5 von");
 
 // Antippen öffnet die Vergrößerung an dieser Seite
 await page.$eval('[data-pager-page="5"] button', (x) => x.click());
@@ -120,6 +139,16 @@ await page.keyboard.press("Enter");
 check(await waitLabel(page, `Seite ${total} von ${total}`), `„Weiter“ bis zum Ende → Seite ${total}`);
 await new Promise((r) => setTimeout(r, 500)); // der Browser räumt den Fokus eines gesperrten Knopfs erst beim nächsten Zeichnen weg
 check(await page.evaluate(() => document.activeElement?.textContent.includes("Weiter")), "… der Fokus bleibt auf „Weiter“");
+check(
+  await page.evaluate(() => {
+    const b = [...document.querySelectorAll('[aria-label="Prospektseiten"] button')].find((x) => x.textContent.includes("Weiter"));
+    return b.getAttribute("aria-disabled") === "true" && !b.disabled;
+  }),
+  "„Weiter“ am Ende: aria-disabled statt disabled – bleibt in jedem Browser fokussierbar",
+);
+await page.keyboard.press("Enter");
+await new Promise((r) => setTimeout(r, 400));
+check((await label(page)) === `Seite ${total} von ${total}`, "… Enter darauf tut nichts");
 
 // geteilte Links
 await page.goto(`${BASE}/angebote?seite=2`, { waitUntil: "load" });
@@ -175,6 +204,51 @@ if (total % 2 === 0) {
 } else {
   check(await waitLabel(desk, `Seite ${total - 1}–${total} von ${total}`), `Desktop: letzte Doppelseite ${total - 1}–${total}`);
 }
+// Vorschau-Leiste auf dem Desktop: die Doppelseite steht als Paar in der Mitte; der Tab-Stopp folgt dem fokussierten Bild
+await desk.$eval('[data-strip-page="10"] button', (x) => x.click());
+await waitLabel(desk, `Seite 10–11 von ${total}`);
+await new Promise((r) => setTimeout(r, 600));
+const pairCentre = await desk.evaluate(() => {
+  const s = document.querySelector('[aria-label="Seiten im Überblick"] ul');
+  const a = s.querySelector('[data-strip-page="10"]').getBoundingClientRect();
+  const c = s.querySelector('[data-strip-page="11"]').getBoundingClientRect();
+  const box = s.getBoundingClientRect();
+  return Math.round(Math.abs((a.left + c.right) / 2 - (box.left + box.width / 2)));
+});
+check(pairCentre <= 2, `Desktop: Vorschau-Leiste zentriert die Doppelseite 10–11 (Abstand ${pairCentre} px)`);
+await desk.$eval('[data-strip-page="1"] button', (x) => x.click());
+await waitLabel(desk, `Seite 1 von ${total}`);
+await desk.focus('[data-strip-page="1"] button');
+await desk.keyboard.press("ArrowRight");
+await desk.keyboard.press("ArrowRight");
+await waitLabel(desk, `Seite 2–3 von ${total}`);
+check(await desk.evaluate(() => document.activeElement?.closest("[data-strip-page]")?.getAttribute("data-strip-page") === "3" && document.activeElement.tabIndex === 0), "Desktop: nach zwei Pfeiltasten ab Bild 1 ist das fokussierte Vorschaubild 3 der Tab-Stopp (nicht Bild 2)");
+// Drehen / Fensterbreite über 1024 px hinweg: die zuerst sichtbare Seite bleibt stehen
+// nach jedem Drehen kurz warten: der Browser meldet die neue Breite erst beim nächsten Zeichnen (Nutzer tippen nicht im selben Frame)
+const rotate = async (w, h) => {
+  await desk.setViewport({ width: w, height: h });
+  await new Promise((r) => setTimeout(r, 500));
+};
+await rotate(820, 1180);
+await desk.$eval('[data-strip-page="5"] button', (x) => x.click());
+check(await waitLabel(desk, "Seite 5 von"), "Tablet hochkant (820 px): Seite 5");
+await rotate(1180, 820);
+check(await waitLabel(desk, `Seite 4–5 von ${total}`), "… quer (1180 px): Doppelseite 4–5, Seite 5 bleibt im Bild");
+await rotate(820, 1180);
+check(await waitLabel(desk, "Seite 4 von"), "… wieder hochkant: Seite 4 (die zuerst sichtbare bleibt)");
+// Desktop mit Retina: keine größere Bildfassung als nötig (die Seitenhöhe ist auf 78 % des Bildschirms begrenzt)
+const retina = await b.newPage();
+await retina.setViewport({ width: 1440, height: 900, deviceScaleFactor: 2 });
+await retina.goto(`${BASE}/angebote`, { waitUntil: "load" });
+await retina.waitForSelector("[data-pager-page='1'] img");
+await new Promise((r) => setTimeout(r, 1500));
+const fit = await retina.$eval("[data-pager-page='1'] img", (img) => {
+  const need = img.getBoundingClientRect().width * devicePixelRatio;
+  const sizes = [390, 640, 828, 1080, 1280, 1600, 1920];
+  return { need: Math.round(need), chosen: Number(new URL(img.currentSrc).searchParams.get("w")), enough: sizes.find((s) => s >= need) };
+});
+check(fit.chosen <= fit.enough, `Desktop 1440 × 900 @2×: Titelseite braucht ${fit.need} px, geladen ${fit.chosen} (≤ ${fit.enough})`);
+await retina.close();
 // weiches Blättern (ohne reduzierte Bewegung): die Seitenanzeige nennt nur echte Doppelseiten
 const smooth = await b.newPage();
 await smooth.setViewport({ width: 1280, height: 900 });

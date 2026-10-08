@@ -6,7 +6,7 @@ import { NumbersBand } from "@/components/home/numbers-band";
 import { RegionalBand } from "@/components/home/regional-band";
 import { Services } from "@/components/home/services";
 import { TermineList } from "@/components/home/termine";
-import { StoryHero } from "@/components/home/story-hero";
+import { RundgangHero } from "@/components/home/rundgang-hero";
 import { OpenStatus } from "@/components/live/open-status";
 import { FlyerWeekText } from "@/components/live/flyer-week";
 import { Gallery } from "@/components/media/gallery";
@@ -18,7 +18,6 @@ import { VisitSection } from "@/components/visit/visit-section";
 import { posts } from "@/content/aktuelles";
 import { galerie } from "@/content/galerie";
 import { markt } from "@/content/markt";
-import { story } from "@/content/story";
 import { currentFlyerLink, publishedFlyers } from "@/lib/data/flyers";
 import { flyerWeek } from "@/lib/flyer";
 import { pickFlyers, shownFlyer } from "@/lib/prospekt/select";
@@ -26,7 +25,7 @@ import { flyerImage } from "@/lib/prospekt/urls";
 import { eventsFrom } from "@/lib/data/inhalte";
 import { berlinNow } from "@/lib/hours";
 import { absoluteUrl } from "@/lib/site";
-import { resolveGallery, resolveStory } from "@/lib/resolve";
+import { resolveClip, resolveGallery } from "@/lib/resolve";
 
 export default async function HomePage() {
   const week = flyerWeek();
@@ -40,19 +39,20 @@ export default async function HomePage() {
 
   return (
     <>
-      <StoryHero
-        items={resolveStory(story)}
+      <RundgangHero
+        clip={resolveClip("markt-rundgang", "Rundgang durch unseren Markt")}
         intro={
           <>
             <p className="text-eyebrow mb-6 flex items-center gap-2.5 text-white">
               <span aria-hidden className="h-px w-6 shrink-0 bg-white/60" />
               REWE in Frankfurt-Rödelheim
             </p>
-            <h1 className="text-hero lg:text-[clamp(4.5rem,1rem+5.6vw,7.5rem)]">
+            <h1 id="hero-titel" className="text-hero lg:text-[clamp(4.5rem,1rem+5.6vw,7.5rem)]">
               Willkommen in deinem{" "}
               <span className="rounded-[0.16em] bg-white px-[0.12em] text-red [box-decoration-break:clone]">Markt.</span>
             </h1>
-            <p className="mt-7 max-w-[34ch] text-lede text-white">
+            {/* unter 1024 px liegt der Text auf dem Video – dort nur Überschrift, Status und Knöpfe */}
+            <p className="mt-7 hidden max-w-[34ch] text-lede text-white lg:block">
               Frisch einkaufen mitten in Rödelheim – mit Bäckerei und Sushi im Markt, Montag bis Samstag von 7 bis 22 Uhr.
             </p>
           </>
@@ -60,7 +60,7 @@ export default async function HomePage() {
         side={
           <div className="grid gap-5">
             <OpenStatus tone="dark" className="justify-self-start" />
-            {/* mobil nebeneinander und kompakter, damit die Story schon im ersten Bildschirm zu sehen ist.
+            {/* mobil nebeneinander und kompakt – sie liegen unten auf dem Video.
                 Solange diese Knöpfe sichtbar sind, bleibt die Schnellzugriff-Leiste unten verborgen (globals.css). */}
             <div id="hero-aktionen" className="flex flex-wrap gap-2.5 sm:gap-3">
               <ButtonLink href={flyer.href} external={flyer.external} variant="white" size="lg" className="h-12 px-5 text-base sm:h-14 sm:px-7 sm:text-[1.0625rem]">
@@ -80,17 +80,18 @@ export default async function HomePage() {
         }
       />
 
-      <MarqueeBand />
+      {/* Laufband und Zahlenband erst ab 768 px – auf dem Handy wiederholen sie nur, was Hero und „Besuch“ schon sagen */}
+      <MarqueeBand className="hidden md:block" />
 
       <section aria-label="Prospekt der Woche" className="wrap pt-16 md:pt-24">
         <FlyerTicket cover={cover} />
       </section>
 
-      <NumbersBand className="pt-24 md:pt-32" />
+      <NumbersBand className="hidden pt-24 md:block md:pt-32" />
 
-      <RegionalBand className="wrap pt-24 md:pt-32" />
+      <RegionalBand className="wrap pt-16 md:pt-32" />
 
-      <section aria-labelledby="markt-titel" className="wrap pt-24 md:pt-32">
+      <section aria-labelledby="markt-titel" className="wrap pt-16 md:pt-32">
         <SectionHeading
           id="markt-titel"
           eyebrow="Aus dem Markt"
@@ -102,10 +103,11 @@ export default async function HomePage() {
             </ButtonLink>
           }
         />
-        <Gallery items={resolveGallery(galerie)} className="mt-10" />
+        {/* ohne den Rundgang – der läuft schon im Hero */}
+        <Gallery items={resolveGallery(galerie.filter((it) => !("clip" in it)))} row className="mt-10" />
       </section>
 
-      <section aria-labelledby="sortiment-titel" className="wrap pt-24 md:pt-32">
+      <section aria-labelledby="sortiment-titel" className="wrap pt-16 md:pt-32">
         <SectionHeading
           id="sortiment-titel"
           eyebrow="Bei uns im Markt"
@@ -116,10 +118,10 @@ export default async function HomePage() {
             </ButtonLink>
           }
         />
-        <Highlights className="mt-10" />
+        <Highlights row className="mt-10" />
       </section>
 
-      <section aria-labelledby="praktisch-titel" className="wrap pt-24 md:pt-32">
+      <section aria-labelledby="praktisch-titel" className="wrap pt-16 md:pt-32">
         <SectionHeading
           id="praktisch-titel"
           eyebrow="Praktisch"
@@ -130,7 +132,7 @@ export default async function HomePage() {
       </section>
 
       {events.length > 0 && (
-        <section aria-labelledby="termine-titel" className="wrap pt-24 md:pt-32">
+        <section aria-labelledby="termine-titel" className="wrap pt-16 md:pt-32">
           <SectionHeading id="termine-titel" eyebrow="Termine" title="Demnächst im Markt." />
           <div className="mt-10">
             <TermineList events={events} />
@@ -139,7 +141,7 @@ export default async function HomePage() {
       )}
 
       {latest && (
-        <section aria-labelledby="aktuelles-titel" className="wrap pt-24 md:pt-32">
+        <section aria-labelledby="aktuelles-titel" className="wrap pt-16 md:pt-32">
           <SectionHeading
             id="aktuelles-titel"
             eyebrow="Aktuelles"
@@ -156,12 +158,12 @@ export default async function HomePage() {
         </section>
       )}
 
-      <section aria-labelledby="besuch-titel" className="wrap pt-24 md:pt-32">
+      <section aria-labelledby="besuch-titel" className="wrap pt-16 md:pt-32">
         <SectionHeading id="besuch-titel" eyebrow="Besuch" title="Öffnungszeiten & Anfahrt." />
         <VisitSection className="mt-10" />
       </section>
 
-      <section aria-label="Karriere" className="wrap py-24 md:py-32">
+      <section aria-label="Karriere" className="wrap py-16 md:py-32">
         <CareerBand />
       </section>
     </>

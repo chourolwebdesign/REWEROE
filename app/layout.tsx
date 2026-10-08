@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { JsClass } from "@/components/motion/js-class";
 import { INDEXABLE, ogImagePath, SITE_NAME, SITE_URL } from "@/lib/site";
 import { display } from "./fonts";
 import "./globals.css";
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Vor dem ersten Paint: Einblend-Animationen nur mit JS (siehe .reveal in globals.css) */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
         {children}
+        <JsClass />
       </body>
     </html>
   );

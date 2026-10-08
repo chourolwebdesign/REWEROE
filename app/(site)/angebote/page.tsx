@@ -59,6 +59,8 @@ export default async function AngebotePage() {
         eyebrow="Angebote"
         title="Prospekt der Woche."
         lede="Alle Angebote deines REWE in der Thudichumstraße – immer aktuell im offiziellen REWE-Prospekt."
+        // Handy: der Prospekt soll zu zwei Dritteln im ersten Bildschirm liegen – KW-Zeile und Prospekt sagen dasselbe konkreter
+        ledeClassName="max-md:hidden"
       />
 
       <section id="prospekt" aria-label="Aktueller Prospekt" className="wrap">

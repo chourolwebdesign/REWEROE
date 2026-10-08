@@ -1,20 +1,13 @@
 import type { GalleryMedia } from "@/components/media/gallery";
-import type { StoryMedia } from "@/components/home/story-hero";
+import type { HeroClip } from "@/components/home/rundgang-hero";
 import type { GalleryItem } from "@/content/galerie";
-import type { StoryItem } from "@/content/story";
-import { clips, media, type MediaKey } from "./media";
+import { clips, media, type ClipKey, type MediaKey } from "./media";
 
 /** Inhalte (Schlüssel) → serialisierbare Props für die Client-Komponenten. */
-export function resolveStory(items: StoryItem[]): StoryMedia[] {
-  return items.map((it) => {
-    if (it.type === "clip") {
-      const c = clips[it.clip];
-      const p = media[c.poster];
-      return { type: "clip", sources: c.sources, poster: p.src, alt: p.alt, caption: it.caption };
-    }
-    const m = media[it.media];
-    return { type: "image", image: m.src, alt: m.alt, caption: it.caption, seconds: it.seconds, position: it.position };
-  });
+export function resolveClip(key: ClipKey, caption: string): HeroClip {
+  const c = clips[key];
+  const p = media[c.poster];
+  return { sources: c.sources, poster: p.src, alt: p.alt, caption };
 }
 
 export function resolveGallery(items: GalleryItem[]): GalleryMedia[] {

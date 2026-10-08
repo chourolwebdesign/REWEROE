@@ -2,7 +2,9 @@
 
 import Image, { type StaticImageData } from "next/image";
 import { ChevronLeft, ChevronRight, Play, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { featuredSpan } from "@/lib/gallery-layout";
+import { coverSizes } from "@/lib/sizes";
 import { cn } from "@/lib/utils";
 import { autoplaySource, type VideoSource } from "@/lib/video";
 
@@ -44,12 +46,33 @@ function TileClip({ sources }: { sources: readonly VideoSource[] }) {
   );
 }
 
-/** Raster je Breite: Spalten, Breite der ersten Kachel und die Klasse, die eine Kachel nur in diesem Bereich ausblendet. */
+/**
+ * Raster je Breite: Spalten, mögliche Breiten der ersten Kachel (die übliche zuerst) und die Klasse, die eine Kachel nur in diesem
+ * Bereich ausblendet. Die erste Kachel nimmt eine Breite, mit der alle Zeilen voll werden (lib/gallery-layout.ts).
+ */
 const LAYOUTS = [
-  { cols: 2, featured: 2, hide: "max-sm:hidden" },
-  { cols: 3, featured: 3, hide: "sm:max-lg:hidden" },
-  { cols: 4, featured: 2, hide: "lg:hidden" },
+  { cols: 2, spans: [2, 1], hide: "max-sm:hidden" },
+  { cols: 3, spans: [3, 1], hide: "sm:max-lg:hidden" },
+  { cols: 4, spans: [2, 3, 1], hide: "lg:hidden" },
 ] as const;
+/** Mit `row` ist die Galerie unter 768 px eine waagerechte Reihe (alle Kacheln sichtbar), das Dreier-Raster beginnt erst bei 768 px. */
+const ROW_LAYOUTS = [
+  { cols: 3, spans: [3, 1], hide: "md:max-lg:hidden" },
+  { cols: 4, spans: [2, 3, 1], hide: "lg:hidden" },
+] as const;
+/** Klassen der ersten Kachel je Breite und Spaltenzahl – als feste Zeichenketten, damit Tailwind sie findet. */
+const SPAN: Record<"base" | "sm" | "md" | "lg", Record<number, string>> = {
+  base: { 2: "col-span-2", 1: "" },
+  sm: { 3: "sm:col-span-3", 1: "sm:col-span-1" },
+  md: { 3: "md:col-span-3", 1: "md:col-span-1" },
+  lg: { 3: "lg:col-span-3", 2: "lg:col-span-2", 1: "lg:col-span-1" },
+};
+const ASPECT: Record<"sm" | "md" | "lg", Record<number, string>> = {
+  sm: { 3: "sm:aspect-video", 1: "sm:aspect-[4/5]" },
+  md: { 3: "md:aspect-video", 1: "md:aspect-[4/5]" },
+  // ab 1024 px füllt eine breite erste Kachel die Höhe der Zeile und schließt so bündig mit den Hochkant-Kacheln ab
+  lg: { 3: "lg:aspect-auto lg:h-full", 2: "lg:aspect-auto lg:h-full", 1: "lg:aspect-[4/5]" },
+};
 
 /** Wie viele Kacheln ein Raster ohne halbe letzte Zeile füllen (die übrigen bleiben über das Vollbild erreichbar). */
 function fullRows(n: number, cols: number, featured: number) {
@@ -58,12 +81,11 @@ function fullRows(n: number, cols: number, featured: number) {
 }
 
 /**
- * „Aus dem Markt“: kuratiertes Mosaik. Die erste Kachel ist breiter: mobil und ab 1024 px über zwei Spalten,
- * dazwischen (drei Spalten) über die ganze Zeile. Ab 1024 px hat sie kein eigenes Seitenverhältnis, sondern füllt
- * die Höhe der Zeile – so schließt sie bündig mit den Hochkant-Kacheln ab.
- * Die letzte Zeile ist immer voll: Was nicht aufgeht, zeigt nur das Vollbild (7 Einträge passen überall).
+ * „Aus dem Markt“: kuratiertes Mosaik. Die erste Kachel ist breiter: bei sieben Fotos mobil und ab 1024 px über zwei Spalten,
+ * dazwischen (drei Spalten) über die ganze Zeile; bei anderer Zahl nimmt sie die Breite, mit der alle Zeilen voll werden (sechs
+ * Fotos: ab 1024 px über drei Spalten, darunter eine). Die letzte Zeile ist immer voll: Was nicht aufgeht, zeigt nur das Vollbild.
  */
-export function Gallery({ items, className }: { items: GalleryMedia[]; className?: string }) {
+export function Gallery({ items, row = false, className }: { items: GalleryMedia[]; row?: boolean; className?: string }) {
   const [open, setOpen] = useState<number | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -76,31 +98,64 @@ export function Gallery({ items, className }: { items: GalleryMedia[]; className
 
   const step = (dir: 1 | -1) => setOpen((i) => (i === null ? i : (i + dir + items.length) % items.length));
   const current = open === null ? null : items[open];
+  const layouts = row ? ROW_LAYOUTS : LAYOUTS;
+  const spans = layouts.map((l) => featuredSpan(items.length, l.cols, l.spans));
+  // Breite der ersten Kachel: Handy (nur im Raster), mittlere Breiten (Raster: ab 640 px, Reihe: ab 768 px), ab 1024 px
+  const [phoneSpan, midSpan, wideSpan] = row ? [1, spans[0], spans[1]] : spans;
+  const mid = row ? "md" : "sm";
+  const featuredSizes = `(min-width: 64rem) ${wideSpan * 320}px, (min-width: ${row ? "48rem" : "40rem"}) ${midSpan === 3 ? "100vw" : "31vw"}`;
 
   return (
     <>
-      <ul className={cn("grid grid-cols-2 gap-2.5 sm:grid-cols-3 md:gap-4 lg:grid-cols-4", className)}>
+      <ul
+        data-snap-row={row || undefined}
+        className={cn(row ? "max-md:snap-row md:grid md:grid-cols-3 md:gap-4 lg:grid-cols-4" : "grid grid-cols-2 gap-2.5 sm:grid-cols-3 md:gap-4 lg:grid-cols-4", className)}
+      >
         {items.map((it, i) => {
           const img = it.type === "image" ? it.image : it.poster;
           const featured = i === 0;
-          const hidden = LAYOUTS.filter((l) => i >= fullRows(items.length, l.cols, l.featured)).map((l) => l.hide);
+          // Große erste Kachel im Raster: ein Querformat zeigt auf dem Handy sein eigenes Seitenverhältnis statt 4:5 – nichts wird
+          // abgeschnitten (z. B. das Gruppenfoto im Beitrag). Hochkant-Kacheln rechnen den Zuschnitt in `sizes` ein.
+          const natural = featured && !row && phoneSpan === 2 && img.width > img.height;
+          const hidden = layouts.filter((l, k) => i >= fullRows(items.length, l.cols, spans[k])).map((l) => l.hide);
           return (
-            <li key={i} className={cn(featured && "col-span-2 sm:col-span-3 lg:col-span-2", hidden)}>
+            <li
+              key={i}
+              className={cn(
+                row && "w-[72%] shrink-0 snap-start md:w-auto",
+                featured && cn(!row && SPAN.base[phoneSpan], SPAN[mid][midSpan], SPAN.lg[wideSpan]),
+                hidden,
+              )}
+            >
               <button
                 type="button"
                 onClick={() => setOpen(i)}
                 className={cn(
                   "group relative block w-full overflow-hidden rounded-[1.25rem] bg-soft text-left md:rounded-[1.5rem]",
-                  featured ? "aspect-[4/5] sm:aspect-video lg:aspect-auto lg:h-full" : "aspect-[4/5]",
+                  featured ? cn(natural ? "aspect-[var(--tile-ar)]" : "aspect-[4/5]", ASPECT[mid][midSpan], ASPECT.lg[wideSpan]) : "aspect-[4/5]",
                 )}
+                style={natural ? ({ "--tile-ar": `${img.width} / ${img.height}` } as CSSProperties) : undefined}
                 aria-label={`${it.type === "clip" ? "Clip abspielen" : "Foto vergrößern"}: ${it.caption}`}
               >
                 <Image
                   src={img}
                   alt={it.alt}
                   fill
-                  sizes={featured ? "(min-width: 64rem) 640px, 100vw" : "(min-width: 64rem) 320px, (min-width: 40rem) 31vw, 48vw"}
+                  sizes={
+                    natural
+                      ? `${featuredSizes}, 100vw`
+                      : coverSizes(
+                          featured
+                            ? `${featuredSizes}, ${row ? "72vw" : phoneSpan === 2 ? "100vw" : "48vw"}`
+                            : row
+                              ? "(min-width: 64rem) 320px, (min-width: 48rem) 31vw, 72vw"
+                              : "(min-width: 64rem) 320px, (min-width: 40rem) 31vw, 48vw",
+                          img.width / img.height,
+                          4 / 5,
+                        )
+                  }
                   quality={75}
+                  fetchPriority="low"
                   className="object-cover transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.04]"
                 />
                 {it.type === "clip" && <TileClip sources={it.sources} />}

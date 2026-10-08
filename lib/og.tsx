@@ -56,7 +56,7 @@ function titleSize(title: string) {
 
 /** Dateien zu den Bildschlüsseln in assets/media (statische Imports liefern beim Build nur URLs, keine Pfade). */
 const MEDIA_FILES: Record<MediaKey, string> = {
-  "markt-rundgang-poster": "markt-rundgang-poster.jpg",
+  "markt-rundgang-poster": "markt-rundgang-poster-1080.jpg",
   "resilienzwoche-obst": "resilienzwoche-obst.jpg",
   "resilienzwoche-rundgang-2": "resilienzwoche-rundgang-2.jpg",
   "resilienzwoche-rundgang-1": "resilienzwoche-rundgang-1.jpg",

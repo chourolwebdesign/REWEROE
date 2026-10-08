@@ -62,16 +62,37 @@
 }
 /* Dachzeile über Abschnittsüberschriften – klein, gesperrt, ruhig. */
 @utility text-eyebrow {
-  font-size: 0.8125rem;
+  /* auf dem Handy 14 px (lesbarer), ab 768 px wie bisher 13 px */
+  font-size: 0.875rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  @media (width >= 48rem) {
+    font-size: 0.8125rem;
+  }
 }
 @utility wrap {
   width: 100%;
   max-width: 82.5rem;
   margin-inline: auto;
   padding-inline: clamp(1rem, 0.6rem + 1.8vw, 1.75rem);
+}
+
+/* Waagerechte Reihe (Handy: Galerie und Service-Karten der Startseite): läuft bis an den Bildschirmrand und rastet am
+   Seitenrand von .wrap ein. */
+@utility snap-row {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  margin-inline: calc(-1 * clamp(1rem, 0.6rem + 1.8vw, 1.75rem));
+  padding-inline: clamp(1rem, 0.6rem + 1.8vw, 1.75rem);
+  scroll-padding-inline: clamp(1rem, 0.6rem + 1.8vw, 1.75rem);
+  /* Platz für den Fokusrahmen (3 px Abstand + 2 px): ein Scroller schneidet auch senkrecht ab */
+  padding-block: 6px;
+  margin-block: -6px;
 }
 
 /* Karte mit sanftem Anheben beim Zeigen. */
@@ -160,6 +181,15 @@
   }
   .reveal:nth-child(4) {
     animation-delay: 180ms;
+  }
+}
+/* Wisch-Reihen auf dem Handy: Kacheln außerhalb des Bildes erschienen sonst erst beim Wischen (und die Reihe wuchs kurz) */
+@media (prefers-reduced-motion: no-preference) and (width < 48rem) {
+  html.js [data-snap-row] .reveal:not(.is-in) {
+    opacity: 1;
+  }
+  html.js [data-snap-row] .reveal.is-in {
+    animation: none;
   }
 }
 

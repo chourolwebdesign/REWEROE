@@ -18,10 +18,11 @@ import { cn } from "@/lib/utils";
  * weggescrollt ist; sonst weiß.
  * Mobil öffnet der Menüknopf ein Vollbild-Menü (natives <dialog>: Fokusfalle, Esc, inerter Hintergrund).
  */
-export function SiteHeader({ flyer = { href: markt.links.flyer, external: true } }: { flyer?: { href: string; external: boolean } }) {
+export function SiteHeader({ flyer = { href: markt.links.flyer, external: true }, hero }: { flyer?: { href: string; external: boolean }; hero?: boolean }) {
   const pathname = usePathname();
   const [atTop, setAtTop] = useState(true);
-  const overHero = hasHero(pathname) && atTop;
+  // `hero` erzwingt den Zustand (404-Seite: weiß, auch unter /aktuelles/…), sonst entscheidet der Pfad schon im Server-HTML
+  const overHero = (hero ?? hasHero(pathname)) && atTop;
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
